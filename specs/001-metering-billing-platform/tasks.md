@@ -67,7 +67,7 @@ A frontend task is not "started" until its `graphify query` has been run and its
   - **Validation**: `cd backend && npm run start:dev` shows successful DB connection log
   - **Risk**: Secrets leakage — keep real `.env` out of git, only commit `.env.example`.
 
-- [ ] T003 [P] Configure backend lint/format/test tooling in `backend/`
+- [X] T003 [P] Configure backend lint/format/test tooling in `backend/`
   - **Dependencies**: T001
   - **Area/Files**: `backend/.eslintrc.cjs`, `backend/.prettierrc`, `backend/jest.config.ts`
   - **Acceptance**: `npm run lint` and `npm test` run (zero tests OK) with no config errors
