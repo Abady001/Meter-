@@ -1,0 +1,13 @@
+RuleID,Rule,Enforcement Level
+R01,"Meter serial number must be UNIQUE",Database (UNIQUE constraint)
+R02,"SIM ICCID must be UNIQUE",Database (UNIQUE constraint)
+R03,"A meter can have only ONE active assignment at a time",Database (partial unique index)
+R04,"A SIM can have only ONE active meter assignment at a time",Database (partial unique index)
+R05,"Issued invoices are IMMUTABLE — corrections via InvoiceAdjustment only",Application + Database
+R06,"CustomerLedgerEntry is APPEND-ONLY — no updates or deletes",Application + Database
+R07,"Payment reversal restricted to super_admin role only",Application (RBAC)
+R08,"Oldest-due-first default payment allocation",Application (service layer)
+R09,"water_child must reference a parent_main_meter",Database (CHECK constraint)
+R10,"Invoice total = subtotal + tax; remaining = total - paid",Database (CHECK constraint)
+R11,"Sum of PaymentAllocations must equal payment amount",Application + Database
+R12,"Only valid and approved corrected readings are billable",Application (billing service)

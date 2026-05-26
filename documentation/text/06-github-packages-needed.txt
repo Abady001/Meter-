@@ -1,0 +1,223 @@
+GitHub Packages Needed — Meter Pulse
+
+All tools and packages used in this project, sourced from or available via GitHub.
+Last updated: 2026-05-26
+  2. Frameworks
+
+NestJS
+  • Version: ^10.4.x (npm), CLI 11.0.21
+  • Use: Backend modular monolith framework
+  • GitHub: https://github.com/nestjs/nest
+  • Download: npm install -g @nestjs/cli or https://www.npmjs.com/package/@nestjs/cli
+
+Next.js
+  • Version: 16.2.6
+  • Use: Frontend React framework with SSR/app-router
+  • GitHub: https://github.com/vercel/next.js
+  • Download: https://www.npmjs.com/package/next
+
+React
+  • Version: ^19.0.0
+  • Use: UI library for frontend
+  • GitHub: https://github.com/facebook/react
+  • Download: https://www.npmjs.com/package/react
+
+Tailwind CSS
+  • Version: ^4.x
+  • Use: Utility-first CSS framework
+  • GitHub: https://github.com/tailwindlabs/tailwindcss
+  • Download: https://www.npmjs.com/package/tailwindcss
+  3. Database & ORM
+
+PostgreSQL
+  • Version: 16 (Docker image: postgres:16-alpine)
+  • Use: Primary database for meterpulse / simsystem
+  • GitHub: https://github.com/postgres/postgres
+  • Download: Docker image — postgres:16-alpine
+
+Prisma
+  • Version: ^6.11.1
+  • Use: ORM, schema management, and database migrations
+  • GitHub: https://github.com/prisma/prisma
+  • Download: https://www.npmjs.com/package/prisma
+  4. Frontend Libraries
+
+TanStack React Query
+  • Version: ^5.82.0
+  • Use: Server state management, API data fetching and caching
+  • GitHub: https://github.com/TanStack/query
+  • Download: https://www.npmjs.com/package/@tanstack/react-query
+
+Zustand
+  • Version: ^5.0.6
+  • Use: Lightweight client-side state management
+  • GitHub: https://github.com/pmndrs/zustand
+  • Download: https://www.npmjs.com/package/zustand
+
+shadcn/ui
+  • Version: Latest (components copied, not a package)
+  • Use: Component library built on Radix UI primitives
+  • GitHub: https://github.com/shadcn-ui/ui
+  • Download: npx shadcn@latest add <component>
+
+next-auth
+  • Version: ^4.24.11
+  • Use: Authentication library for Next.js
+  • GitHub: https://github.com/nextauthjs/next-auth
+  • Download: https://www.npmjs.com/package/next-auth
+
+Zod
+  • Version: ^4.0.2
+  • Use: Schema validation (frontend forms + API validation)
+  • GitHub: https://github.com/colinhacks/zod
+  • Download: https://www.npmjs.com/package/zod
+
+react-hook-form
+  • Version: ^7.60.0
+  • Use: Performant form handling with validation
+  • GitHub: https://github.com/react-hook-form/react-hook-form
+  • Download: https://www.npmjs.com/package/react-hook-form
+
+Recharts
+  • Version: ^2.15.4
+  • Use: Charting and data visualization
+  • GitHub: https://github.com/recharts/recharts
+  • Download: https://www.npmjs.com/package/recharts
+
+Framer Motion
+  • Version: ^12.23.2
+  • Use: Animation library for React
+  • GitHub: https://github.com/framer/motion
+  • Download: https://www.npmjs.com/package/framer-motion
+
+lucide-react
+  • Version: ^0.525.0
+  • Use: Icon library for UI components
+  • GitHub: https://github.com/lucide-icons/lucide
+  • Download: https://www.npmjs.com/package/lucide-react
+
+next-themes
+  • Version: ^0.4.6
+  • Use: Theme management (dark/light mode)
+  • GitHub: https://github.com/pacocoursey/next-themes
+  • Download: https://www.npmjs.com/package/next-themes
+
+sonner
+  • Version: ^2.0.6
+  • Use: Toast notifications
+  • GitHub: https://github.com/emilkowalski/sonner
+  • Download: https://www.npmjs.com/package/sonner
+
+@dnd-kit
+  • Version: ^6.3.1 / ^10.0.0
+  • Use: Drag and drop toolkit
+  • GitHub: https://github.com/clauderic/dnd-kit
+  • Download: https://www.npmjs.com/package/@dnd-kit/core
+  5. Backend Libraries
+
+class-validator / class-transformer
+  • Version: Latest
+  • Use: DTO validation and transformation for NestJS
+  • GitHub: https://github.com/typestack/class-validator / https://github.com/typestack/class-transformer
+  • Download: https://www.npmjs.com/package/class-validator
+
+Passport.js + passport-jwt
+  • Version: Latest
+  • Use: Authentication strategies for NestJS JWT auth
+  • GitHub: https://github.com/jaredhanson/passport
+  • Download: https://www.npmjs.com/package/passport
+
+@nestjs/config
+  • Version: ^3.3.0
+  • Use: Environment configuration management
+  • GitHub: https://github.com/nestjs/config
+  • Download: https://www.npmjs.com/package/@nestjs/config
+
+@nestjs/jwt / @nestjs/passport / @nestjs/swagger
+  • Use: JWT auth, Passport integration, OpenAPI documentation
+  • GitHub: https://github.com/nestjs/jwt, https://github.com/nestjs/passport, https://github.com/nestjs/swagger
+  • Download: Available via npm
+  6. Testing
+
+Playwright
+  • Version: ^1.60.0
+  • Use: E2E smoke tests for frontend (all pages traversal)
+  • GitHub: https://github.com/microsoft/playwright
+  • Download: https://www.npmjs.com/package/playwright
+
+Jest
+  • Version: ^29.7.0
+  • Use: Unit and integration tests for backend
+  • GitHub: https://github.com/jestjs/jest
+  • Download: https://www.npmjs.com/package/jest
+
+Supertest
+  • Version: Latest
+  • Use: HTTP contract testing for NestJS APIs
+  • GitHub: https://github.com/ladjs/supertest
+  • Download: https://www.npmjs.com/package/supertest
+  7. Linting & Formatting
+
+ESLint
+  • Version: 8.57.1 (backend) / ^9.x (frontend)
+  • Use: Code linting and static analysis
+  • GitHub: https://github.com/eslint/eslint
+  • Download: https://www.npmjs.com/package/eslint
+
+Prettier
+  • Version: ^3.8.3
+  • Use: Code formatting
+  • GitHub: https://github.com/prettier/prettier
+  • Download: https://www.npmjs.com/package/prettier
+  8. Infrastructure
+
+Docker
+  • Version: 29.4.2
+  • Use: Container runtime for local PostgreSQL database
+  • GitHub: https://github.com/docker/docker
+  • Download: https://docs.docker.com/desktop/install/windows-install/
+
+Docker Compose
+  • Version: v5.1.3
+  • Use: Container orchestration for multi-service setup
+  • GitHub: https://github.com/docker/compose
+  • Download: Bundled with Docker Desktop
+  9. Spec Workflow & Knowledge Tools
+
+Speckit (specify CLI)
+  • Version: v0.8.13
+  • Use: Specification-driven development workflow — creates specs, plans, tasks, and tracks implementation
+  • GitHub: https://github.com/github/spec-kit
+  • Install: uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.13
+
+Graphify
+  • Version: 0.8.18
+  • Use: AI coding assistant skill — builds knowledge graph from codebase for querying instead of grepping
+  • GitHub: https://github.com/safishamsi/graphify
+  • Install: pip install graphifyy (PyPI package name graphifyy, CLI command graphify)
+
+uv
+  • Version: 0.10.8
+  • Use: Python package and project manager (used to install Speckit, Graphify, and manage Python versions)
+  • GitHub: https://github.com/astral-sh/uv
+  • Download: https://docs.astral.sh/uv/
+  10. Package Managers (via npm registry, not GitHub)
+
+  Tool  |  Version  |  Use  
+
+  npm  |  11.12.1  |  Backend package management  
+  Bun  |  1.3.14  |  Frontend package management (also a runtime)  
+
+Summary: What needs to be installed from scratch
+
+If starting from a clean machine, install in this order:
+  1. Node.js v24.15.0 — runtime foundation
+  2. Docker Desktop — PostgreSQL container
+  3. Bun v1.3.14 — frontend runtime
+  4. Python 3.12+ (via uv python install 3.12) — for Speckit & Graphify
+  5. Speckit: uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.13
+  6. Graphify: uv tool install graphifyy then graphify install --platform opencode
+  7. Frontend: cd Frontend && npm install (or bun install)
+  8. Backend: cd backend && npm install
+  9. Docker: cd backend && docker compose up -d db (for PostgreSQL)
+  10. Playwright: cd Frontend && npx playwright install chromium

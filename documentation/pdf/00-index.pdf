@@ -1,0 +1,127 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 0 R 5 0 R 7 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 2682 >>
+stream
+BT /F2 14 Tf 50 722 Td (00-index) Tj ET
+BT /F1 9 Tf 50 698 Td (Documentation Index — Meter Pulse) Tj ET
+BT /F1 9 Tf 50 662 Td (Complete index of all documentation files with their functions.) Tj ET
+BT /F1 9 Tf 50 638 Td (Last updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 602 Td (00  |  00-index.md  |  This file — index of all documentation with descriptions) Tj ET
+BT /F1 9 Tf 50 590 Td (and functions  ) Tj ET
+BT /F1 9 Tf 50 566 Td (01  |  01-conversation-log.md  |  Complete record of all prompts, responses, and) Tj ET
+BT /F1 9 Tf 50 554 Td (decisions during the initial project setup session on 2026-05-26  ) Tj ET
+BT /F1 9 Tf 50 530 Td (02  |  02-memory-files.md  |  Documents all agent memory files \(AGENTS.md\),) Tj ET
+BT /F1 9 Tf 50 518 Td (Speckit constitution, skill definitions \(.agents/skills/\), OpenCode config, and) Tj ET
+BT /F1 9 Tf 50 506 Td (Graphify knowledge graph  ) Tj ET
+BT /F1 9 Tf 50 482 Td (03  |  03-database-schema-overview.md  |  Complete entity relationship model: 20) Tj ET
+BT /F1 9 Tf 50 470 Td (tables with columns, types, constraints, foreign keys, state transitions,) Tj ET
+BT /F1 9 Tf 50 458 Td (derived views, and business rules  ) Tj ET
+BT /F1 9 Tf 50 434 Td (04  |  04-audit-log.csv  |  Timestamped log of every action taken during setup:) Tj ET
+BT /F1 9 Tf 50 422 Td (installations, merges, file creations, verifications — 35+ entries  ) Tj ET
+BT /F1 9 Tf 50 398 Td (05  |  05-programming-languages.md  |  All programming languages used) Tj ET
+BT /F1 9 Tf 50 386 Td (\(TypeScript, JavaScript, CSS, SQL, YAML, Markdown, JSON, PowerShell\) and) Tj ET
+BT /F1 9 Tf 50 374 Td (planned, with version strategy  ) Tj ET
+BT /F1 9 Tf 50 338 Td (Tools & Dependencies) Tj ET
+BT /F1 9 Tf 50 302 Td (#  |  File  |  Function  ) Tj ET
+BT /F1 9 Tf 50 266 Td (06  |  github-packages-needed.md  |  Markdown reference: all 30+ tools from) Tj ET
+BT /F1 9 Tf 50 254 Td (GitHub with current versions, purposes, and download links — organized by) Tj ET
+BT /F1 9 Tf 50 242 Td (category \(runtimes, frameworks, database, frontend libs, backend libs, testing,) Tj ET
+BT /F1 9 Tf 50 230 Td (linting, infrastructure, spec tools\)  ) Tj ET
+BT /F1 9 Tf 50 206 Td (07  |  github-packages-needed.txt  |  Plain-text compact version of the above) Tj ET
+BT /F1 9 Tf 50 194 Td (for quick terminal reference  ) Tj ET
+BT /F1 9 Tf 50 170 Td (08  |  required-apps.txt  |  All applications, runtimes, frameworks, and tools) Tj ET
+BT /F1 9 Tf 50 158 Td (needed across the full project lifecycle  ) Tj ET
+BT /F1 9 Tf 50 122 Td (External Spec Files \(referenced, not duplicated\)) Tj ET
+BT /F1 9 Tf 50 86 Td (These files define the project requirements and live in their original) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 2351 >>
+stream
+BT /F1 9 Tf 50 722 Td (locations:) Tj ET
+BT /F1 9 Tf 50 686 Td (File  |  Location  |  Function  ) Tj ET
+BT /F1 9 Tf 50 650 Td (Feature Spec  |  specs/001-metering-billing-platform/spec.md  |  19 functional) Tj ET
+BT /F1 9 Tf 50 638 Td (requirements, 3 user stories, clarified decisions  ) Tj ET
+BT /F1 9 Tf 50 614 Td (Implementation Plan  |  specs/001-metering-billing-platform/plan.md  | ) Tj ET
+BT /F1 9 Tf 50 602 Td (Architecture, data model plan, API contract, testing strategy  ) Tj ET
+BT /F1 9 Tf 50 578 Td (Research Decisions  |  specs/001-metering-billing-platform/research.md  |  13) Tj ET
+BT /F1 9 Tf 50 566 Td (architectural decisions with rationale  ) Tj ET
+BT /F1 9 Tf 50 542 Td (Data Model  |  specs/001-metering-billing-platform/data-model.md  |  Full schema) Tj ET
+BT /F1 9 Tf 50 530 Td (definition \(source for 03-database-schema-overview.md\)  ) Tj ET
+BT /F1 9 Tf 50 506 Td (Task List  |  specs/001-metering-billing-platform/tasks.md  |  85 tasks) Tj ET
+BT /F1 9 Tf 50 494 Td (\(T001–T085\) across 6 phases  ) Tj ET
+BT /F1 9 Tf 50 470 Td (API Contract  | ) Tj ET
+BT /F1 9 Tf 50 458 Td (specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml  |  OpenAPI) Tj ET
+BT /F1 9 Tf 50 446 Td (3.1 specification, 13 endpoints  ) Tj ET
+BT /F1 9 Tf 50 422 Td (PRD  |  meteringsystemprd_brainstorm.md  |  Original product requirements) Tj ET
+BT /F1 9 Tf 50 410 Td (document  ) Tj ET
+BT /F1 9 Tf 50 374 Td (File Dependency Map) Tj ET
+BT /F1 9 Tf 50 338 Td (documentation/) Tj ET
+BT /F1 9 Tf 50 314 Td (├── 00-index.md                  ← Entry point — start here) Tj ET
+BT /F1 9 Tf 50 290 Td (├── 01-conversation-log.md       ← Full session history) Tj ET
+BT /F1 9 Tf 50 266 Td (├── 02-memory-files.md           ← Agent config & skill files) Tj ET
+BT /F1 9 Tf 50 242 Td (├── 03-database-schema-overview.md ← Data model reference) Tj ET
+BT /F1 9 Tf 50 218 Td (├── 04-audit-log.csv             ← Every action recorded) Tj ET
+BT /F1 9 Tf 50 194 Td (├── 05-programming-languages.md  ← Tech stack documentation) Tj ET
+BT /F1 9 Tf 50 170 Td (├── github-packages-needed.md    ← GitHub tools \(detailed\)) Tj ET
+BT /F1 9 Tf 50 146 Td (├── github-packages-needed.txt   ← GitHub tools \(compact\)) Tj ET
+BT /F1 9 Tf 50 122 Td (└── required-apps.txt            ← All required applications) Tj ET
+BT /F1 9 Tf 50 86 Td (How to Use These Files) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 804 >>
+stream
+BT /F1 9 Tf 50 710 Td (If you want to...  |  Read this file  ) Tj ET
+BT /F1 9 Tf 50 674 Td (Understand what happened during setup  |  01-conversation-log.md  ) Tj ET
+BT /F1 9 Tf 50 650 Td (See what was installed and when  |  04-audit-log.csv  ) Tj ET
+BT /F1 9 Tf 50 626 Td (Find a tool's version and download link  |  github-packages-needed.md  ) Tj ET
+BT /F1 9 Tf 50 602 Td (Understand the database structure  |  03-database-schema-overview.md  ) Tj ET
+BT /F1 9 Tf 50 578 Td (Know which languages we use  |  05-programming-languages.md  ) Tj ET
+BT /F1 9 Tf 50 554 Td (Configure a new agent session  |  02-memory-files.md → then AGENTS.md  ) Tj ET
+BT /F1 9 Tf 50 530 Td (Install everything from scratch  |  required-apps.txt +) Tj ET
+BT /F1 9 Tf 50 518 Td (github-packages-needed.md install order) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000262 00000 n 
+0000002996 00000 n 
+0000003132 00000 n 
+0000005535 00000 n 
+0000005671 00000 n 
+0000006526 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+6663
+%%EOF

@@ -1,0 +1,58 @@
+Documentation Index — Meter Pulse
+
+Complete index of all documentation files with their functions.
+Last updated: 2026-05-26
+
+  00  |  00-index.md  |  This file — index of all documentation with descriptions and functions  
+  01  |  01-conversation-log.md  |  Complete record of all prompts, responses, and decisions during the initial project setup session on 2026-05-26  
+  02  |  02-memory-files.md  |  Documents all agent memory files (AGENTS.md), Speckit constitution, skill definitions (.agents/skills/), OpenCode config, and Graphify knowledge graph  
+  03  |  03-database-schema-overview.md  |  Complete entity relationship model: 20 tables with columns, types, constraints, foreign keys, state transitions, derived views, and business rules  
+  04  |  04-audit-log.csv  |  Timestamped log of every action taken during setup: installations, merges, file creations, verifications — 35+ entries  
+  05  |  05-programming-languages.md  |  All programming languages used (TypeScript, JavaScript, CSS, SQL, YAML, Markdown, JSON, PowerShell) and planned, with version strategy  
+
+Tools & Dependencies
+
+  #  |  File  |  Function  
+
+  06  |  github-packages-needed.md  |  Markdown reference: all 30+ tools from GitHub with current versions, purposes, and download links — organized by category (runtimes, frameworks, database, frontend libs, backend libs, testing, linting, infrastructure, spec tools)  
+  07  |  github-packages-needed.txt  |  Plain-text compact version of the above for quick terminal reference  
+  08  |  required-apps.txt  |  All applications, runtimes, frameworks, and tools needed across the full project lifecycle  
+
+External Spec Files (referenced, not duplicated)
+
+These files define the project requirements and live in their original locations:
+
+  File  |  Location  |  Function  
+
+  Feature Spec  |  specs/001-metering-billing-platform/spec.md  |  19 functional requirements, 3 user stories, clarified decisions  
+  Implementation Plan  |  specs/001-metering-billing-platform/plan.md  |  Architecture, data model plan, API contract, testing strategy  
+  Research Decisions  |  specs/001-metering-billing-platform/research.md  |  13 architectural decisions with rationale  
+  Data Model  |  specs/001-metering-billing-platform/data-model.md  |  Full schema definition (source for 03-database-schema-overview.md)  
+  Task List  |  specs/001-metering-billing-platform/tasks.md  |  85 tasks (T001–T085) across 6 phases  
+  API Contract  |  specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml  |  OpenAPI 3.1 specification, 13 endpoints  
+  PRD  |  meteringsystemprd_brainstorm.md  |  Original product requirements document  
+
+File Dependency Map
+
+documentation/
+├── 00-index.md                  ← Entry point — start here
+├── 01-conversation-log.md       ← Full session history
+├── 02-memory-files.md           ← Agent config & skill files
+├── 03-database-schema-overview.md ← Data model reference
+├── 04-audit-log.csv             ← Every action recorded
+├── 05-programming-languages.md  ← Tech stack documentation
+├── github-packages-needed.md    ← GitHub tools (detailed)
+├── github-packages-needed.txt   ← GitHub tools (compact)
+└── required-apps.txt            ← All required applications
+
+How to Use These Files
+
+  If you want to...  |  Read this file  
+
+  Understand what happened during setup  |  01-conversation-log.md  
+  See what was installed and when  |  04-audit-log.csv  
+  Find a tool's version and download link  |  github-packages-needed.md  
+  Understand the database structure  |  03-database-schema-overview.md  
+  Know which languages we use  |  05-programming-languages.md  
+  Configure a new agent session  |  02-memory-files.md → then AGENTS.md  
+  Install everything from scratch  |  required-apps.txt + github-packages-needed.md install order

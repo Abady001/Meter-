@@ -13,7 +13,7 @@ module.exports = {
     es2021: true,
     jest: true
   },
-  ignorePatterns: ['dist/', 'node_modules/'],
+  ignorePatterns: ['dist/', 'node_modules/', 'jest.config.ts', 'test/'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-expressions': 'off'

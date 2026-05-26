@@ -1,0 +1,14 @@
+#,Date,Hash,Author,Message,Phase
+1,2026-05-25 16:54,82e7fc6,(baseline),initial project baseline,Setup
+2,2026-05-25 16:59,b3386ee,(baseline),chore: refresh Graphify maps,Setup
+3,2026-05-25 17:23,bbe05db,(baseline),"T001: NestJS scaffold",Phase 1
+4,2026-05-25 17:23,7f01e4e,(baseline),"docs: mark T001 complete",Phase 1
+5,2026-05-25 17:25,111a9c0,(baseline),"chore: ignore Graphify root marker",Setup
+6,2026-05-25 17:44,81884a1,(baseline),"T002: config + PostgreSQL connection",Phase 1
+7,2026-05-25 17:59,fb979f6,(baseline),"T003: lint/format/test tooling",Phase 1
+8,2026-05-26 13:45,20e6796,Kirllos Hany,"T004: init Prisma ORM",Phase 1
+9,2026-05-26,8c03a81,Kirllos Hany,"build(backend): implement jwt auth and rbac for T009",Phase 2
+10,2026-05-26,3905f3a,Kirllos Hany,"build(backend): implement global error envelope for T006",Phase 2
+11,2026-05-26,4f12da5,Kirllos Hany,"build(backend): add correlation middleware for T007",Phase 2
+12,2026-05-26,d0d72b4,Kirllos Hany,"build(backend): implement append-only audit logging for T010",Phase 2
+13,2026-05-26,a18038f,Kirllos Hany,"build(backend): wire api versioning and openapi for T011",Phase 2

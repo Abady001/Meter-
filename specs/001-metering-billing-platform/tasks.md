@@ -74,14 +74,14 @@ A frontend task is not "started" until its `graphify query` has been run and its
   - **Validation**: `cd backend && npm run lint && npm test`
   - **Risk**: ESLint/TS version mismatch breaking CI; align with frontend toolchain versions.
 
-- [ ] T004 [P] Initialize Prisma ORM in `backend/prisma/`
+- [X] T004 [P] Initialize Prisma ORM in `backend/prisma/`
   - **Dependencies**: T002
   - **Area/Files**: `backend/prisma/schema.prisma` (datasource + generator only), `backend/src/common/database/prisma.service.ts`
   - **Acceptance**: `prisma generate` succeeds; `PrismaService` injectable; `multiSchema`/`sim_system` schema configured
   - **Validation**: `cd backend && npx prisma validate && npx prisma generate`
   - **Risk**: ORM choice locked per research Decision 3 — switching later is costly; confirm Prisma before proceeding.
 
-- [ ] T005 [P] Add local PostgreSQL via docker-compose in `backend/`
+- [X] T005 [P] Add local PostgreSQL via docker-compose in `backend/`
   - **Dependencies**: none
   - **Area/Files**: `backend/docker-compose.yml`, `backend/README.md` (DB run instructions)
   - **Acceptance**: `docker compose up -d db` exposes a reachable `meter_pulse` Postgres
@@ -98,14 +98,14 @@ A frontend task is not "started" until its `graphify query` has been run and its
 
 ### Backend cross-cutting infrastructure
 
-- [ ] T006 [P] Implement standard error envelope + global exception filter in `backend/src/common/http/`
+- [X] T006 [P] Implement standard error envelope + global exception filter in `backend/src/common/http/`
   - **Dependencies**: T001
   - **Area/Files**: `backend/src/common/http/error-envelope.ts`, `backend/src/common/http/all-exceptions.filter.ts`
   - **Acceptance**: All errors serialize to `{ code, message, details?, correlationId }` exactly matching `ErrorEnvelope` in the contract
   - **Validation**: `cd backend && npm test -- error-envelope`
   - **Risk**: Envelope drift from contract breaks frontend error parsing (FE-001); assert shape in a unit test.
 
-- [ ] T007 [P] Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
+- [X] T007 [P] Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
   - **Dependencies**: T001
   - **Area/Files**: `backend/src/common/http/correlation.middleware.ts`
   - **Acceptance**: Every request gets/propagates a `correlationId`, surfaced in responses and error envelope

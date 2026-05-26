@@ -1,0 +1,27 @@
+Git Commit Log — Meter Pulse
+
+Every commit made during this project, recorded with timestamp, author, description, and files changed.
+Updated automatically after each task completion.
+Started: 2026-05-26
+
+  Commit style  |  TXXX: short description  
+  Author  |  Kirllos Hany (kirllos.hany@epower.com.eg)  
+  When  |  After every completed task  
+  Push  |  Only after user approval ("go")  
+  Token  |  Never used without explicit permission  
+  Before commit  |  git status checked, only intended files staged  
+  Secrets  |  Never commit .env, tokens, *.db, node_modules/, .next/  
+
+Commits
+
+  #  |  Date/Time  |  Hash  |  Author  |  Message  |  Files Changed  |  Phase  
+
+  1  |  2026-05-25 16:54  |  82e7fc6  |  (baseline)  |  initial project baseline  |  —  |  Setup  
+  2  |  2026-05-25 16:59  |  b3386ee  |  (baseline)  |  chore: refresh Graphify maps  |  —  |  Setup  
+  3  |  2026-05-25 17:23  |  bbe05db  |  (baseline)  |  T001: NestJS scaffold  |  —  |  Phase 1  
+  4  |  2026-05-25 17:23  |  7f01e4e  |  (baseline)  |  docs: mark T001 complete  |  —  |  Phase 1  
+  5  |  2026-05-25 17:25  |  111a9c0  |  (baseline)  |  chore: ignore Graphify root marker  |  —  |  Setup  
+  6  |  2026-05-25 17:44  |  81884a1  |  (baseline)  |  T002: config + PostgreSQL connection  |  —  |  Phase 1  
+  7  |  2026-05-25 17:59  |  fb979f6  |  (baseline)  |  T003: lint/format/test tooling  |  —  |  Phase 1  
+
+*Future commits will be appended here automatically after each task.*

@@ -1,0 +1,124 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 0 R 5 0 R 7 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 1946 >>
+stream
+BT /F2 14 Tf 50 722 Td (08-required-apps) Tj ET
+BT /F1 9 Tf 50 698 Td (============================================================) Tj ET
+BT /F1 9 Tf 50 674 Td (Meter Pulse — Required Applications & Tools) Tj ET
+BT /F1 9 Tf 50 650 Td (============================================================) Tj ET
+BT /F1 9 Tf 50 626 Td (This file lists every application used across the full project) Tj ET
+BT /F1 9 Tf 50 602 Td (\(frontend + backend + infrastructure\).) Tj ET
+BT /F1 9 Tf 50 578 Td (Last updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 554 Td (============================================================) Tj ET
+BT /F1 9 Tf 50 518 Td (RUNTIMES) Tj ET
+BT /F1 9 Tf 50 494 Td (Node.js        v24.15.0   JavaScript runtime \(backend + frontend build\)) Tj ET
+BT /F1 9 Tf 50 470 Td (Bun            v1.3.14    JavaScript runtime & package manager \(frontend) Tj ET
+BT /F1 9 Tf 50 458 Td (dev/build/test\)) Tj ET
+BT /F1 9 Tf 50 422 Td (PACKAGE MANAGERS) Tj ET
+BT /F1 9 Tf 50 398 Td (npm            v11.12.1   Package manager \(backend dependencies\)) Tj ET
+BT /F1 9 Tf 50 374 Td (Bun            v1.3.14    Package manager \(frontend dependencies\)) Tj ET
+BT /F1 9 Tf 50 338 Td (FRAMEWORKS) Tj ET
+BT /F1 9 Tf 50 314 Td (NestJS         v11.x      Backend framework \(modular monolith\)) Tj ET
+BT /F1 9 Tf 50 290 Td (Next.js        v16.x      Frontend framework \(React\)) Tj ET
+BT /F1 9 Tf 50 254 Td (DATABASE) Tj ET
+BT /F1 9 Tf 50 230 Td (PostgreSQL     via Docker  Primary database \(meterpulse DB, simsystem schema\)) Tj ET
+BT /F1 9 Tf 50 206 Td (Prisma         v6.x       ORM & migrations \(backend\)) Tj ET
+BT /F1 9 Tf 50 182 Td (SQLite         via Prisma  Local dev database \(frontend only, placeholder\)) Tj ET
+BT /F1 9 Tf 50 146 Td (INFRASTRUCTURE) Tj ET
+BT /F1 9 Tf 50 122 Td (Docker         v29.4.2    Container runtime \(local PostgreSQL\)) Tj ET
+BT /F1 9 Tf 50 98 Td (Docker Compose v5.1.3     Container orchestration \(DB service\)) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 1880 >>
+stream
+BT /F1 9 Tf 50 710 Td (TESTING) Tj ET
+BT /F1 9 Tf 50 686 Td (Jest                     Unit & integration tests \(backend\)) Tj ET
+BT /F1 9 Tf 50 662 Td (Supertest                HTTP contract tests \(backend\)) Tj ET
+BT /F1 9 Tf 50 638 Td (Playwright               E2E smoke tests \(frontend\)) Tj ET
+BT /F1 9 Tf 50 602 Td (LINTING & FORMATTING) Tj ET
+BT /F1 9 Tf 50 578 Td (ESLint         v9.x       Code linting \(frontend + backend\)) Tj ET
+BT /F1 9 Tf 50 554 Td (Prettier                 Code formatting \(backend\)) Tj ET
+BT /F1 9 Tf 50 518 Td (FRONTEND \(via package.json — auto-installed\)) Tj ET
+BT /F1 9 Tf 50 494 Td (React          v19.x      UI library) Tj ET
+BT /F1 9 Tf 50 470 Td (TypeScript     v5.x       Type system) Tj ET
+BT /F1 9 Tf 50 446 Td (Tailwind CSS   v4.x       Styling framework) Tj ET
+BT /F1 9 Tf 50 422 Td (shadcn/ui                Component library) Tj ET
+BT /F1 9 Tf 50 398 Td (Zustand                  State management) Tj ET
+BT /F1 9 Tf 50 374 Td (TanStack React Query     Server state / API hooks) Tj ET
+BT /F1 9 Tf 50 350 Td (react-hook-form          Form handling) Tj ET
+BT /F1 9 Tf 50 326 Td (Zod                      Schema validation) Tj ET
+BT /F1 9 Tf 50 302 Td (Recharts                 Charting) Tj ET
+BT /F1 9 Tf 50 278 Td (Framer Motion            Animations) Tj ET
+BT /F1 9 Tf 50 254 Td (next-auth    v4.x        Authentication) Tj ET
+BT /F1 9 Tf 50 230 Td (next-intl                Internationalization) Tj ET
+BT /F1 9 Tf 50 206 Td (lucide-react             Icons) Tj ET
+BT /F1 9 Tf 50 182 Td (sonner                   Toast notifications) Tj ET
+BT /F1 9 Tf 50 146 Td (BACKEND \(to be installed via npm\)) Tj ET
+BT /F1 9 Tf 50 122 Td (@nestjs/core             NestJS core) Tj ET
+BT /F1 9 Tf 50 98 Td (@nestjs/common           NestJS common utilities) Tj ET
+BT /F1 9 Tf 50 74 Td (@nestjs/platform-express NestJS Express adapter) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 1120 >>
+stream
+BT /F1 9 Tf 50 710 Td (@nestjs/config           Environment config) Tj ET
+BT /F1 9 Tf 50 686 Td (@nestjs/jwt              JWT authentication) Tj ET
+BT /F1 9 Tf 50 662 Td (@nestjs/passport         Passport integration) Tj ET
+BT /F1 9 Tf 50 638 Td (@nestjs/swagger          OpenAPI documentation) Tj ET
+BT /F1 9 Tf 50 614 Td (class-validator          DTO validation) Tj ET
+BT /F1 9 Tf 50 590 Td (class-transformer        Data transformation) Tj ET
+BT /F1 9 Tf 50 566 Td (passport + passport-jwt  Authentication strategies) Tj ET
+BT /F1 9 Tf 50 542 Td (@prisma/client           Database client) Tj ET
+BT /F1 9 Tf 50 518 Td (reflect-metadata        TypeScript decorators) Tj ET
+BT /F1 9 Tf 50 494 Td (rxjs                     Reactive extensions) Tj ET
+BT /F1 9 Tf 50 458 Td (KNOWLEDGE GRAPH) Tj ET
+BT /F1 9 Tf 50 434 Td (Graphify                 Frontend code knowledge graph \(plugin at) Tj ET
+BT /F1 9 Tf 50 422 Td (Frontend/.opencode/plugins/graphify.js\)) Tj ET
+BT /F1 9 Tf 50 386 Td (SPEC WORKFLOW) Tj ET
+BT /F1 9 Tf 50 362 Td (Speckit                  Specification workflow system \(via .specify/ directory\)) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000262 00000 n 
+0000002260 00000 n 
+0000002396 00000 n 
+0000004328 00000 n 
+0000004464 00000 n 
+0000005636 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+5773
+%%EOF

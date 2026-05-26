@@ -1,0 +1,94 @@
+Memory & Configuration Files — Meter Pulse
+
+All agent memory, skill definitions, and configuration files used by OpenCode, Speckit, and Graphify.
+Last updated: 2026-05-26
+  2. AGENTS.md (Frontend)
+  • Path: /Frontend/AGENTS.md
+  • Function: Graphify-specific instructions for frontend work — every frontend ticket must start with graphify query.
+  • Used by: OpenCode agent when working on frontend tasks
+  3. Speckit Constitution (Template)
+  • Path: .specify/memory/constitution.md
+  • Function: Project constitution defining core principles, governance rules, and quality gates. Currently a template with placeholder markers — must be ratified before implementation closeout (T085).
+  • Status: ⚠️ Template — not yet ratified
+  • Required fields: Core Principles (4+), Governance rules, Version, Ratification date
+  4. Speckit Feature Configuration
+  • Path: .specify/feature.json
+  • Function: Maps the active feature directory: specs/001-metering-billing-platform
+  • Used by: Speckit workflow to locate spec files
+  5. Speckit Integration Config
+  • Path: .specify/integration.json
+  • Function: Speckit integration settings — currently configured for codex integration, version 0.8.13
+  6. Agent Skills (.agents/skills/)
+
+  Skill File  |  Function  
+
+  speckit-analyze/SKILL.md  |  Analyze specifications for completeness and quality  
+  speckit-checklist/SKILL.md  |  Generate and validate specification checklists  
+  speckit-clarify/SKILL.md  |  Identify and resolve ambiguous requirements  
+  speckit-constitution/SKILL.md  |  Create and manage project constitution  
+  speckit-implement/SKILL.md  |  Guide implementation of planned tasks  
+  speckit-plan/SKILL.md  |  Generate implementation plans from specs  
+  speckit-specify/SKILL.md  |  Create feature specifications  
+  speckit-tasks/SKILL.md  |  Break plans into actionable tasks  
+  speckit-taskstoissues/SKILL.md  |  Convert tasks to GitHub issues  
+  7. OpenCode Configuration
+
+  Path  |  Function  
+
+  .opencode/commands/speckit.constitution.md  |  OpenCode command for constitution workflow  
+  Frontend/.opencode/opencode.json  |  OpenCode plugin config — registers Graphify plugin  
+  Frontend/.opencode/plugins/graphify.js  |  Graphify plugin — injects knowledge graph reminders before bash calls  
+  8. Speckit Templates (.specify/templates/)
+
+  Template  |  Used For  
+
+  checklist-template.md  |  Specification quality checklists  
+  constitution-template.md  |  Project constitution documents  
+  plan-template.md  |  Implementation plans  
+  spec-template.md  |  Feature specifications  
+  tasks-template.md  |  Task breakdown lists  
+  9. Speckit Workflows
+
+  Path  |  Function  
+
+  .specify/workflows/workflow-registry.json  |  Registers available workflows (Speckit: specify → plan → tasks → implement)  
+  .specify/workflows/speckit/workflow.yml  |  Full SDD cycle workflow definition with review gates  
+  10. Speckit Scripts
+
+  Script  |  Function  
+
+  check-prerequisites.sh  |  Verify environment meets requirements  
+  common.sh  |  Shared utility functions  
+  create-new-feature.sh  |  Bootstrap new feature directory  
+  setup-plan.sh  |  Initialize plan artifacts  
+  setup-tasks.sh  |  Initialize task artifacts  
+  11. Graphify Knowledge Graph
+  • Path: Frontend/graphify-out/
+  • Function: Stores auto-generated knowledge graph of the codebase (AST extraction + community detection)
+  • Key files:
+  • graph.json — Queryable graph data (GraphRAG-ready JSON)
+  • graph.html — Interactive HTML visualization
+  • GRAPH_REPORT.md — Plain-language architecture report
+  • manifest.json — Graph metadata and versioning
+
+File Dependency Diagram
+
+.specify/memory/constitution.md
+  ├── Defines quality gates for all work
+  ├── Referenced by plan.md (Gate 4)
+  └── Must be ratified before T085 closeout
+
+.agents/skills/*.md
+  ├── Provide slash commands (/speckit-*)
+  ├── Used by OpenCode to run Speckit workflow
+  └── Invoked via .specify/workflows/speckit/workflow.yml
+
+AGENTS.md (root)
+  ├── Loaded by OpenCode at session start
+  ├── Points to specs/001-metering-billing-platform/plan.md
+  └── Contains project-specific agent instructions
+
+Frontend/AGENTS.md
+  ├── Loaded when working in Frontend/
+  ├── Enforces Graphify-first rule for frontend tasks
+  └── References Frontend/graphify-out/ knowledge graph

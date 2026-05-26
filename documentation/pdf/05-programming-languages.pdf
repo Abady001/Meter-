@@ -1,0 +1,122 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 0 R 5 0 R 7 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 2508 >>
+stream
+BT /F2 14 Tf 50 722 Td (05-programming-languages) Tj ET
+BT /F1 9 Tf 50 698 Td (Programming Languages — Meter Pulse) Tj ET
+BT /F1 9 Tf 50 662 Td (All programming languages used and planned across the full project.) Tj ET
+BT /F1 9 Tf 50 638 Td (Last updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 602 Td (TypeScript  |  ^5.x  |  Frontend \(Frontend/\) + Backend \(backend/\)  |  Primary) Tj ET
+BT /F1 9 Tf 50 590 Td (language for both frontend and backend  ) Tj ET
+BT /F1 9 Tf 50 566 Td (JavaScript  |  ES2022  |  Frontend config files  |  ESLint config, Next.js) Tj ET
+BT /F1 9 Tf 50 554 Td (config, PostCSS config  ) Tj ET
+BT /F1 9 Tf 50 530 Td (CSS  |  —  |  Frontend/src/app/globals.css  |  Tailwind CSS v4 with custom dark) Tj ET
+BT /F1 9 Tf 50 518 Td (theme, glassmorphism, animations  ) Tj ET
+BT /F1 9 Tf 50 494 Td (SQL  |  —  |  Prisma schema + migrations \(backend/prisma/\)  |  Database schema) Tj ET
+BT /F1 9 Tf 50 482 Td (definition, partial unique indexes, derived views  ) Tj ET
+BT /F1 9 Tf 50 458 Td (YAML  |  —  | ) Tj ET
+BT /F1 9 Tf 50 446 Td (specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml  |  OpenAPI) Tj ET
+BT /F1 9 Tf 50 434 Td (3.1 API contract definition  ) Tj ET
+BT /F1 9 Tf 50 410 Td (Markdown  |  —  |  specs/, documentation/, AGENTS.md  |  Documentation,) Tj ET
+BT /F1 9 Tf 50 398 Td (specifications, agent instructions  ) Tj ET
+BT /F1 9 Tf 50 374 Td (JSON  |  —  |  package.json, tsconfig.json, .specify/*.json  |  Configuration) Tj ET
+BT /F1 9 Tf 50 362 Td (files  ) Tj ET
+BT /F1 9 Tf 50 338 Td (PowerShell  |  5.1  |  .specify/scripts/  |  Speckit automation scripts) Tj ET
+BT /F1 9 Tf 50 326 Td (\(Windows\)  ) Tj ET
+BT /F1 9 Tf 50 302 Td (Bash  |  —  |  .specify/scripts/bash/  |  Speckit automation scripts) Tj ET
+BT /F1 9 Tf 50 290 Td (\(Linux/macOS\)  ) Tj ET
+BT /F1 9 Tf 50 266 Td (MJS  |  —  |  Frontend/eslint.config.mjs, postcss.config.mjs, next.config.ts  | ) Tj ET
+BT /F1 9 Tf 50 254 Td (Module-based configuration files  ) Tj ET
+BT /F1 9 Tf 50 218 Td (Planned \(to be implemented\)) Tj ET
+BT /F1 9 Tf 50 182 Td (Language  |  Where  |  Purpose  ) Tj ET
+BT /F1 9 Tf 50 146 Td (TypeScript  |  backend/src/  |  All NestJS modules: auth, projects, customers,) Tj ET
+BT /F1 9 Tf 50 134 Td (meters, SIMs, readings, billing, payments, reports, audit  ) Tj ET
+BT /F1 9 Tf 50 110 Td (SQL  |  backend/prisma/migrations/  |  Database migrations for all 20 entities  ) Tj ET
+BT /F1 9 Tf 50 86 Td (YAML  |  backend/  |  Docker Compose configuration \(T005\)  ) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 2180 >>
+stream
+BT /F1 9 Tf 50 698 Td (Language Version Strategy) Tj ET
+BT /F1 9 Tf 50 662 Td (Component  |  Strategy  ) Tj ET
+BT /F1 9 Tf 50 626 Td (Frontend TypeScript  |  Uses tsconfig.json in Frontend/ — strict mode, ES2017) Tj ET
+BT /F1 9 Tf 50 614 Td (target, bundler module resolution  ) Tj ET
+BT /F1 9 Tf 50 590 Td (Backend TypeScript  |  Uses tsconfig.json in backend/ — strict mode, ES2022) Tj ET
+BT /F1 9 Tf 50 578 Td (target, commonjs module \(NestJS standard\)  ) Tj ET
+BT /F1 9 Tf 50 554 Td (Node.js  |  Engine pinned to >=20 in backend package.json — matches frontend's) Tj ET
+BT /F1 9 Tf 50 542 Td (Node version requirements  ) Tj ET
+BT /F1 9 Tf 50 506 Td (Why TypeScript Everywhere?) Tj ET
+BT /F1 9 Tf 50 470 Td (Reason  |  Detail  ) Tj ET
+BT /F1 9 Tf 50 434 Td (Type safety  |  Catches assignment/billing/ledger errors at compile time —) Tj ET
+BT /F1 9 Tf 50 422 Td (critical for financial data  ) Tj ET
+BT /F1 9 Tf 50 398 Td (Shared types  |  Frontend types.ts enums must match backend Prisma schema enums ) Tj ET
+BT /F1 9 Tf 50 374 Td (NestJS native  |  NestJS is built for TypeScript with decorator support  ) Tj ET
+BT /F1 9 Tf 50 350 Td (Next.js native  |  Next.js v16 has first-class TypeScript support  ) Tj ET
+BT /F1 9 Tf 50 326 Td (Graphify support  |  Graphify parses TypeScript AST for knowledge graph) Tj ET
+BT /F1 9 Tf 50 314 Td (construction  ) Tj ET
+BT /F1 9 Tf 50 278 Td (Files That Define Language Configuration) Tj ET
+BT /F1 9 Tf 50 242 Td (File  |  Language  |  What It Configures  ) Tj ET
+BT /F1 9 Tf 50 206 Td (Frontend/tsconfig.json  |  TypeScript  |  Frontend compiler options, paths,) Tj ET
+BT /F1 9 Tf 50 194 Td (strict mode  ) Tj ET
+BT /F1 9 Tf 50 170 Td (backend/tsconfig.json  |  TypeScript  |  Backend compiler options, decorators,) Tj ET
+BT /F1 9 Tf 50 158 Td (commonjs output  ) Tj ET
+BT /F1 9 Tf 50 134 Td (Frontend/package.json  |  TypeScript + JS  |  Scripts, dependencies,) Tj ET
+BT /F1 9 Tf 50 122 Td (devDependencies  ) Tj ET
+BT /F1 9 Tf 50 98 Td (backend/package.json  |  TypeScript + JS  |  Scripts, dependencies, engines  ) Tj ET
+BT /F1 9 Tf 50 74 Td (Frontend/eslint.config.mjs  |  JavaScript  |  ESLint flat config for frontend  ) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 581 >>
+stream
+BT /F1 9 Tf 50 710 Td (backend/.eslintrc.cjs  |  JavaScript  |  ESLint config for backend \(CommonJS\)  ) Tj ET
+BT /F1 9 Tf 50 686 Td (Frontend/postcss.config.mjs  |  JavaScript  |  PostCSS with Tailwind CSS v4  ) Tj ET
+BT /F1 9 Tf 50 662 Td (Frontend/next.config.ts  |  TypeScript  |  Next.js v16 configuration \(standalone) Tj ET
+BT /F1 9 Tf 50 650 Td (output\)  ) Tj ET
+BT /F1 9 Tf 50 626 Td (Frontend/tailwind.config.ts  |  TypeScript  |  Tailwind CSS design tokens  ) Tj ET
+BT /F1 9 Tf 50 602 Td (Frontend/components.json  |  JSON  |  shadcn/ui component configuration) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000262 00000 n 
+0000002822 00000 n 
+0000002958 00000 n 
+0000005190 00000 n 
+0000005326 00000 n 
+0000005958 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+6095
+%%EOF

@@ -1,0 +1,40 @@
+Category,Step,Check,Result,Details
+Speckit Pre-req,1,Feature branch,PASS,On 001-metering-billing-platform
+Speckit Pre-req,2,plan.md exists,PASS,specs/001-metering-billing-platform/plan.md
+Speckit Pre-req,3,spec.md exists,PASS,specs/001-metering-billing-platform/spec.md
+Speckit Pre-req,4,tasks.md exists,PASS,specs/001-metering-billing-platform/tasks.md
+Speckit Pre-req,5,research.md exists,PASS,Available
+Speckit Pre-req,6,data-model.md exists,PASS,Available
+Speckit Pre-req,7,contracts/ exists,PASS,Available
+Speckit Pre-req,8,quickstart.md exists,PASS,Available
+Implementation,1,prisma validate,PASS,Schema is valid
+Implementation,2,prisma generate,PASS,Client v6.19.3 generated
+Implementation,3,tsc --noEmit,PASS,Exit code 0
+Implementation,4,eslint . --ext .ts,PASS,Exit code 0
+Implementation,5,Server boot,PASS,NestJS on port 3001
+Implementation,6,Health check,PASS,{"status":"ok"}
+Implementation,7,Prisma connected,PASS,[PrismaService] connected
+Implementation,8,DB validated,PASS,[DatabaseService] validated
+,,,,,
+OVERALL VERDICT,PASS,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+REUSABLE TEMPLATE,,,,,
+Task Info,TXXX,Task Name,Date,Branch:Commit
+,,,,,
+Speckit Pre-req,1,Feature branch exists,[ ] check-prerequisites.sh --json,
+Speckit Pre-req,2,plan.md exists,[ ] ,
+Speckit Pre-req,3,spec.md exists,[ ] ,
+Speckit Pre-req,4,tasks.md exists,[ ] ,
+Speckit Pre-req,5,Aux docs present,[ ] research/data-model/contracts/quickstart,
+,,,,,
+Implementation,1,prisma validate,Command: npx prisma validate,Expected: Schema valid
+Implementation,2,prisma generate,Command: npx prisma generate,Expected: Client generated
+Implementation,3,tsc build,Command: npx tsc --noEmit,Expected: Exit 0
+Implementation,4,eslint,Command: npx eslint . --ext .ts,Expected: Exit 0
+Implementation,5,Server boot,Command: nest start,Expected: Starts on :PORT
+Implementation,6,Health check,Command: curl localhost:PORT/health,Expected: {"status":"ok"}
+,,,,,
+Verdict,[PASS / FAIL],,,,

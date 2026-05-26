@@ -1,0 +1,27 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  schemas           = ["sim_system"]
+}
+
+model AuditLog {
+  id             String   @id @default(uuid()) @map("id")
+  actorId        String   @map("actor_id")
+  actorRole      String   @map("actor_role")
+  action         String   @map("action")
+  resourceType   String   @map("resource_type")
+  resourceId     String   @map("resource_id")
+  beforeState    Json?    @map("before_state")
+  afterState     Json?    @map("after_state")
+  reason         String?  @map("reason")
+  correlationId  String?  @map("correlation_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@map("audit_log")
+  @@schema("sim_system")
+}

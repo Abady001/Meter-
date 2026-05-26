@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 0 R 5 0 R 7 0 R 9 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 2116 >>
+stream
+BT /F2 14 Tf 50 722 Td (02-memory-files) Tj ET
+BT /F1 9 Tf 50 698 Td (Memory & Configuration Files — Meter Pulse) Tj ET
+BT /F1 9 Tf 50 662 Td (All agent memory, skill definitions, and configuration files used by OpenCode,) Tj ET
+BT /F1 9 Tf 50 650 Td (Speckit, and Graphify.) Tj ET
+BT /F1 9 Tf 50 626 Td (Last updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 602 Td (2. AGENTS.md \(Frontend\)) Tj ET
+BT /F1 9 Tf 50 578 Td (• Path: /Frontend/AGENTS.md) Tj ET
+BT /F1 9 Tf 50 554 Td (• Function: Graphify-specific instructions for frontend work — every frontend) Tj ET
+BT /F1 9 Tf 50 542 Td (ticket must start with graphify query.) Tj ET
+BT /F1 9 Tf 50 518 Td (• Used by: OpenCode agent when working on frontend tasks) Tj ET
+BT /F1 9 Tf 50 494 Td (3. Speckit Constitution \(Template\)) Tj ET
+BT /F1 9 Tf 50 470 Td (• Path: .specify/memory/constitution.md) Tj ET
+BT /F1 9 Tf 50 446 Td (• Function: Project constitution defining core principles, governance rules, and) Tj ET
+BT /F1 9 Tf 50 434 Td (quality gates. Currently a template with placeholder markers — must be ratified) Tj ET
+BT /F1 9 Tf 50 422 Td (before implementation closeout \(T085\).) Tj ET
+BT /F1 9 Tf 50 398 Td (• Status: ⚠️ Template — not yet ratified) Tj ET
+BT /F1 9 Tf 50 374 Td (• Required fields: Core Principles \(4+\), Governance rules, Version, Ratification) Tj ET
+BT /F1 9 Tf 50 362 Td (date) Tj ET
+BT /F1 9 Tf 50 338 Td (4. Speckit Feature Configuration) Tj ET
+BT /F1 9 Tf 50 314 Td (• Path: .specify/feature.json) Tj ET
+BT /F1 9 Tf 50 290 Td (• Function: Maps the active feature directory:) Tj ET
+BT /F1 9 Tf 50 278 Td (specs/001-metering-billing-platform) Tj ET
+BT /F1 9 Tf 50 254 Td (• Used by: Speckit workflow to locate spec files) Tj ET
+BT /F1 9 Tf 50 230 Td (5. Speckit Integration Config) Tj ET
+BT /F1 9 Tf 50 206 Td (• Path: .specify/integration.json) Tj ET
+BT /F1 9 Tf 50 182 Td (• Function: Speckit integration settings — currently configured for codex) Tj ET
+BT /F1 9 Tf 50 170 Td (integration, version 0.8.13) Tj ET
+BT /F1 9 Tf 50 146 Td (6. Agent Skills \(.agents/skills/\)) Tj ET
+BT /F1 9 Tf 50 110 Td (Skill File  |  Function  ) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 2133 >>
+stream
+BT /F1 9 Tf 50 722 Td (speckit-analyze/SKILL.md  |  Analyze specifications for completeness and quality) Tj ET
+BT /F1 9 Tf 50 698 Td (speckit-checklist/SKILL.md  |  Generate and validate specification checklists  ) Tj ET
+BT /F1 9 Tf 50 674 Td (speckit-clarify/SKILL.md  |  Identify and resolve ambiguous requirements  ) Tj ET
+BT /F1 9 Tf 50 650 Td (speckit-constitution/SKILL.md  |  Create and manage project constitution  ) Tj ET
+BT /F1 9 Tf 50 626 Td (speckit-implement/SKILL.md  |  Guide implementation of planned tasks  ) Tj ET
+BT /F1 9 Tf 50 602 Td (speckit-plan/SKILL.md  |  Generate implementation plans from specs  ) Tj ET
+BT /F1 9 Tf 50 578 Td (speckit-specify/SKILL.md  |  Create feature specifications  ) Tj ET
+BT /F1 9 Tf 50 554 Td (speckit-tasks/SKILL.md  |  Break plans into actionable tasks  ) Tj ET
+BT /F1 9 Tf 50 530 Td (speckit-taskstoissues/SKILL.md  |  Convert tasks to GitHub issues  ) Tj ET
+BT /F1 9 Tf 50 506 Td (7. OpenCode Configuration) Tj ET
+BT /F1 9 Tf 50 470 Td (Path  |  Function  ) Tj ET
+BT /F1 9 Tf 50 434 Td (.opencode/commands/speckit.constitution.md  |  OpenCode command for constitution) Tj ET
+BT /F1 9 Tf 50 422 Td (workflow  ) Tj ET
+BT /F1 9 Tf 50 398 Td (Frontend/.opencode/opencode.json  |  OpenCode plugin config — registers Graphify) Tj ET
+BT /F1 9 Tf 50 386 Td (plugin  ) Tj ET
+BT /F1 9 Tf 50 362 Td (Frontend/.opencode/plugins/graphify.js  |  Graphify plugin — injects knowledge) Tj ET
+BT /F1 9 Tf 50 350 Td (graph reminders before bash calls  ) Tj ET
+BT /F1 9 Tf 50 326 Td (8. Speckit Templates \(.specify/templates/\)) Tj ET
+BT /F1 9 Tf 50 290 Td (Template  |  Used For  ) Tj ET
+BT /F1 9 Tf 50 254 Td (checklist-template.md  |  Specification quality checklists  ) Tj ET
+BT /F1 9 Tf 50 230 Td (constitution-template.md  |  Project constitution documents  ) Tj ET
+BT /F1 9 Tf 50 206 Td (plan-template.md  |  Implementation plans  ) Tj ET
+BT /F1 9 Tf 50 182 Td (spec-template.md  |  Feature specifications  ) Tj ET
+BT /F1 9 Tf 50 158 Td (tasks-template.md  |  Task breakdown lists  ) Tj ET
+BT /F1 9 Tf 50 134 Td (9. Speckit Workflows) Tj ET
+BT /F1 9 Tf 50 98 Td (Path  |  Function  ) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 1961 >>
+stream
+BT /F1 9 Tf 50 722 Td (.specify/workflows/workflow-registry.json  |  Registers available workflows) Tj ET
+BT /F1 9 Tf 50 710 Td (\(Speckit: specify → plan → tasks → implement\)  ) Tj ET
+BT /F1 9 Tf 50 686 Td (.specify/workflows/speckit/workflow.yml  |  Full SDD cycle workflow definition) Tj ET
+BT /F1 9 Tf 50 674 Td (with review gates  ) Tj ET
+BT /F1 9 Tf 50 650 Td (10. Speckit Scripts) Tj ET
+BT /F1 9 Tf 50 614 Td (Script  |  Function  ) Tj ET
+BT /F1 9 Tf 50 578 Td (check-prerequisites.sh  |  Verify environment meets requirements  ) Tj ET
+BT /F1 9 Tf 50 554 Td (common.sh  |  Shared utility functions  ) Tj ET
+BT /F1 9 Tf 50 530 Td (create-new-feature.sh  |  Bootstrap new feature directory  ) Tj ET
+BT /F1 9 Tf 50 506 Td (setup-plan.sh  |  Initialize plan artifacts  ) Tj ET
+BT /F1 9 Tf 50 482 Td (setup-tasks.sh  |  Initialize task artifacts  ) Tj ET
+BT /F1 9 Tf 50 458 Td (11. Graphify Knowledge Graph) Tj ET
+BT /F1 9 Tf 50 434 Td (• Path: Frontend/graphify-out/) Tj ET
+BT /F1 9 Tf 50 410 Td (• Function: Stores auto-generated knowledge graph of the codebase \(AST) Tj ET
+BT /F1 9 Tf 50 398 Td (extraction + community detection\)) Tj ET
+BT /F1 9 Tf 50 374 Td (• Key files:) Tj ET
+BT /F1 9 Tf 50 350 Td (• graph.json — Queryable graph data \(GraphRAG-ready JSON\)) Tj ET
+BT /F1 9 Tf 50 326 Td (• graph.html — Interactive HTML visualization) Tj ET
+BT /F1 9 Tf 50 302 Td (• GRAPH_REPORT.md — Plain-language architecture report) Tj ET
+BT /F1 9 Tf 50 278 Td (• manifest.json — Graph metadata and versioning) Tj ET
+BT /F1 9 Tf 50 242 Td (File Dependency Diagram) Tj ET
+BT /F1 9 Tf 50 206 Td (.specify/memory/constitution.md) Tj ET
+BT /F1 9 Tf 50 182 Td (├── Defines quality gates for all work) Tj ET
+BT /F1 9 Tf 50 158 Td (├── Referenced by plan.md \(Gate 4\)) Tj ET
+BT /F1 9 Tf 50 134 Td (└── Must be ratified before T085 closeout) Tj ET
+BT /F1 9 Tf 50 98 Td (.agents/skills/*.md) Tj ET
+BT /F1 9 Tf 50 74 Td (├── Provide slash commands \(/speckit-*\)) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+11 0 obj
+<< /Length 729 >>
+stream
+BT /F1 9 Tf 50 710 Td (├── Used by OpenCode to run Speckit workflow) Tj ET
+BT /F1 9 Tf 50 686 Td (└── Invoked via .specify/workflows/speckit/workflow.yml) Tj ET
+BT /F1 9 Tf 50 650 Td (AGENTS.md \(root\)) Tj ET
+BT /F1 9 Tf 50 626 Td (├── Loaded by OpenCode at session start) Tj ET
+BT /F1 9 Tf 50 602 Td (├── Points to specs/001-metering-billing-platform/plan.md) Tj ET
+BT /F1 9 Tf 50 578 Td (└── Contains project-specific agent instructions) Tj ET
+BT /F1 9 Tf 50 542 Td (Frontend/AGENTS.md) Tj ET
+BT /F1 9 Tf 50 518 Td (├── Loaded when working in Frontend/) Tj ET
+BT /F1 9 Tf 50 494 Td (├── Enforces Graphify-first rule for frontend tasks) Tj ET
+BT /F1 9 Tf 50 470 Td (└── References Frontend/graphify-out/ knowledge graph) Tj ET
+
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 11 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000268 00000 n 
+0000002436 00000 n 
+0000002572 00000 n 
+0000004757 00000 n 
+0000004893 00000 n 
+0000006906 00000 n 
+0000007043 00000 n 
+0000007824 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+7962
+%%EOF

@@ -1,0 +1,310 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R] /Count 8 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 1614 >>
+stream
+BT /F2 14 Tf 50 722 Td (06-github-packages-needed) Tj ET
+BT /F1 9 Tf 50 698 Td (GitHub Packages Needed — Meter Pulse) Tj ET
+BT /F1 9 Tf 50 662 Td (All tools and packages used in this project, sourced from or available via) Tj ET
+BT /F1 9 Tf 50 650 Td (GitHub.) Tj ET
+BT /F1 9 Tf 50 626 Td (Last updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 602 Td (2. Frameworks) Tj ET
+BT /F1 9 Tf 50 566 Td (NestJS) Tj ET
+BT /F1 9 Tf 50 542 Td (• Version: ^10.4.x \(npm\), CLI 11.0.21) Tj ET
+BT /F1 9 Tf 50 518 Td (• Use: Backend modular monolith framework) Tj ET
+BT /F1 9 Tf 50 494 Td (• GitHub: https://github.com/nestjs/nest) Tj ET
+BT /F1 9 Tf 50 470 Td (• Download: npm install -g @nestjs/cli or) Tj ET
+BT /F1 9 Tf 50 458 Td (https://www.npmjs.com/package/@nestjs/cli) Tj ET
+BT /F1 9 Tf 50 422 Td (Next.js) Tj ET
+BT /F1 9 Tf 50 398 Td (• Version: 16.2.6) Tj ET
+BT /F1 9 Tf 50 374 Td (• Use: Frontend React framework with SSR/app-router) Tj ET
+BT /F1 9 Tf 50 350 Td (• GitHub: https://github.com/vercel/next.js) Tj ET
+BT /F1 9 Tf 50 326 Td (• Download: https://www.npmjs.com/package/next) Tj ET
+BT /F1 9 Tf 50 290 Td (React) Tj ET
+BT /F1 9 Tf 50 266 Td (• Version: ^19.0.0) Tj ET
+BT /F1 9 Tf 50 242 Td (• Use: UI library for frontend) Tj ET
+BT /F1 9 Tf 50 218 Td (• GitHub: https://github.com/facebook/react) Tj ET
+BT /F1 9 Tf 50 194 Td (• Download: https://www.npmjs.com/package/react) Tj ET
+BT /F1 9 Tf 50 158 Td (Tailwind CSS) Tj ET
+BT /F1 9 Tf 50 134 Td (• Version: ^4.x) Tj ET
+BT /F1 9 Tf 50 110 Td (• Use: Utility-first CSS framework) Tj ET
+BT /F1 9 Tf 50 86 Td (• GitHub: https://github.com/tailwindlabs/tailwindcss) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 1664 >>
+stream
+BT /F1 9 Tf 50 710 Td (• Download: https://www.npmjs.com/package/tailwindcss) Tj ET
+BT /F1 9 Tf 50 686 Td (3. Database & ORM) Tj ET
+BT /F1 9 Tf 50 650 Td (PostgreSQL) Tj ET
+BT /F1 9 Tf 50 626 Td (• Version: 16 \(Docker image: postgres:16-alpine\)) Tj ET
+BT /F1 9 Tf 50 602 Td (• Use: Primary database for meterpulse / simsystem) Tj ET
+BT /F1 9 Tf 50 578 Td (• GitHub: https://github.com/postgres/postgres) Tj ET
+BT /F1 9 Tf 50 554 Td (• Download: Docker image — postgres:16-alpine) Tj ET
+BT /F1 9 Tf 50 518 Td (Prisma) Tj ET
+BT /F1 9 Tf 50 494 Td (• Version: ^6.11.1) Tj ET
+BT /F1 9 Tf 50 470 Td (• Use: ORM, schema management, and database migrations) Tj ET
+BT /F1 9 Tf 50 446 Td (• GitHub: https://github.com/prisma/prisma) Tj ET
+BT /F1 9 Tf 50 422 Td (• Download: https://www.npmjs.com/package/prisma) Tj ET
+BT /F1 9 Tf 50 398 Td (4. Frontend Libraries) Tj ET
+BT /F1 9 Tf 50 362 Td (TanStack React Query) Tj ET
+BT /F1 9 Tf 50 338 Td (• Version: ^5.82.0) Tj ET
+BT /F1 9 Tf 50 314 Td (• Use: Server state management, API data fetching and caching) Tj ET
+BT /F1 9 Tf 50 290 Td (• GitHub: https://github.com/TanStack/query) Tj ET
+BT /F1 9 Tf 50 266 Td (• Download: https://www.npmjs.com/package/@tanstack/react-query) Tj ET
+BT /F1 9 Tf 50 230 Td (Zustand) Tj ET
+BT /F1 9 Tf 50 206 Td (• Version: ^5.0.6) Tj ET
+BT /F1 9 Tf 50 182 Td (• Use: Lightweight client-side state management) Tj ET
+BT /F1 9 Tf 50 158 Td (• GitHub: https://github.com/pmndrs/zustand) Tj ET
+BT /F1 9 Tf 50 134 Td (• Download: https://www.npmjs.com/package/zustand) Tj ET
+BT /F1 9 Tf 50 98 Td (shadcn/ui) Tj ET
+BT /F1 9 Tf 50 74 Td (• Version: Latest \(components copied, not a package\)) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 1638 >>
+stream
+BT /F1 9 Tf 50 710 Td (• Use: Component library built on Radix UI primitives) Tj ET
+BT /F1 9 Tf 50 686 Td (• GitHub: https://github.com/shadcn-ui/ui) Tj ET
+BT /F1 9 Tf 50 662 Td (• Download: npx shadcn@latest add <component>) Tj ET
+BT /F1 9 Tf 50 626 Td (next-auth) Tj ET
+BT /F1 9 Tf 50 602 Td (• Version: ^4.24.11) Tj ET
+BT /F1 9 Tf 50 578 Td (• Use: Authentication library for Next.js) Tj ET
+BT /F1 9 Tf 50 554 Td (• GitHub: https://github.com/nextauthjs/next-auth) Tj ET
+BT /F1 9 Tf 50 530 Td (• Download: https://www.npmjs.com/package/next-auth) Tj ET
+BT /F1 9 Tf 50 494 Td (Zod) Tj ET
+BT /F1 9 Tf 50 470 Td (• Version: ^4.0.2) Tj ET
+BT /F1 9 Tf 50 446 Td (• Use: Schema validation \(frontend forms + API validation\)) Tj ET
+BT /F1 9 Tf 50 422 Td (• GitHub: https://github.com/colinhacks/zod) Tj ET
+BT /F1 9 Tf 50 398 Td (• Download: https://www.npmjs.com/package/zod) Tj ET
+BT /F1 9 Tf 50 362 Td (react-hook-form) Tj ET
+BT /F1 9 Tf 50 338 Td (• Version: ^7.60.0) Tj ET
+BT /F1 9 Tf 50 314 Td (• Use: Performant form handling with validation) Tj ET
+BT /F1 9 Tf 50 290 Td (• GitHub: https://github.com/react-hook-form/react-hook-form) Tj ET
+BT /F1 9 Tf 50 266 Td (• Download: https://www.npmjs.com/package/react-hook-form) Tj ET
+BT /F1 9 Tf 50 230 Td (Recharts) Tj ET
+BT /F1 9 Tf 50 206 Td (• Version: ^2.15.4) Tj ET
+BT /F1 9 Tf 50 182 Td (• Use: Charting and data visualization) Tj ET
+BT /F1 9 Tf 50 158 Td (• GitHub: https://github.com/recharts/recharts) Tj ET
+BT /F1 9 Tf 50 134 Td (• Download: https://www.npmjs.com/package/recharts) Tj ET
+BT /F1 9 Tf 50 98 Td (Framer Motion) Tj ET
+BT /F1 9 Tf 50 74 Td (• Version: ^12.23.2) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+11 0 obj
+<< /Length 1615 >>
+stream
+BT /F1 9 Tf 50 710 Td (• Use: Animation library for React) Tj ET
+BT /F1 9 Tf 50 686 Td (• GitHub: https://github.com/framer/motion) Tj ET
+BT /F1 9 Tf 50 662 Td (• Download: https://www.npmjs.com/package/framer-motion) Tj ET
+BT /F1 9 Tf 50 626 Td (lucide-react) Tj ET
+BT /F1 9 Tf 50 602 Td (• Version: ^0.525.0) Tj ET
+BT /F1 9 Tf 50 578 Td (• Use: Icon library for UI components) Tj ET
+BT /F1 9 Tf 50 554 Td (• GitHub: https://github.com/lucide-icons/lucide) Tj ET
+BT /F1 9 Tf 50 530 Td (• Download: https://www.npmjs.com/package/lucide-react) Tj ET
+BT /F1 9 Tf 50 494 Td (next-themes) Tj ET
+BT /F1 9 Tf 50 470 Td (• Version: ^0.4.6) Tj ET
+BT /F1 9 Tf 50 446 Td (• Use: Theme management \(dark/light mode\)) Tj ET
+BT /F1 9 Tf 50 422 Td (• GitHub: https://github.com/pacocoursey/next-themes) Tj ET
+BT /F1 9 Tf 50 398 Td (• Download: https://www.npmjs.com/package/next-themes) Tj ET
+BT /F1 9 Tf 50 362 Td (sonner) Tj ET
+BT /F1 9 Tf 50 338 Td (• Version: ^2.0.6) Tj ET
+BT /F1 9 Tf 50 314 Td (• Use: Toast notifications) Tj ET
+BT /F1 9 Tf 50 290 Td (• GitHub: https://github.com/emilkowalski/sonner) Tj ET
+BT /F1 9 Tf 50 266 Td (• Download: https://www.npmjs.com/package/sonner) Tj ET
+BT /F1 9 Tf 50 230 Td (@dnd-kit) Tj ET
+BT /F1 9 Tf 50 206 Td (• Version: ^6.3.1 / ^10.0.0) Tj ET
+BT /F1 9 Tf 50 182 Td (• Use: Drag and drop toolkit) Tj ET
+BT /F1 9 Tf 50 158 Td (• GitHub: https://github.com/clauderic/dnd-kit) Tj ET
+BT /F1 9 Tf 50 134 Td (• Download: https://www.npmjs.com/package/@dnd-kit/core) Tj ET
+BT /F1 9 Tf 50 110 Td (5. Backend Libraries) Tj ET
+BT /F1 9 Tf 50 74 Td (class-validator / class-transformer) Tj ET
+
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 11 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+13 0 obj
+<< /Length 1842 >>
+stream
+BT /F1 9 Tf 50 710 Td (• Version: Latest) Tj ET
+BT /F1 9 Tf 50 686 Td (• Use: DTO validation and transformation for NestJS) Tj ET
+BT /F1 9 Tf 50 662 Td (• GitHub: https://github.com/typestack/class-validator /) Tj ET
+BT /F1 9 Tf 50 650 Td (https://github.com/typestack/class-transformer) Tj ET
+BT /F1 9 Tf 50 626 Td (• Download: https://www.npmjs.com/package/class-validator) Tj ET
+BT /F1 9 Tf 50 590 Td (Passport.js + passport-jwt) Tj ET
+BT /F1 9 Tf 50 566 Td (• Version: Latest) Tj ET
+BT /F1 9 Tf 50 542 Td (• Use: Authentication strategies for NestJS JWT auth) Tj ET
+BT /F1 9 Tf 50 518 Td (• GitHub: https://github.com/jaredhanson/passport) Tj ET
+BT /F1 9 Tf 50 494 Td (• Download: https://www.npmjs.com/package/passport) Tj ET
+BT /F1 9 Tf 50 458 Td (@nestjs/config) Tj ET
+BT /F1 9 Tf 50 434 Td (• Version: ^3.3.0) Tj ET
+BT /F1 9 Tf 50 410 Td (• Use: Environment configuration management) Tj ET
+BT /F1 9 Tf 50 386 Td (• GitHub: https://github.com/nestjs/config) Tj ET
+BT /F1 9 Tf 50 362 Td (• Download: https://www.npmjs.com/package/@nestjs/config) Tj ET
+BT /F1 9 Tf 50 326 Td (@nestjs/jwt / @nestjs/passport / @nestjs/swagger) Tj ET
+BT /F1 9 Tf 50 302 Td (• Use: JWT auth, Passport integration, OpenAPI documentation) Tj ET
+BT /F1 9 Tf 50 278 Td (• GitHub: https://github.com/nestjs/jwt, https://github.com/nestjs/passport,) Tj ET
+BT /F1 9 Tf 50 266 Td (https://github.com/nestjs/swagger) Tj ET
+BT /F1 9 Tf 50 242 Td (• Download: Available via npm) Tj ET
+BT /F1 9 Tf 50 218 Td (6. Testing) Tj ET
+BT /F1 9 Tf 50 182 Td (Playwright) Tj ET
+BT /F1 9 Tf 50 158 Td (• Version: ^1.60.0) Tj ET
+BT /F1 9 Tf 50 134 Td (• Use: E2E smoke tests for frontend \(all pages traversal\)) Tj ET
+BT /F1 9 Tf 50 110 Td (• GitHub: https://github.com/microsoft/playwright) Tj ET
+BT /F1 9 Tf 50 86 Td (• Download: https://www.npmjs.com/package/playwright) Tj ET
+
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 13 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+15 0 obj
+<< /Length 1536 >>
+stream
+BT /F1 9 Tf 50 710 Td (Jest) Tj ET
+BT /F1 9 Tf 50 686 Td (• Version: ^29.7.0) Tj ET
+BT /F1 9 Tf 50 662 Td (• Use: Unit and integration tests for backend) Tj ET
+BT /F1 9 Tf 50 638 Td (• GitHub: https://github.com/jestjs/jest) Tj ET
+BT /F1 9 Tf 50 614 Td (• Download: https://www.npmjs.com/package/jest) Tj ET
+BT /F1 9 Tf 50 578 Td (Supertest) Tj ET
+BT /F1 9 Tf 50 554 Td (• Version: Latest) Tj ET
+BT /F1 9 Tf 50 530 Td (• Use: HTTP contract testing for NestJS APIs) Tj ET
+BT /F1 9 Tf 50 506 Td (• GitHub: https://github.com/ladjs/supertest) Tj ET
+BT /F1 9 Tf 50 482 Td (• Download: https://www.npmjs.com/package/supertest) Tj ET
+BT /F1 9 Tf 50 458 Td (7. Linting & Formatting) Tj ET
+BT /F1 9 Tf 50 422 Td (ESLint) Tj ET
+BT /F1 9 Tf 50 398 Td (• Version: 8.57.1 \(backend\) / ^9.x \(frontend\)) Tj ET
+BT /F1 9 Tf 50 374 Td (• Use: Code linting and static analysis) Tj ET
+BT /F1 9 Tf 50 350 Td (• GitHub: https://github.com/eslint/eslint) Tj ET
+BT /F1 9 Tf 50 326 Td (• Download: https://www.npmjs.com/package/eslint) Tj ET
+BT /F1 9 Tf 50 290 Td (Prettier) Tj ET
+BT /F1 9 Tf 50 266 Td (• Version: ^3.8.3) Tj ET
+BT /F1 9 Tf 50 242 Td (• Use: Code formatting) Tj ET
+BT /F1 9 Tf 50 218 Td (• GitHub: https://github.com/prettier/prettier) Tj ET
+BT /F1 9 Tf 50 194 Td (• Download: https://www.npmjs.com/package/prettier) Tj ET
+BT /F1 9 Tf 50 170 Td (8. Infrastructure) Tj ET
+BT /F1 9 Tf 50 134 Td (Docker) Tj ET
+BT /F1 9 Tf 50 110 Td (• Version: 29.4.2) Tj ET
+BT /F1 9 Tf 50 86 Td (• Use: Container runtime for local PostgreSQL database) Tj ET
+
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 15 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+17 0 obj
+<< /Length 1927 >>
+stream
+BT /F1 9 Tf 50 722 Td (• GitHub: https://github.com/docker/docker) Tj ET
+BT /F1 9 Tf 50 698 Td (• Download: https://docs.docker.com/desktop/install/windows-install/) Tj ET
+BT /F1 9 Tf 50 662 Td (Docker Compose) Tj ET
+BT /F1 9 Tf 50 638 Td (• Version: v5.1.3) Tj ET
+BT /F1 9 Tf 50 614 Td (• Use: Container orchestration for multi-service setup) Tj ET
+BT /F1 9 Tf 50 590 Td (• GitHub: https://github.com/docker/compose) Tj ET
+BT /F1 9 Tf 50 566 Td (• Download: Bundled with Docker Desktop) Tj ET
+BT /F1 9 Tf 50 542 Td (9. Spec Workflow & Knowledge Tools) Tj ET
+BT /F1 9 Tf 50 506 Td (Speckit \(specify CLI\)) Tj ET
+BT /F1 9 Tf 50 482 Td (• Version: v0.8.13) Tj ET
+BT /F1 9 Tf 50 458 Td (• Use: Specification-driven development workflow — creates specs, plans, tasks,) Tj ET
+BT /F1 9 Tf 50 446 Td (and tracks implementation) Tj ET
+BT /F1 9 Tf 50 422 Td (• GitHub: https://github.com/github/spec-kit) Tj ET
+BT /F1 9 Tf 50 398 Td (• Install: uv tool install specify-cli --from) Tj ET
+BT /F1 9 Tf 50 386 Td (git+https://github.com/github/spec-kit.git@v0.8.13) Tj ET
+BT /F1 9 Tf 50 350 Td (Graphify) Tj ET
+BT /F1 9 Tf 50 326 Td (• Version: 0.8.18) Tj ET
+BT /F1 9 Tf 50 302 Td (• Use: AI coding assistant skill — builds knowledge graph from codebase for) Tj ET
+BT /F1 9 Tf 50 290 Td (querying instead of grepping) Tj ET
+BT /F1 9 Tf 50 266 Td (• GitHub: https://github.com/safishamsi/graphify) Tj ET
+BT /F1 9 Tf 50 242 Td (• Install: pip install graphifyy \(PyPI package name graphifyy, CLI command) Tj ET
+BT /F1 9 Tf 50 230 Td (graphify\)) Tj ET
+BT /F1 9 Tf 50 194 Td (uv) Tj ET
+BT /F1 9 Tf 50 170 Td (• Version: 0.10.8) Tj ET
+BT /F1 9 Tf 50 146 Td (• Use: Python package and project manager \(used to install Speckit, Graphify,) Tj ET
+BT /F1 9 Tf 50 134 Td (and manage Python versions\)) Tj ET
+BT /F1 9 Tf 50 110 Td (• GitHub: https://github.com/astral-sh/uv) Tj ET
+BT /F1 9 Tf 50 86 Td (• Download: https://docs.astral.sh/uv/) Tj ET
+
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 17 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+19 0 obj
+<< /Length 1409 >>
+stream
+BT /F1 9 Tf 50 722 Td (10. Package Managers \(via npm registry, not GitHub\)) Tj ET
+BT /F1 9 Tf 50 686 Td (Tool  |  Version  |  Use  ) Tj ET
+BT /F1 9 Tf 50 650 Td (npm  |  11.12.1  |  Backend package management  ) Tj ET
+BT /F1 9 Tf 50 626 Td (Bun  |  1.3.14  |  Frontend package management \(also a runtime\)  ) Tj ET
+BT /F1 9 Tf 50 590 Td (Summary: What needs to be installed from scratch) Tj ET
+BT /F1 9 Tf 50 554 Td (If starting from a clean machine, install in this order:) Tj ET
+BT /F1 9 Tf 50 530 Td (1. Node.js v24.15.0 — runtime foundation) Tj ET
+BT /F1 9 Tf 50 506 Td (2. Docker Desktop — PostgreSQL container) Tj ET
+BT /F1 9 Tf 50 482 Td (3. Bun v1.3.14 — frontend runtime) Tj ET
+BT /F1 9 Tf 50 458 Td (4. Python 3.12+ \(via uv python install 3.12\) — for Speckit & Graphify) Tj ET
+BT /F1 9 Tf 50 434 Td (5. Speckit: uv tool install specify-cli --from) Tj ET
+BT /F1 9 Tf 50 422 Td (git+https://github.com/github/spec-kit.git@v0.8.13) Tj ET
+BT /F1 9 Tf 50 398 Td (6. Graphify: uv tool install graphifyy then graphify install --platform opencode) Tj ET
+BT /F1 9 Tf 50 374 Td (7. Frontend: cd Frontend && npm install \(or bun install\)) Tj ET
+BT /F1 9 Tf 50 350 Td (8. Backend: cd backend && npm install) Tj ET
+BT /F1 9 Tf 50 326 Td (9. Docker: cd backend && docker compose up -d db \(for PostgreSQL\)) Tj ET
+BT /F1 9 Tf 50 302 Td (10. Playwright: cd Frontend && npx playwright install chromium) Tj ET
+
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 19 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> >>
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000151 00000 n 
+0000000221 00000 n 
+0000000296 00000 n 
+0000001962 00000 n 
+0000002098 00000 n 
+0000003814 00000 n 
+0000003950 00000 n 
+0000005640 00000 n 
+0000005777 00000 n 
+0000007445 00000 n 
+0000007583 00000 n 
+0000009478 00000 n 
+0000009616 00000 n 
+0000011205 00000 n 
+0000011343 00000 n 
+0000013323 00000 n 
+0000013461 00000 n 
+0000014923 00000 n 
+trailer
+<< /Size 21 /Root 1 0 R >>
+startxref
+15061
+%%EOF

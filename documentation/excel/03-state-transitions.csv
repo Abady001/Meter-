@@ -1,0 +1,29 @@
+Entity,From,To,Notes
+Meter,available,assigned,
+Meter,assigned,active,
+Meter,active,offline,
+Meter,active,faulty,
+Meter,active,replaced,
+Meter,active,terminated,"requires final reading + reason + assignment closure"
+Meter,active,retired,
+SIMCard,available,assigned,
+SIMCard,assigned,active,
+SIMCard,active,suspended,
+SIMCard,active,old,"triggered by meter termination"
+SIMCard,active,reusable,"triggered by meter termination"
+SIMCard,active,retired,
+Reading,pending_review,valid,
+Reading,pending_review,suspicious,
+Reading,pending_review,rejected,
+Reading,pending_review,corrected,
+Invoice,draft,pending_approval,"optional high-risk path"
+Invoice,pending_approval,issued,
+Invoice,draft,issued,
+Invoice,issued,partially_paid,
+Invoice,issued,paid,
+Invoice,issued,overdue,
+Invoice,partially_paid,paid,
+Invoice,issued,cancelled,
+Payment,pending,confirmed,
+Payment,confirmed,reversed,"restricted to super_admin"
+Payment,confirmed,cancelled,

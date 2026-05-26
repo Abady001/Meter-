@@ -1,0 +1,52 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 1626 >>
+stream
+BT /F1 9 Tf 50 722 Td (Email Report Log ??? Meter Pulse) Tj ET
+BT /F1 9 Tf 50 698 Td (> Daily email report tracking.) Tj ET
+BT /F1 9 Tf 50 686 Td (> Each entry records a progress/health report sent to the project team.) Tj ET
+BT /F1 9 Tf 50 674 Td (> Updated: 2026-05-26) Tj ET
+BT /F1 9 Tf 50 650 Td (---) Tj ET
+BT /F1 9 Tf 50 626 Td (## Reports Sent) Tj ET
+BT /F1 9 Tf 50 602 Td ( |  #  |  Date  |  Recipient  |  Subject  |  Status  |  Doc Reference  | ) Tj ET
+BT /F1 9 Tf 50 590 Td ( | --- | ------ | ----------- | --------- | -------- | --------------- | ) Tj ET
+BT /F1 9 Tf 50 578 Td ( |  1  |  2026-05-26  |  Kirllos Hany  |  [Meter Pulse] 3.3% ??? Phase 1 at 60%, System Healthy, Docs Ready  |  ???? Ready to send  |  documentation/markdown/10-progress-health-report.md  | ) Tj ET
+BT /F1 9 Tf 50 554 Td (---) Tj ET
+BT /F1 9 Tf 50 530 Td (## How to Use) Tj ET
+BT /F1 9 Tf 50 506 Td (1. Copy the email content from the corresponding report file in markdown/10-progress-health-report.md) Tj ET
+BT /F1 9 Tf 50 494 Td (2. Send via your email client) Tj ET
+BT /F1 9 Tf 50 482 Td (3. Add a new row to this log with the actual send date and status) Tj ET
+BT /F1 9 Tf 50 458 Td (---) Tj ET
+BT /F1 9 Tf 50 434 Td (## Future Report Schedule) Tj ET
+BT /F1 9 Tf 50 410 Td ( |  Report  |  Cadence  |  Description  | ) Tj ET
+BT /F1 9 Tf 50 398 Td ( | -------- | --------- | ------------- | ) Tj ET
+BT /F1 9 Tf 50 386 Td ( |  Progress & Health  |  After each task milestone  |  System health + task progress + feedback  | ) Tj ET
+BT /F1 9 Tf 50 374 Td ( |  Weekly Summary  |  Weekly \(every ~5 tasks\)  |  Broader progress recap) Tj ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000000 00000 n 
+0000000049 00000 n 
+0000000106 00000 n 
+0000000176 00000 n 
+0000001854 00000 n 
+	railer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1980
+%%EOF

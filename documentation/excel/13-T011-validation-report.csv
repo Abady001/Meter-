@@ -1,0 +1,19 @@
+Category,Step,Check,Result,Details
+Implementation,1,OpenAPI setup helper,CREATED,src/common/openapi/openapi.setup.ts
+Implementation,2,Global API prefix,SET,app.setGlobalPrefix('api/v1')
+Implementation,3,Swagger UI endpoint,AVAILABLE,/api/v1/docs (HTTP 200)
+Implementation,4,OpenAPI JSON endpoint,AVAILABLE,/api/v1/docs-json (valid spec)
+Dependencies,1,@nestjs/swagger,INSTALLED,v7.4.2
+Dependencies,2,swagger-ui-express,INSTALLED,v5.0.1
+Validation,1,npm run build,PASS,Exit code 0
+Validation,2,npm test,PASS,69/69 tests passing
+Validation,3,Server startup,PASS,NestJS on port 3001
+Validation,4,curl /api/v1/health,PASS,{"status":"ok"}
+Validation,5,curl /api/v1/docs-json,PASS,Valid OpenAPI 3.0 JSON
+Validation,6,curl /api/v1/docs,PASS,HTTP 200 (Swagger UI)
+Compatibility,T006 (ErrorEnvelope),PASS,Global filter registered
+Compatibility,T007 (CorrelationMiddleware),PASS,Middleware applied
+Compatibility,T009 (JWT Auth),PASS,Auth scheme pre-configured
+Compatibility,T010 (Audit),PASS,GET bypass prevents audit on Swagger
+,,,,,
+OVERALL VERDICT,PASS,,,,,

@@ -1,0 +1,39 @@
+Category,Tool,Version,Use,Package Manager
+Runtime,Node.js,v24.15.0,JavaScript runtime for backend/frontend,Direct download
+Runtime,TypeScript,^5.x,Type system for frontend/backend,npm
+Runtime,Bun,v1.3.14,JS runtime & package manager for frontend,npm/Bun
+Runtime,Python,3.12.13,Runtime for Speckit/Graphify,uv
+Framework,NestJS,^10.4.x,Backend modular monolith,npm
+Framework,Next.js,16.2.6,Frontend React framework,npm
+Framework,React,^19.0.0,UI library,npm
+Framework,Tailwind CSS,^4.x,Utility-first CSS,npm
+Database,PostgreSQL,16,Docker image (postgres:16-alpine),Docker
+ORM,Prisma,^6.11.1,ORM & schema management,npm
+Frontend,TanStack React Query,^5.82.0,Server state management,npm
+Frontend,Zustand,^5.0.6,Client-side state management,npm
+Frontend,shadcn/ui,Latest,Component library,npx
+Frontend,next-auth,^4.24.11,Authentication,npm
+Frontend,Zod,^4.0.2,Schema validation,npm
+Frontend,react-hook-form,^7.60.0,Form handling,npm
+Frontend,Recharts,^2.15.4,Charts,npm
+Frontend,Framer Motion,^12.23.2,Animations,npm
+Frontend,lucide-react,^0.525.0,Icons,npm
+Frontend,next-themes,^0.4.6,Theme management,npm
+Frontend,sonner,^2.0.6,Toast notifications,npm
+Frontend,@dnd-kit,^6.3.1,Drag and drop,npm
+Backend,class-validator,Latest,DTO validation,npm
+Backend,class-transformer,Latest,DTO transformation,npm
+Backend,Passport.js,Latest,Authentication strategies,npm
+Backend,@nestjs/config,^3.3.0,Environment config,npm
+Backend,@nestjs/jwt,Latest,JWT auth,npm
+Backend,@nestjs/swagger,Latest,OpenAPI docs,npm
+Testing,Playwright,^1.60.0,E2E smoke tests,npm
+Testing,Jest,^29.7.0,Unit/integration tests,npm
+Testing,Supertest,Latest,HTTP contract testing,npm
+Linting,ESLint,"8.57.1 / ^9.x",Code linting,npm
+Formatting,Prettier,^3.8.3,Code formatting,npm
+Infrastructure,Docker,29.4.2,Container runtime,Docker
+Infrastructure,Docker Compose,v5.1.3,Container orchestration,Docker
+Spec,Speckit (specify CLI),v0.8.13,Spec-driven development,uv (GitHub)
+Spec,Graphify,0.8.18,Knowledge graph,uv pip
+Spec,uv,0.10.8,Python package manager,Direct download

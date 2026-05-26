@@ -1,0 +1,14 @@
+Language,Version,Where Used,Purpose,Status
+TypeScript,^5.x,"Frontend (Frontend/) + Backend (backend/)",Primary language for both frontend and backend,Currently Used
+JavaScript,ES2022,"Frontend config files",ESLint config, Next.js config, PostCSS config,Currently Used
+CSS,--,"Frontend/src/app/globals.css",Tailwind CSS v4 with custom dark theme,Currently Used
+SQL,--,"backend/prisma/migrations/",Database schema definition, partial unique indexes,Currently Used
+YAML,--,"specs/contracts/meter-pulse-api.yaml",OpenAPI 3.1 API contract definition,Currently Used
+Markdown,--,"specs/, documentation/, AGENTS.md",Documentation, specifications, agent instructions,Currently Used
+JSON,--,"package.json, tsconfig.json",Configuration files,Currently Used
+PowerShell,5.1,.specify/scripts/,Speckit automation scripts (Windows),Currently Used
+Bash,--,.specify/scripts/bash/,Speckit automation scripts (Linux/macOS),Currently Used
+MJS,--,"Frontend/eslint.config.mjs, postcss.config.mjs",Module-based configuration files,Currently Used
+TypeScript (planned),^5.x,backend/src/,"All NestJS modules: auth, projects, billing, etc.",Planned
+SQL (planned),--,backend/prisma/migrations/,Database migrations for all 20 entities,Planned
+YAML (planned),--,backend/,Docker Compose configuration (T005),Planned

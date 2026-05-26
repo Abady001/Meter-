@@ -1,0 +1,159 @@
+================================================================================
+  GITHUB PACKAGES NEEDED - Meter Pulse
+  All tools sourced from or available via GitHub
+  Last updated: 2026-05-26
+================================================================================
+
+1. RUNTIMES & LANGUAGES
+================================================================================
+
+Node.js   v24.15.0    JavaScript runtime (backend + frontend build)
+  GitHub: https://github.com/nodejs/node
+  Download: https://nodejs.org/download/release/v24.15.0/
+
+TypeScript  ^5.x       Type system (frontend + backend)
+  GitHub: https://github.com/microsoft/TypeScript
+
+Bun       v1.3.14     JS runtime & package manager (frontend)
+  GitHub: https://github.com/oven-sh/bun
+  Install: https://bun.sh/install
+
+Python    3.12.13     Runtime for Speckit & Graphify
+  GitHub: https://github.com/python/cpython
+
+2. FRAMEWORKS
+================================================================================
+
+NestJS    ^10.4.x     Backend framework (modular monolith)
+  GitHub: https://github.com/nestjs/nest
+  CLI: npm install -g @nestjs/cli
+
+Next.js   16.2.6      Frontend React framework
+  GitHub: https://github.com/vercel/next.js
+
+React     ^19.0.0     UI library
+  GitHub: https://github.com/facebook/react
+
+Tailwind  ^4.x        CSS framework
+  GitHub: https://github.com/tailwindlabs/tailwindcss
+
+3. DATABASE & ORM
+================================================================================
+
+PostgreSQL 16         Primary database (via Docker)
+  GitHub: https://github.com/postgres/postgres
+  Image: postgres:16-alpine
+
+Prisma    ^6.11.1     ORM & migrations
+  GitHub: https://github.com/prisma/prisma
+
+4. FRONTEND LIBRARIES (via npm)
+================================================================================
+
+TanStack React Query  ^5.82.0    API data fetching
+  GitHub: https://github.com/TanStack/query
+
+Zustand   ^5.0.6     State management
+  GitHub: https://github.com/pmndrs/zustand
+
+shadcn/ui Latest     Component library
+  GitHub: https://github.com/shadcn-ui/ui
+
+next-auth ^4.24.11   Authentication
+  GitHub: https://github.com/nextauthjs/next-auth
+
+Zod       ^4.0.2     Schema validation
+  GitHub: https://github.com/colinhacks/zod
+
+react-hook-form ^7.60.0  Form handling
+  GitHub: https://github.com/react-hook-form/react-hook-form
+
+Recharts  ^2.15.4    Charting
+  GitHub: https://github.com/recharts/recharts
+
+Framer Motion ^12.23.2  Animations
+  GitHub: https://github.com/framer/motion
+
+lucide-react ^0.525.0   Icons
+  GitHub: https://github.com/lucide-icons/lucide
+
+sonner    ^2.0.6     Toast notifications
+  GitHub: https://github.com/emilkowalski/sonner
+
+next-themes ^0.4.6   Dark/light mode
+  GitHub: https://github.com/pacocoursey/next-themes
+
+5. BACKEND LIBRARIES (via npm)
+================================================================================
+
+class-validator / class-transformer  DTO validation
+  GitHub: https://github.com/typestack/class-validator
+
+Passport.js + passport-jwt  Auth strategies
+  GitHub: https://github.com/jaredhanson/passport
+
+@nestjs/config  ^3.3.0  Environment config
+  GitHub: https://github.com/nestjs/config
+
+6. TESTING
+================================================================================
+
+Playwright  ^1.60.0   E2E smoke tests (frontend)
+  GitHub: https://github.com/microsoft/playwright
+
+Jest        ^29.7.0   Unit/integration tests (backend)
+  GitHub: https://github.com/jestjs/jest
+
+Supertest   Latest    HTTP contract tests
+  GitHub: https://github.com/ladjs/supertest
+
+7. LINTING & FORMATTING
+================================================================================
+
+ESLint     8.57.1/9.x  Code linting
+  GitHub: https://github.com/eslint/eslint
+
+Prettier   ^3.8.3     Code formatting
+  GitHub: https://github.com/prettier/prettier
+
+8. INFRASTRUCTURE
+================================================================================
+
+Docker     29.4.2     Container runtime
+  GitHub: https://github.com/docker/docker
+
+Docker Compose v5.1.3  Container orchestration
+  GitHub: https://github.com/docker/compose
+
+9. SPEC WORKFLOW & KNOWLEDGE TOOLS
+================================================================================
+
+Speckit (specify CLI)  v0.8.13  Spec-driven development
+  GitHub: https://github.com/github/spec-kit
+  Install: uv tool install specify-cli --from git+.../github/spec-kit.git@v0.8.13
+
+Graphify  v0.8.18    Knowledge graph for codebases
+  GitHub: https://github.com/safishamsi/graphify
+  Install: uv tool install graphifyy
+
+uv        v0.10.8    Python package manager
+  GitHub: https://github.com/astral-sh/uv
+
+10. PACKAGE MANAGERS (not from GitHub)
+================================================================================
+  npm 11.12.1  - Backend package management
+  Bun 1.3.14   - Frontend package management (also in section 1)
+
+================================================================================
+  INSTALL ORDER (clean machine)
+================================================================================
+1. Node.js v24.15.0
+2. Docker Desktop
+3. Bun v1.3.14
+4. uv python install 3.12
+5. uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@v0.8.13
+6. uv tool install graphifyy && graphify install --platform opencode
+7. cd Frontend && npm install
+8. cd backend && npm install
+9. cd backend && docker compose up -d db
+10. cd Frontend && npx playwright install chromium

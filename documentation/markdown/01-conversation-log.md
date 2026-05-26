@@ -1,0 +1,137 @@
+# Conversation Log — Meter Pulse Setup Session
+
+> Complete record of all prompts and responses during initial project setup.
+> Date: 2026-05-26
+> Agent: OpenCode (opencode/deepseek-v4-flash-free)
+
+---
+
+## 1. Clone Repository
+
+**Prompt**: `https://github.com/Abady001/Meter-.git, git this here`
+
+**Response**: Cloned into `D:\meter\Meter-` successfully.
+
+**Action**: `git clone https://github.com/Abady001/Meter-.git`
+
+---
+
+## 2. Create AGENTS.md
+
+**Prompt**: Create or update AGENTS.md for this repository — compact instruction file for future OpenCode sessions.
+
+**Response**: Updated root `AGENTS.md` with stack info, commands, architecture constraints, spec workflow, Graphify rules, testing, and quirks.
+
+**Files affected**: `AGENTS.md`
+
+---
+
+## 3. Verify Task 004
+
+**Prompt**: Are you see task 004?
+
+**Response**: Located T004 in `specs/001-metering-billing-platform/tasks.md:77` — "Initialize Prisma ORM in backend/prisma/".
+
+---
+
+## 4. Read All Files for Building
+
+**Prompt**: Are you read all files to start in building?
+
+**Response**: Confirmed all critical files read: specs, frontend config, PRD, plan, research, data-model, tasks (85 tasks), contracts.
+
+**Key finding**: Backend (`backend/`) does not exist yet.
+
+---
+
+## 5. Full Deep Read
+
+**Prompt**: Read all details before we start — verify GitHub link, review speckit tasks, don't change anything.
+
+**Response**: Comprehensive read completed. Git remote verified as `https://github.com/Abady001/Meter-.git`. All 85 tasks unchecked.
+
+---
+
+## 6. Task List Review
+
+**Prompt**: Review all task list and tell me all apps needed.
+
+**Response**: Compiled full inventory: Node.js v24, npm, Bun, NestJS CLI, Docker, PostgreSQL, Prisma, Jest, Playwright, ESLint, Prettier, plus all npm packages.
+
+---
+
+## 7. Download & Install Apps
+
+**Prompt**: Proceed with downloading all apps and install, prepare text file with all apps used.
+
+**Response**: Installed Bun v1.3.14, NestJS CLI v11.0.21, Frontend npm deps (847 packages), Playwright Chromium. Created `required-apps.txt`.
+
+---
+
+## 8. Install Speckit & Graphify
+
+**Prompt**: Go to GitHub, install Speckit and Graphify, verify all commits match GitHub.
+
+**Response**: Discovered remote branches with actual work done: T001, T002, T003 completed. Merged `feature/t003-backend-tooling` into main. Installed Speckit v0.8.13, Graphify v0.8.18, Python 3.12.
+
+---
+
+## 9. Document GitHub Packages
+
+**Prompt**: Document all GitHub-sourced tools into documentation folder.
+
+**Response**: Created `documentation/github-packages-needed.md` and `.txt` with all 30+ tools, versions, purposes, and download links.
+
+---
+
+## 10. Final Verification
+
+**Prompt**: Test all files after update, verify everything works.
+
+**Response**: Verified:
+- Frontend lint ✅
+- Frontend build ✅
+- Backend build ✅
+- Backend lint ✅
+- Docker PostgreSQL healthy ✅
+- Speckit CLI working ✅
+- Graphify installed ✅
+
+---
+
+## Key Decisions Made During Session
+
+| # | Decision | Rationale |
+|---|----------|-----------|
+| 1 | Use npm for backend (not bun) | Bun not available on machine; frontend uses bun |
+| 2 | NestJS on port 3001 (not 3000) | Frontend dev server already uses :3000 |
+| 3 | PostgreSQL via Docker (not local install) | Docker already available; cleaner isolation |
+| 4 | Merge remote feature branches into main | Remote had T001-T003 completed; local was behind |
+| 5 | Install Python via uv (not standalone) | uv already available; manages versions automatically |
+| 6 | `pip install graphifyy` (double-y) | Official PyPI package name; CLI command is still `graphify` |
+| 7 | Speckit v0.8.13 pinned | Matches project's `.specify/integration.json` version |
+
+---
+
+## Git Commits History
+
+```
+fb979f6  2026-05-25 17:59  T003: lint/format/test tooling
+81884a1  2026-05-25 17:44  T002: config + PostgreSQL connection
+111a9c0  2026-05-25 17:25  chore: ignore Graphify root marker
+7f01e4e  2026-05-25 17:25  T001: marked complete
+bbe05db  2026-05-25 17:23  T001: NestJS scaffold
+b3386ee  2026-05-25 16:59  chore: refresh Graphify maps
+82e7fc6  2026-05-25 16:54  initial project baseline
+```
+
+## Task Completion Status (end of session)
+
+| Task | Status | Notes |
+|------|--------|-------|
+| T001 | ✅ Complete | NestJS scaffold in `backend/` |
+| T002 | ✅ Complete | Config + PostgreSQL connection module |
+| T003 | ✅ Complete | ESLint, Prettier, Jest configured |
+| T004 | ❌ Not started | Prisma ORM init |
+| T005 | ⚠️ Partial | docker-compose.yml exists (created locally), needs README |
+| T006+ | ❌ Not started | Phase 2 onwards |

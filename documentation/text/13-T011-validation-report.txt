@@ -1,0 +1,53 @@
+T011 VALIDATION REPORT - WIRE API VERSIONING + OPENAPI
+========================================================
+
+Task:   T011 - Wire API versioning /api/v1, base routing, and OpenAPI serving
+Date:   2026-05-26
+Author: Kirllos Hany
+Branch: feature/t011-api-versioning
+Verdict: PASS (ALL CHECKS PASSED)
+
+----------------------------------------------------------------------
+IMPLEMENTATION SUMMARY
+----------------------------------------------------------------------
+
+ 1. OpenAPI setup helper .......... CREATED - src/common/openapi/openapi.setup.ts
+ 2. Global API prefix ............. SET - app.setGlobalPrefix('api/v1')
+ 3. Swagger UI .................... /api/v1/docs (HTTP 200)
+ 4. OpenAPI JSON .................. /api/v1/docs-json (valid spec)
+ 5. Dependencies .................. @nestjs/swagger@7.4.2, swagger-ui-express@5.0.1
+
+----------------------------------------------------------------------
+VALIDATION STEPS
+----------------------------------------------------------------------
+
+ 1. npm run build ................. PASS - Exit code 0, no errors
+ 2. npm test ...................... PASS - 69/69 tests passing (8 suites)
+ 3. Server startup ................ PASS - NestJS started on port 3001
+ 4. curl /api/v1/health ........... PASS - {"status":"ok"}
+ 5. curl /api/v1/docs-json ........ PASS - Valid OpenAPI 3.0 JSON
+ 6. curl /api/v1/docs ............. PASS - HTTP 200 (Swagger UI renders)
+
+----------------------------------------------------------------------
+ACCEPTANCE CRITERIA
+----------------------------------------------------------------------
+
+ [PASS] All routes mounted under /api/v1
+ [PASS] OpenAPI docs available at /api/v1/docs
+ [PASS] OpenAPI JSON available at /api/v1/docs-json
+ [PASS] Startup stable
+ [PASS] Build stable
+ [PASS] Frontend untouched
+
+----------------------------------------------------------------------
+COMPATIBILITY
+----------------------------------------------------------------------
+
+ T006 (ErrorEnvelope) ............. PASS - Global filter registered
+ T007 (CorrelationMiddleware) .... PASS - Middleware applied globally
+ T009 (JWT Auth/RBAC) ............ PASS - Auth pre-configured in Swagger
+ T010 (Audit) .................... PASS - GET bypass prevents audit on Swagger
+
+----------------------------------------------------------------------
+OVERALL VERDICT: PASS
+----------------------------------------------------------------------
