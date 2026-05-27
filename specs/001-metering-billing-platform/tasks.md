@@ -105,7 +105,7 @@ A frontend task is not "started" until its `graphify query` has been run and its
   - **Validation**: `cd backend && npm test -- error-envelope`
   - **Risk**: Envelope drift from contract breaks frontend error parsing (FE-001); assert shape in a unit test.
 
-- [ ] T007 [P] Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
+- [X] T007 [P] Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
   - **Dependencies**: T001
   - **Area/Files**: `backend/src/common/http/correlation.middleware.ts`
   - **Acceptance**: Every request gets/propagates a `correlationId`, surfaced in responses and error envelope

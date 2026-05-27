@@ -2,13 +2,14 @@
 
 ## Full Session Summary (2026-05-26)
 
-### Completed Tasks (6 of ~91 — 6.6%)
+### Completed Tasks (7 of ~91 — 7.7%)
 - **T001**: NestJS backend scaffold — `backend/` structure, main.ts, app.module.ts, package.json, tsconfig.json
 - **T002**: Config + PostgreSQL connection — `AppConfigModule`, `DatabaseModule`, `.env`, Docker container `meter-pulse-db`
 - **T003**: Backend tooling — ESLint, Prettier, Jest configured; eslint fix: added `jest.config.ts` to ignorePatterns
 - **T004**: Prisma ORM init — `schema.prisma` (multiSchema, sim_system), `PrismaService`, `DATABASE_URL`; validated 5/5
 - **T005**: Docker PostgreSQL — `docker-compose.yml` (env vars, healthcheck, volume, restart), `README.md` (start/stop/reset/connection docs)
 - **T006**: Error envelope + global filter — `ErrorEnvelope` interface, `AllExceptionsFilter`, 10 unit tests; validated 3/3
+- **T007**: Correlation-ID middleware — `CorrelationMiddleware` class, registered globally, `req.correlationId` set on every request; 7 unit tests; validated 3/3
 
 ### Implementation Workflow
 1. User provides task via Speckit-style prompt
@@ -26,7 +27,7 @@
 13. Save prompt to `prompt-history_TXXX.md`
 
 ### Documentation Structure
-- 16 markdown, 7 sql, 18 text, 15 csv, 20 pdf files
+- 17 markdown, 7 sql, 19 text, 16 csv, 21 pdf files
 - Index: `documentation/markdown/00-index.md`
 - Validation reports: `documentation/markdown/13-T001-validation-report.md` through `13-T006-validation-report.md`
 
@@ -50,9 +51,8 @@
 - `specs/001-metering-billing-platform/tasks.md` — 91 tasks, T001-T006 marked [X]
 
 ### Next Unfinished Task
-- **T007**: Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
-  - Dependencies: T006
-  - Every request gets/propagates a correlationId, surfaced in responses and error envelope
+- **T007**: ✅ Add correlation-ID middleware in `backend/src/common/http/correlation.middleware.ts`
+- **T008**: Add Idempotency-Key interceptor in `backend/src/common/http/idempotency.interceptor.ts`
 
 ### Stack
 - **Frontend** (`Frontend/`): Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui
@@ -119,8 +119,17 @@ bun run db:generate      # Prisma generate
 - **Changed**: Created `error-envelope.ts`, `all-exceptions.filter.ts`, `error-envelope.spec.ts`; updated `main.ts`, `tsconfig.json`, `.eslintrc.cjs`
 - **Validation**: npm test -- error-envelope ✅ (10/10), tsc --noEmit ✅, eslint ✅
 - **Branch**: `feature/t006-error-envelope`
-- **Next**: T007
+- **Next**: T008
 - **Token note**: Push succeeded via credential manager, but PR creation via curl API failed (token expired for non-git calls). Used `git push` as workaround.
+
+## T007 Memory Log (2026-05-26)
+
+- **Task**: T007 — Add correlation-ID middleware
+- **Status**: done
+- **Changed**: Created `correlation.middleware.ts`, `correlation.middleware.spec.ts`, `src/types/express.d.ts`; updated `app.module.ts` (NestModule configure), `all-exceptions.filter.ts` (prefer req.correlationId)
+- **Validation**: npm test ✅ (17/17), tsc --noEmit ✅, eslint ✅
+- **Branch**: `feature/t007-correlation-middleware`
+- **Next**: T008
 
 ## Token Expiry Rule
 

@@ -16,7 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
-    const correlationId = getCorrelationId(request.headers ?? {});
+    const correlationId = request.correlationId ?? getCorrelationId(request.headers ?? {});
     const status = statusFromException(exception);
     const envelope = toErrorEnvelope(exception, correlationId);
 
