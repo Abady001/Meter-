@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   // reactStrictMode false because some shadcn/ui components
   // have known double-mount side effects in dev.
   reactStrictMode: false,
+  allowedDevOrigins: ['host.docker.internal'],
 };
 
 export default nextConfig;

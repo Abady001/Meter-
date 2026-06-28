@@ -1,0 +1,41 @@
+# Auto-label PRs by file changes
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: backend/**/*
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: Frontend/**/*
+
+reporting:
+  - changed-files:
+      - any-glob-to-any-file: reporting-engine/**/*
+      - any-glob-to-any-file: templates/**/*
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: docs/**/*
+      - any-glob-to-any-file: '**/*.md'
+
+draft:
+  - changed-files:
+      - any-glob-to-any-file: draft/**/*
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: .github/**/*
+      - any-glob-to-any-file: docker-compose.yml
+      - any-glob-to-any-file: Dockerfile
+      - any-glob-to-any-file: '**/Dockerfile'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: tests/**/*
+      - any-glob-to-any-file: '**/*.spec.*'
+
+billing:
+  - changed-files:
+      - any-glob-to-any-file: backend/src/billing/**/*
+      - any-glob-to-any-file: backend/src/invoices/**/*
+      - any-glob-to-any-file: backend/src/payments/**/*

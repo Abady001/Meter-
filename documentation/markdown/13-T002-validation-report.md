@@ -27,7 +27,7 @@
 | 4 | Database module exists | ✅ PASS | `src/common/database/database.module.ts` |
 | 5 | Database service exists | ✅ PASS | `src/common/database/database.service.ts` |
 | 6 | Server starts on :3001 | ✅ PASS | Dev server boot logged |
-| 7 | PostgreSQL connection | ✅ PASS | Docker container meter-pulse-db healthy |
+| 7 | PostgreSQL connection | ✅ PASS | Docker container meter-verse-db healthy |
 
 ## Verdict
 

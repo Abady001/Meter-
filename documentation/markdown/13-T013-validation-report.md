@@ -1,4 +1,4 @@
-# T013 Validation Report — Meter Pulse
+# T013 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T013 — Migration - Project, LocationNode, Customer, CustomerUnitAssignment

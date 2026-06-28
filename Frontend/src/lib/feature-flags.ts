@@ -3,19 +3,19 @@ import { useState, useCallback } from 'react';
 export type FeatureFlag = 'mock' | 'api';
 
 export const FeatureFlags: Record<string, FeatureFlag> = {
-  'projects.list': 'mock',
-  'projects.readings': 'mock',
-  'locations.list': 'mock',
-  'customers.list': 'mock',
-  'meters.list': 'mock',
-  'sims.list': 'mock',
-  'readings.list': 'mock',
-  'billing.list': 'mock',
-  'invoices.list': 'mock',
-  'payments.list': 'mock',
-  'reports.list': 'mock',
-  'alerts.list': 'mock',
-  'tickets.list': 'mock',
+  'projects.list': 'api',
+  'projects.readings': 'api',
+  'locations.list': 'api',
+  'customers.list': 'api',
+  'meters.list': 'api',
+  'sims.list': 'api',
+  'readings.list': 'api',
+  'billing.list': 'api',
+  'invoices.list': 'api',
+  'payments.list': 'api',
+  'reports.list': 'api',
+  'alerts.list': 'api',
+  'tickets.list': 'api',
 };
 
 const STORAGE_KEY = 'meter-feature-flags';

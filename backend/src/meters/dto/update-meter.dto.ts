@@ -1,4 +1,4 @@
-import { IsString, IsUUID, IsDateString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsUUID, IsDateString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateMeterDto {
@@ -7,10 +7,30 @@ export class UpdateMeterDto {
   @IsString()
   serialNumber?: string;
 
-  @ApiPropertyOptional({ enum: ['electricity', 'water_main', 'water_child'] })
+  @ApiPropertyOptional({ enum: ['electricity', 'water_main', 'water_child', 'solar', 'gas', 'chilled_water', 'outdoor_unit'] })
   @IsOptional()
-  @IsEnum(['electricity', 'water_main', 'water_child'] as const)
-  meterType?: 'electricity' | 'water_main' | 'water_child';
+  @IsString()
+  meterType?: string;
+
+  @ApiPropertyOptional({ enum: ['1PH', '3PH'] })
+  @IsOptional()
+  @IsString()
+  phaseType?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  ampRating?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  diameter?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  solarEnabled?: boolean;
 
   @ApiPropertyOptional()
   @IsOptional()

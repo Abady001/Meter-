@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../common/database/prisma.service';
 import { ThresholdService } from '../projects/thresholds/threshold.service';
 import { CreateReadingDto } from './dto/create-reading.dto';
@@ -10,6 +10,64 @@ export class ReadingsService {
     private readonly prisma: PrismaService,
     private readonly thresholdService: ThresholdService
   ) {}
+
+  private async toDto(reading: any): Promise<ReadingResponseDto> {
+    let meterSerial = '';
+    let meterType: any = 'electricity';
+    if (reading.meterId) {
+      const meter = await this.prisma.meter.findUnique({
+        where: { id: reading.meterId },
+        select: { serialNumber: true, meterType: true },
+      });
+      if (meter) {
+        meterSerial = meter.serialNumber;
+        meterType = meter.meterType;
+      }
+    }
+
+    return {
+      id: reading.id,
+      meterId: reading.meterId,
+      meterSerial,
+      meterType: meterType as any,
+      customerId: reading.customerIdSnapshot || undefined,
+      customerName: undefined,
+      unitId: reading.unitIdSnapshot || undefined,
+      unitNumber: undefined,
+      projectId: reading.projectId || undefined,
+      previousReading: reading.previousReadingValue ? Number(reading.previousReadingValue) : 0,
+      currentReading: Number(reading.readingValue),
+      consumption: reading.consumptionValue ? Number(reading.consumptionValue) : 0,
+      readingDate: reading.readingAt instanceof Date
+        ? reading.readingAt.toISOString()
+        : new Date(reading.readingAt).toISOString(),
+      source: reading.source as any,
+      status: reading.status as any,
+      anomaly: reading.status === 'suspicious',
+      enteredBy: reading.enteredBy,
+      notes: reading.notes || undefined,
+      projectThresholdProfile: null,
+    };
+  }
+
+  async findAll(projectId?: string): Promise<ReadingResponseDto[]> {
+    const where: any = {};
+    if (projectId) where.projectId = projectId;
+
+    const readings = await this.prisma.reading.findMany({
+      where,
+      orderBy: { readingAt: 'desc' },
+      take: 500,
+    });
+
+    return Promise.all(readings.map((r) => this.toDto(r)));
+  }
+
+  async findOne(id: string): Promise<ReadingResponseDto> {
+    const reading = await this.prisma.reading.findUnique({ where: { id } });
+    if (!reading) throw new NotFoundException(`Reading ${id} not found`);
+    return this.toDto(reading);
+  }
 
   async listReviewQueue(filters: {
     projectId?: string;
@@ -24,13 +82,7 @@ export class ReadingsService {
     const readings = await this.prisma.reading.findMany({ where, orderBy: { readingAt: 'desc' } });
 
     return {
-      items: readings.map((r) => ({
-        id: r.id,
-        meterId: r.meterId,
-        status: r.status,
-        consumptionValue: r.consumptionValue ? Number(r.consumptionValue) : null,
-        projectThresholdProfile: null
-      }))
+      items: await Promise.all(readings.map((r) => this.toDto(r)))
     };
   }
 
@@ -122,13 +174,7 @@ export class ReadingsService {
       throw err;
     }
 
-    return {
-      id: reading.id,
-      meterId: reading.meterId,
-      status: status,
-      consumptionValue: consumptionValue,
-      projectThresholdProfile: profileName
-    };
+    return this.toDto(reading);
   }
 
   private async getAverageConsumption(meterId: string): Promise<number> {

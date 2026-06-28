@@ -27,7 +27,7 @@ export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
   @Post()
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('location', 'create')
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -41,7 +41,7 @@ export class LocationsController {
   @Get()
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -54,7 +54,7 @@ export class LocationsController {
   @Get(':id')
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -68,7 +68,7 @@ export class LocationsController {
   }
 
   @Patch(':id')
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('location', 'update')
   async update(
     @Param('projectId', ParseUUIDPipe) projectId: string,
@@ -80,7 +80,7 @@ export class LocationsController {
   }
 
   @Delete(':id')
-  @Roles(Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('location', 'deactivate')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(
@@ -89,5 +89,70 @@ export class LocationsController {
     @Req() req: { user: { userId: string } }
   ) {
     await this.locationsService.remove(projectId, id, req.user.userId);
+  }
+
+  // Unit lifecycle: assign meter
+  @Post(':id/assign-meter')
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
+  @Audit('location', 'assign_meter')
+  async assignMeter(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: { meterId: string },
+    @Req() req: any
+  ) {
+    return this.locationsService.assignMeter(projectId, id, dto.meterId, req.user.userId);
+  }
+
+  // Unit lifecycle: replace meter
+  @Post(':id/replace-meter')
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
+  @Audit('location', 'replace_meter')
+  async replaceMeter(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: { oldMeterId: string; newMeterId: string; reason?: string },
+    @Req() req: any
+  ) {
+    return this.locationsService.replaceMeter(projectId, id, dto.oldMeterId, dto.newMeterId, dto.reason, req.user.userId);
+  }
+
+  // Unit lifecycle: disconnect meter
+  @Post(':id/disconnect-meter')
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
+  @Audit('location', 'disconnect_meter')
+  async disconnectMeter(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: { meterId: string; reason?: string },
+    @Req() req: any
+  ) {
+    return this.locationsService.disconnectMeter(projectId, id, dto.meterId, dto.reason, req.user.userId);
+  }
+
+  // Unit lifecycle: change customer
+  @Post(':id/change-customer')
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
+  @Audit('location', 'change_customer')
+  async changeCustomer(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: { customerId: string; reason?: string },
+    @Req() req: any
+  ) {
+    return this.locationsService.changeCustomer(projectId, id, dto.customerId, dto.reason, req.user.userId);
+  }
+
+  // Unit lifecycle: close unit
+  @Post(':id/close')
+  @Roles(Role.ADMIN, Role.SUPER_ADMIN)
+  @Audit('location', 'close')
+  async closeUnit(
+    @Param('projectId', ParseUUIDPipe) projectId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: { reason?: string },
+    @Req() req: any
+  ) {
+    return this.locationsService.closeUnit(projectId, id, dto.reason, req.user.userId);
   }
 }

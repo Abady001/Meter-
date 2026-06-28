@@ -1,0 +1,529 @@
+openapi: 3.1.0
+info:
+  title: Meter Verse MVP API
+  version: 1.0.0
+  description: >-
+    Contract for utility metering, billing, and ledger workflows.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Meters
+  - name: SIM
+  - name: Readings
+  - name: Billing
+  - name: Payments
+  - name: Reports
+  - name: System
+  - name: Statements
+paths:
+  /health:
+    get:
+      tags: [System]
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /meters/{meterId}/assign:
+    post:
+      tags: [Meters]
+      summary: Assign meter to customer and unit
+      operationId: assignMeter
+      parameters:
+        - $ref: '#/components/parameters/MeterId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeterAssignRequest'
+      responses:
+        '200':
+          description: Assignment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterAssignment'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /meters/{meterId}/terminate:
+    post:
+      tags: [Meters]
+      summary: Terminate meter and release SIM for reuse
+      operationId: terminateMeter
+      parameters:
+        - $ref: '#/components/parameters/MeterId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeterTerminateRequest'
+      responses:
+        '200':
+          description: Meter terminated and SIM lifecycle updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterTerminateResult'
+
+  /sim-cards/{simId}/eligibility:
+    get:
+      tags: [SIM]
+      summary: Check SIM reuse eligibility
+      operationId: getSimEligibility
+      parameters:
+        - $ref: '#/components/parameters/SimId'
+      responses:
+        '200':
+          description: Eligibility details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimEligibility'
+
+  /readings:
+    post:
+      tags: [Readings]
+      summary: Ingest reading from manual/import/automatic source
+      operationId: createReading
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadingCreateRequest'
+      responses:
+        '201':
+          description: Reading stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reading'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /readings/review-queue:
+    get:
+      tags: [Readings]
+      summary: List suspicious/pending readings for review
+      operationId: listReadingReviewQueue
+      parameters:
+        - in: query
+          name: projectId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: status
+          schema: { type: string, enum: [pending_review, suspicious] }
+      responses:
+        '200':
+          description: Review queue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reading'
+
+  /invoices/generate:
+    post:
+      tags: [Billing]
+      summary: Generate invoices by utility type for billing period
+      operationId: generateInvoices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceGenerateRequest'
+      responses:
+        '202':
+          description: Generation accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batchId: { type: string, format: uuid }
+                  generatedCount: { type: integer }
+
+  /invoices/{invoiceId}/issue:
+    post:
+      tags: [Billing]
+      summary: Issue invoice (immutable after issue)
+      operationId: issueInvoice
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Invoice issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '409':
+          description: High-risk invoice requires approval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /invoices/{invoiceId}/adjustments:
+    post:
+      tags: [Billing]
+      summary: Apply adjustment to immutable issued invoice
+      operationId: addInvoiceAdjustment
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceAdjustmentRequest'
+      responses:
+        '201':
+          description: Adjustment created
+
+  /payments:
+    post:
+      tags: [Payments]
+      summary: Record payment with oldest-due-first default allocation
+      operationId: createPayment
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreateRequest'
+      responses:
+        '201':
+          description: Payment recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /payments/{paymentId}/reverse:
+    post:
+      tags: [Payments]
+      summary: Reverse payment (super admin only)
+      operationId: reversePayment
+      parameters:
+        - $ref: '#/components/parameters/PaymentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Payment reversed
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /customers/{customerId}/statement:
+    get:
+      tags: [Statements]
+      summary: Get running ledger statement for customer
+      operationId: getCustomerStatement
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Statement payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerStatement'
+
+  /reports/exports:
+    post:
+      tags: [Reports]
+      summary: Start async report export job
+      operationId: createReportExportJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportExportRequest'
+      responses:
+        '202':
+          description: Export job accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportJob'
+
+  /reports/exports/{jobId}:
+    get:
+      tags: [Reports]
+      summary: Check report export job status
+      operationId: getReportExportJob
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Export job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportJob'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    MeterId:
+      in: path
+      name: meterId
+      required: true
+      schema: { type: string, format: uuid }
+    SimId:
+      in: path
+      name: simId
+      required: true
+      schema: { type: string, format: uuid }
+    InvoiceId:
+      in: path
+      name: invoiceId
+      required: true
+      schema: { type: string, format: uuid }
+    PaymentId:
+      in: path
+      name: paymentId
+      required: true
+      schema: { type: string, format: uuid }
+    CustomerId:
+      in: path
+      name: customerId
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: false
+      schema:
+        type: string
+  responses:
+    ValidationError:
+      description: Validation failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ConflictError:
+      description: Business conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ForbiddenError:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  schemas:
+    ErrorEnvelope:
+      type: object
+      required: [code, message, correlationId]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details: { type: object, additionalProperties: true }
+        correlationId: { type: string }
+    MeterAssignRequest:
+      type: object
+      required: [customerId, unitId, projectId, startAt]
+      properties:
+        customerId: { type: string, format: uuid }
+        unitId: { type: string, format: uuid }
+        projectId: { type: string, format: uuid }
+        startAt: { type: string, format: date-time }
+        reason: { type: string }
+        simId: { type: string, format: uuid }
+    MeterAssignment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        meterId: { type: string, format: uuid }
+        customerId: { type: string, format: uuid }
+        unitId: { type: string, format: uuid }
+        status: { type: string }
+        startAt: { type: string, format: date-time }
+        endAt: { type: string, format: date-time, nullable: true }
+    MeterTerminateRequest:
+      type: object
+      required: [reason, terminatedAt, finalReading]
+      properties:
+        reason: { type: string }
+        terminatedAt: { type: string, format: date-time }
+        finalReading: { type: number }
+    MeterTerminateResult:
+      type: object
+      properties:
+        meterStatus: { type: string }
+        simStatus: { type: string }
+        simReusable: { type: boolean }
+    SimEligibility:
+      type: object
+      properties:
+        simId: { type: string, format: uuid }
+        eligible: { type: boolean }
+        reason: { type: string }
+        cooldownUntil: { type: string, format: date-time, nullable: true }
+    ReadingCreateRequest:
+      type: object
+      required: [meterId, projectId, readingValue, readingAt, source]
+      properties:
+        meterId: { type: string, format: uuid }
+        projectId: { type: string, format: uuid }
+        readingValue: { type: number }
+        readingAt: { type: string, format: date-time }
+        source:
+          type: string
+          enum: [manual, import, automatic]
+        rawPayload:
+          type: object
+          additionalProperties: true
+    Reading:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        meterId: { type: string, format: uuid }
+        status:
+          type: string
+          enum: [valid, pending_review, estimated, suspicious, corrected, rejected]
+        consumptionValue: { type: number, nullable: true }
+        projectThresholdProfile: { type: string, nullable: true }
+    InvoiceGenerateRequest:
+      type: object
+      required: [projectId, billingPeriodId]
+      properties:
+        projectId: { type: string, format: uuid }
+        billingPeriodId: { type: string, format: uuid }
+        customerIds:
+          type: array
+          items: { type: string, format: uuid }
+    Invoice:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        invoiceNumber: { type: string }
+        utilityType: { type: string, enum: [electricity, water] }
+        status: { type: string }
+        subtotalAmount: { type: number }
+        taxAmount: { type: number }
+        totalAmount: { type: number }
+        remainingAmount: { type: number }
+    InvoiceAdjustmentRequest:
+      type: object
+      required: [adjustmentType, amount, reason]
+      properties:
+        adjustmentType: { type: string, enum: [credit, debit] }
+        amount: { type: number }
+        reason: { type: string }
+    PaymentCreateRequest:
+      type: object
+      required: [projectId, customerId, amount, paymentDate, method]
+      properties:
+        projectId: { type: string, format: uuid }
+        customerId: { type: string, format: uuid }
+        amount: { type: number }
+        paymentDate: { type: string, format: date-time }
+        method: { type: string }
+        allocationMode:
+          type: string
+          enum: [oldest_due_first, explicit]
+          default: oldest_due_first
+        allocations:
+          type: array
+          items:
+            type: object
+            required: [invoiceId, amount]
+            properties:
+              invoiceId: { type: string, format: uuid }
+              amount: { type: number }
+    Payment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        paymentNumber: { type: string }
+        status: { type: string }
+        amount: { type: number }
+    CustomerStatement:
+      type: object
+      properties:
+        customerId: { type: string, format: uuid }
+        openingBalance: { type: number }
+        closingBalance: { type: number }
+        entries:
+          type: array
+          items:
+            type: object
+            properties:
+              at: { type: string, format: date-time }
+              type: { type: string }
+              referenceId: { type: string, format: uuid }
+              amountDelta: { type: number }
+              runningBalance: { type: number }
+    ReportExportRequest:
+      type: object
+      required: [projectId, reportType, format]
+      properties:
+        projectId: { type: string, format: uuid }
+        reportType: { type: string }
+        format: { type: string, enum: [csv, xlsx, pdf] }
+        filters:
+          type: object
+          additionalProperties: true
+    ReportJob:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        status:
+          type: string
+          enum: [queued, running, completed, failed, expired]
+        fileUrl: { type: string, nullable: true }
+        errorMessage: { type: string, nullable: true }

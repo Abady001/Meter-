@@ -19,6 +19,11 @@
         "ODOO_USERNAME": "your_username",
         "ODOO_PASSWORD": "your_password"
       }
+    },
+    "playwright-mcp": {
+      "type": "local",
+      "command": ["node", "D:\\meter\\Meter\\tools\\playwright-mcp\\cli.js"],
+      "enabled": true
     }
   },
   "command": {

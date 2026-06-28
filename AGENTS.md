@@ -1,64 +1,90 @@
-# Meter Pulse — Utility Metering & Billing Platform
+# Meter Verse — Unified Utility Metering & Billing Platform
 
 ## Stack
 - **Frontend** (`Frontend/`): Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui
-- **Backend** (`backend/`): NestJS + PostgreSQL + Prisma ORM
-- **Runtime**: Bun (not npm/yarn)
-- **Auth**: next-auth v4 (frontend)
+- **Backend** (`backend/`): NestJS + PostgreSQL + Prisma ORM (multi-schema: Core + Features + 15 Areas)
+- **Collection System** (`reference/collection-system/`): Flask 3.1.3 + PostgreSQL (8 schemas, 36 tables)
+- **Symbiot Bridge** (planned): 10 TCP × 100 HTTP channels, WinService
+- **Runtime**: Bun (frontend), Node 20+ (backend), Python 3.x (collection system)
+- **Auth**: next-auth v4 (frontend) | Flask-Login (collection system)
 
 ## Key commands (run from `Frontend/`)
 ```bash
 bun run dev              # dev server on :3000
-bun run build            # standalone output + static cp
 bun run lint             # ESLint
-bun run test:smoke       # build + Playwright smoke traversal
-bun run db:push          # Prisma push (SQLite for dev)
-bun run db:migrate       # Prisma migrate dev
-bun run db:generate      # Prisma generate
 ```
+Backend (`backend/`): `npm run build`, `npm run start:dev`
+
+## Playwright Tests
+Tests are in `draft/tests/` — create test via Python generator script (gen_*.py) to avoid encoding issues.
+Run: `node draft/tests/pw-<name>.cjs` (requires frontend + backend running).
+
+## Architecture (3-Plan, 15-Area)
+- **Plan 1 — Full** (all modules, production): Core DB + Features DB + 15 Area DBs
+- **Plan 2 — Safety** (metering only, minimal): Core DB + 15 Area DBs (no billing features)
+- **Plan 3 — Failover** (read-only, failover): Core DB + cached queries
+- **15 Area Databases**: Per-client isolation (october, new_cairo, sodic_ednc, sodic_estates, sodic_vye, badya_city, north_coast, uvines_mall, +7 future)
+- **Multi-schema**: `Core` (auth/shared) → `Features` (billing/reports) → `Area_N` (customer data per area)
 
 ## Architecture constraints
-- **Never rebuild the frontend shell, routes, or design system.** All work is incremental API migration.
-- Frontend currently uses mock data (`src/lib/mock-*.ts`). Migration to live APIs happens sprint-by-sprint.
-- Backend (`backend/`) does not exist yet — NestJS modular monolith planned in `specs/001-metering-billing-platform/plan.md`.
-- Prisma schema (`Frontend/prisma/schema.prisma`) currently uses SQLite; production target is PostgreSQL.
+- **Never rebuild the frontend shell, routes, or design system.** All work is incremental.
+- Frontend currently uses mock data (`src/lib/mock-*.ts`). Migration to live APIs sprint-by-sprint.
+- Backend modules implemented per task list.
+- Prisma schema targets PostgreSQL with multi-schema (`sim_system` → `core` + `features` + `area_{n}`).
 - Next config: `output: "standalone"`, `ignoreBuildErrors: true`, `reactStrictMode: false`.
 
+## Main Plan (Live)
+All planning is now in `docs/main-plan/` (single source of truth).
+Old plans moved to `docs/previous-plans/` and `draft/`.
+Task list: `docs/main-plan/06-tasks.md` (40 tasks, 37 TODO).
+
+## Repository Structure
+```
+Meter/
+├── backend/              # NestJS API
+├── Frontend/             # Next.js 16 app
+├── specs/ (4 sub-dirs)   # Specs: 001-original, 002-core, 003-symbiot, 004-migration
+├── reference/ (7 dirs)   # All reference systems
+├── tools/                # Playwright MCP
+├── docs/                 # Architecture + migration
+├── scripts/              # Utility scripts
+├── ci-cd/                # CI/CD configs
+└── documentation/        # Multi-format docs
+```
+
+## Reference Systems
+- `reference/collection-system/` — Flask billing system (5 priority features to build)
+- `reference/sbill/` — SBill Palm Hills + Estates billing
+- `reference/symbiot/` — Symbiot SEP integration
+- `reference/ims/` — IMS system
+- `reference/meter-department/` — Meter department files
+- `reference/energy-360/` — Energy 360 mobile app
+- `reference/all-last-update/` — Latest system updates
+
 ## Spec workflow (Speckit)
-- Feature specs live in `specs/<feature-id>/` — currently `001-metering-billing-platform/`.
-- Key files: `spec.md` (requirements), `plan.md` (impl plan), `data-model.md`, `contracts/meter-pulse-api.yaml`, `tasks.md`.
-- `.specify/` contains workflow config, skill templates, and Speckit pipeline scripts.
-- Run `quickstart.md` checks before kicking off `/speckit-tasks`.
-
-## Graphify (knowledge graph)
-- Graph lives at `Frontend/graphify-out/`. **Every frontend ticket must start with `graphify query "<objective>"`**.
-- After modifying code: `graphify update .`
-- See `Frontend/AGENTS.md` for full graphify rules.
-
-## Testing
-- Smoke tests: `bun run test:smoke` (Playwright, traverses all pages).
-- Backend contract/integration tests are planned but not yet set up.
-
-## Documentation (`documentation/`)
-- Organized by format type into subfolders:
-  - `markdown/` — readable docs (conversation log, memory files, DB schema, languages, packages, commit log)
-  - `sql/` — PostgreSQL DDL (20 tables with enums, indexes, views, triggers)
-  - `text/` — plain text versions of all markdown content
-  - `excel/` — CSV data (tables, state transitions, business rules, audit log, commit log)
-  - `pdf/` — printable PDF versions of all content
-- Start at `documentation/markdown/00-index.md` for the full file index
-- **Commit log**: `markdown/09-git-commit-log.md` / `excel/09-git-commit-log.csv` — every commit recorded with timestamp
+- Feature specs live in `specs/<feature-id>/`:
+  - `001-metering-billing-platform/` — T001-T085 (original Meter Pulse tasks)
+  - `002-meter-verse-core/` — T086-T092 (Core DB, Auth, 16 profiles)
+  - `003-symbiot-integration/` — Symbiot bridge (10 TCP × 100 HTTP)
+  - `004-migration-plans/` — Data migration + parallel run
+- Key files: `spec.md`, `plan.md`, `data-model.md`, `contracts/meter-verse-api.yaml`, `tasks.md`.
 
 ## Git / Commit Discipline
-- **Author**: Kirllos Hany <kirllos.hany@epower.com.eg> (matches GitHub account Kirllos360)
-- **Style**: `TXXX: short description` (e.g., `T004: init Prisma ORM`)
-- **When**: After every completed task
-- **Push**: ONLY after user says "go" — never push without asking
-- **Token**: Never used without explicit user permission
-- **Pre-commit**: Always run `git status` first; only stage intended files; check for secrets
-- **Never commit**: `.env`, `*.db`, `.next/`, `node_modules/`, `graphify-out/cache/`, workspace archives, tokens
+- **GitHub**: https://github.com/Kirllos360/Meter
+- **Author**: Kirllos Hany <kirllos.hany@epower.com.eg>
+- **Style**: `TXXX: short description`
+- **Push**: ONLY after user says "go"
+- **Never commit**: `.env`, `*.db`, `.next/`, `node_modules/`, `graphify-out/cache/`
 
-## T005 Memory Log (2026-05-26)
+## T086+ (Meter Verse v2.0.0 Migration)
+- Phase 0: Core DB schema (15 tables) + Features DB (10 tables)
+- Phase 1: Area DB template (45 tables), 16-profile RBAC, i18n (676 keys)
+- Phase 2: Symbiot bridge (10 TCP × 100 HTTP multiplex), 3 availability plans
+- Phase 3: Customer, Meter, Balances, Payments, Invoices, Readings pages
+- Phase 4: Meter Lifecycle, Tariffs, Workspace, 32 reports, Admin/Superadmin
+- Phase 5: Data migration (SBill PH, SBill Estates, Collection Tracker → new)
+- Phase 6: Security audit, load test, CI/CD
+- Phase 7: Deploy, cutover, documentation freeze
 
 - **Task**: T005 — Add local PostgreSQL via docker-compose
 - **Status**: done
@@ -190,7 +216,7 @@ Every time the user sends a message, run `git status --short` to detect any chan
 - `/api/v1/docs-json` — OpenAPI JSON spec
 
 ### OpenAPI Configuration
-- Title: Meter Pulse API
+- Title: Meter Verse API
 - Version: 1.0
 - Server: /api/v1
 - JWT bearer auth scheme pre-configured
@@ -218,7 +244,7 @@ Every time the user sends a message, run `git status --short` to detect any chan
 
 ### What Changed
 - Created `backend/prisma/migrations/20260528000200_views/migration.sql` with 3 views:
-  - `meter_assignment_active_view` — active meter assignments (7 cols, filter `end_at IS NULL`)
+  - `Meter_Verse_assignment_active_view` — active meter assignments (7 cols, filter `end_at IS NULL`)
   - `sim_assignment_active_view` — active SIM assignments (6 cols, filter `end_at IS NULL`)
   - `customer_statement_view` — financial statement with debit/credit/running_balance (8 cols)
 - All views use `CREATE OR REPLACE VIEW` with `sim_system` schema qualification
@@ -226,7 +252,7 @@ Every time the user sends a message, run `git status --short` to detect any chan
 - Running balance uses stored `running_balance` from append-only ledger
 
 ### Dependencies
-- T014 (meter_assignments, sim_assignments tables)
+- T014 (Meter_Verse_assignments, sim_assignments tables)
 - T017 (customer_ledger_entries table)
 
 ### Validation
@@ -485,3 +511,56 @@ const source = getModuleSource('projects'); // returns 'mock' or 'api'
 - Path: `restore-point-20260531-094024/`
 - Start with: `AI_HANDOFF.md`
 - Next tasks: T049+ in `specs/001-metering-billing-platform/tasks.md`
+
+---
+
+## T086+ Memory Log (Meter Verse v2.0.0)
+
+**Status**: Planning Complete | Implementation: Pending
+**Date**: 2026-06-13
+**Branch**: `main` (new Meter repo)
+
+### Architecture Summary
+
+- **3 Plans**: Full (all modules), Safety (metering only), Failover (read-only)
+- **15 Areas**: october, new_cairo, sodic_ednc, sodic_estates, sodic_vye, badya_city, north_coast, uvines_mall, +7 future
+- **14 Pages**: Dashboard, Customers, Meters, Balances, Payments, Invoices, Readings, Meter Lifecycle, Tariffs, Workspace, Reports, Admin, Locations, Login
+- **16 Profiles**: super_admin, system_admin, admin, area_manager, team_leader, operator, technician, finance, support, customer, collector, meter_reader, inspector, supervisor, accountant, viewer
+- **Reference Systems** (7): collection-system, sbill, symbiot, ims, meter-department, energy-360, all-last-update
+
+### Task Progress
+
+| Phase | Tasks | Status |
+|-------|-------|--------|
+| 0: Foundation | T086-T090 | Pending |
+| 1: Infrastructure | T091-T092 | Pending |
+| 2: Core Pages | T093-T098 | Pending |
+| 3: Features | T099-T106 | Pending |
+| 4: Migration | T107-T111 | Pending |
+| 5: Quality | T112-T116 | Pending |
+| 6: Launch | T117-T120 | Pending |
+
+### Documentation Created
+
+- `docs/planning/` — 12 planning documents with Mermaid diagrams
+- `specs/002-meter-verse-core/` — Core DB, RBAC, i18n specs
+- `specs/003-symbiot-integration/` — Symbiot bridge specs
+- `specs/004-migration-plans/` — Migration plans
+
+### Next Action
+
+Start T086: Create Core DB schema (15 tables)
+
+### Key Files
+
+| Path | Purpose |
+|------|---------|
+| `docs/planning/v2.0.0-planning-strategy.md` | Overall strategy |
+| `docs/planning/v2.0.0-implementation-roadmap.md` | 12-phase roadmap |
+| `docs/planning/v2.0.0-tasks.md` | T086-T150 tasks |
+| `docs/planning/v2.0.0-data-model.md` | Full data model |
+| `docs/planning/v2.0.0-workflow.md` | 9 workflow diagrams |
+| `docs/planning/v2.0.0-security.md` | Security architecture |
+| `specs/002-meter-verse-core/spec.md` | Core spec |
+| `specs/002-meter-verse-core/plan.md` | Core implementation plan |
+| `specs/002-meter-verse-core/data-model.md` | Core data model |

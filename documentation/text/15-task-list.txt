@@ -1,4 +1,4 @@
-﻿Task List â€” Meter Pulse MVP
+Task List — Meter Verse MVP
 
 Ready to paste into Notion as a task database.
 Source: specs/001-metering-billing-platform/tasks.md
@@ -9,11 +9,11 @@ Phase 1: Setup (Shared Infrastructure)
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T001   Create NestJS backend project scaffold   âœ… Done   High  
-  T002   Add config + PostgreSQL connection module   âœ… Done   High  
-  T003   Configure backend lint/format/test tooling   âœ… Done   High  
-  T004   Initialize Prisma ORM   âœ… Done   High  
-  T005   Add local PostgreSQL via docker-compose   âœ… Done   High  
+  T001   Create NestJS backend project scaffold   ✅ Done   High  
+  T002   Add config + PostgreSQL connection module   ✅ Done   High  
+  T003   Configure backend lint/format/test tooling   ✅ Done   High  
+  T004   Initialize Prisma ORM   ✅ Done   High  
+  T005   Add local PostgreSQL via docker-compose   ✅ Done   High  
 
 Phase 2: Foundational
 
@@ -21,162 +21,162 @@ Backend Cross-Cutting Infrastructure
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T006   Standard error envelope + global exception filter   âœ… Done   High  
-  T007   Correlation-ID middleware   âœ… Done   High  
-  T008   Idempotency-Key interceptor   âœ… Done   High  
-  T009   Auth (JWT) + RBAC guard + role model   âœ… Done   High  
-  T010   Append-only audit log service + interceptor   âœ… Done   High  
-  T011   API versioning /api/v1 + OpenAPI serving   âœ… Done   High  
-  T012   Contract-test harness against meter-pulse-api.yaml   âœ… Done   High  
+  T006   Standard error envelope + global exception filter   ✅ Done   High  
+  T007   Correlation-ID middleware   ✅ Done   High  
+  T008   Idempotency-Key interceptor   ✅ Done   High  
+  T009   Auth (JWT) + RBAC guard + role model   ✅ Done   High  
+  T010   Append-only audit log service + interceptor   ✅ Done   High  
+  T011   API versioning /api/v1 + OpenAPI serving   ✅ Done   High  
+  T012   Contract-test harness against meter-verse-api.yaml   ✅ Done   High  
 
 PostgreSQL Schema / Migrations
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T013   Project, LocationNode, Customer, CustomerUnitAssignment   âœ… Done   High  
-  T014   Meter, SIMCard, MeterAssignment, SIMAssignment   âœ… Done   High  
-  T015   Reading, ReadingReview, TariffPlan, BillingPeriod   âœ… Done   High  
-  T016   Invoice, InvoiceLine, InvoiceAdjustment   âœ… Done   High  
-  T017   Payment, PaymentAllocation, CustomerLedgerEntry   âœ… Done   High  
-  T018   AuditLog, ReportJob   âœ… Done   Medium  
-  T019   Derived views (customer_statement_view, meter_assignment_active_view, sim_assignment_active_view)   âœ… Done   Medium  
+  T013   Project, LocationNode, Customer, CustomerUnitAssignment   ✅ Done   High  
+  T014   Meter, SIMCard, MeterAssignment, SIMAssignment   ✅ Done   High  
+  T015   Reading, ReadingReview, TariffPlan, BillingPeriod   ✅ Done   High  
+  T016   Invoice, InvoiceLine, InvoiceAdjustment   ✅ Done   High  
+  T017   Payment, PaymentAllocation, CustomerLedgerEntry   ✅ Done   High  
+  T018   AuditLog, ReportJob   ✅ Done   Medium  
+  T019   Derived views (customer_statement_view, Meter_Verse_assignment_active_view, sim_assignment_active_view)   ✅ Done   Medium  
 
 Frontend Sprint 0 Foundation
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T020   FE-001 API client foundation   âœ… Done   High  
-  T021   FE-002 React Query integration pattern   âœ… Done   High  
-  T022   FE-003 Feature-flag toggles for API migration   âœ… Done   High  
+  T020   FE-001 API client foundation   ✅ Done   High  
+  T021   FE-002 React Query integration pattern   ✅ Done   High  
+  T022   FE-003 Feature-flag toggles for API migration   ✅ Done   High  
 
 
-Phase 3: User Story 1 â€” Meter & Location Assignments (P1 ðŸŽ¯)
+Phase 3: User Story 1 — Meter & Location Assignments (P1 🎯)
 
 Tests (Write First)
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T023   Contract test assignMeter (200 + 409)   âœ… Done   High  
-  T024   Contract test terminateMeter + getSimEligibility   âœ… Done   High  
-  T025   Contract test simEligibility   âœ… Done   High  
-  T026   Contract test createReading (201 + 422)   âœ… Done   High  
-  T027   Contract test listReadingReviewQueue   âœ… Done   High  
-  T028   Contract test generateInvoices   âœ… Done   Medium  
-  T029   Contract test issueInvoice   âœ… Done   Medium  
-  T030   Contract test addInvoiceAdjustment   âœ… Done   Medium  
+  T023   Contract test assignMeter (200 + 409)   ✅ Done   High  
+  T024   Contract test terminateMeter + getSimEligibility   ✅ Done   High  
+  T025   Contract test simEligibility   ✅ Done   High  
+  T026   Contract test createReading (201 + 422)   ✅ Done   High  
+  T027   Contract test listReadingReviewQueue   ✅ Done   High  
+  T028   Contract test generateInvoices   ✅ Done   Medium  
+  T029   Contract test issueInvoice   ✅ Done   Medium  
+  T030   Contract test addInvoiceAdjustment   ✅ Done   Medium  
 
 Backend Implementation
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T031   Projects module (CRUD + status + tax/threshold)   ðŸ”² Pending   High  
-  T032   Locations module (CRUD over LocationNode hierarchy)   ðŸ”² Pending   High  
-  T033   Customers module + CustomerUnitAssignment   ðŸ”² Pending   High  
-  T034   Meters module (CRUD + status lifecycle)   ðŸ”² Pending   High  
-  T035   SIM module (CRUD + eligibility endpoint)   ðŸ”² Pending   High  
-  T036   Assignment command + POST /api/v1/meters/{meterId}/assign   ðŸ”² Pending   High  
-  T037   Termination command + POST /api/v1/meters/{meterId}/terminate   ðŸ”² Pending   High  
-  T038   Dashboard summary endpoints   ðŸ”² Pending   High  
+  T031   Projects module (CRUD + status + tax/threshold)   🔲 Pending   High  
+  T032   Locations module (CRUD over LocationNode hierarchy)   🔲 Pending   High  
+  T033   Customers module + CustomerUnitAssignment   🔲 Pending   High  
+  T034   Meters module (CRUD + status lifecycle)   🔲 Pending   High  
+  T035   SIM module (CRUD + eligibility endpoint)   🔲 Pending   High  
+  T036   Assignment command + POST /api/v1/meters/{meterId}/assign   🔲 Pending   High  
+  T037   Termination command + POST /api/v1/meters/{meterId}/terminate   🔲 Pending   High  
+  T038   Dashboard summary endpoints   🔲 Pending   High  
 
 Frontend Migration
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T039   FE-010 Projects + Locations API migration   ðŸ”² Pending   High  
-  T040   FE-011 Customers API migration   ðŸ”² Pending   High  
-  T041   FE-012 Dashboard KPI backend wiring   ðŸ”² Pending   High  
-  T042   FE-020 Meters + SIM cards API migration   ðŸ”² Pending   High  
-  T043   FE-021 Meter assignment workflow hardening   ðŸ”² Pending   High  
-  T044   FE-022 Meter replacement + termination workflow   ðŸ”² Pending   High  
-  T045   FE-023 SIM cooldown + reuse eligibility UI   ðŸ”² Pending   Medium  
-  T046   US1 frontend batch validation + graph refresh   ðŸ”² Pending   High  
+  T039   FE-010 Projects + Locations API migration   🔲 Pending   High  
+  T040   FE-011 Customers API migration   🔲 Pending   High  
+  T041   FE-012 Dashboard KPI backend wiring   🔲 Pending   High  
+  T042   FE-020 Meters + SIM cards API migration   🔲 Pending   High  
+  T043   FE-021 Meter assignment workflow hardening   🔲 Pending   High  
+  T044   FE-022 Meter replacement + termination workflow   🔲 Pending   High  
+  T045   FE-023 SIM cooldown + reuse eligibility UI   🔲 Pending   Medium  
+  T046   US1 frontend batch validation + graph refresh   🔲 Pending   High  
 
 
-Phase 4: User Story 2 â€” Readings & Consumption (P2)
+Phase 4: User Story 2 — Readings & Consumption (P2)
 
 Tests (Write First)
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T047   Contract test createReading (201 + 422)   âœ… Done   Medium  
-  T048   Contract test listReadingReviewQueue   âœ… Done   Medium  
-  T049   Integration test â€” reading validation thresholds + suspicious flagging   ðŸ”² Pending   Medium  
+  T047   Contract test createReading (201 + 422)   ✅ Done   Medium  
+  T048   Contract test listReadingReviewQueue   ✅ Done   Medium  
+  T049   Integration test — reading validation thresholds + suspicious flagging   🔲 Pending   Medium  
 
 Backend Implementation
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T050   Project threshold-profile config   ðŸ”² Pending   Medium  
-  T051   Readings module + POST /api/v1/readings   âœ… Done   Medium  
-  T051a   Automatic polling ingestion adapter   ðŸ”² Pending   Low  
-  T052   Review queue + actions (approve/reject/correct)   âœ… Done (GET only)   Medium  
-  T052a   Water main-vs-sub variance service + GET /api/v1/projects/{projectId}/water-balance   ðŸ”² Pending   Medium  
-  T053   FE-030 Readings API migration   ðŸ”² Pending   Medium  
-  T054   FE-031 Reading schema + business validation   ðŸ”² Pending   Medium  
-  T055   FE-032 Anomaly review queue   ðŸ”² Pending   Medium  
-  T055a   Water balance UI migration   ðŸ”² Pending   Medium  
-  T056   US2 frontend batch validation + graph refresh   ðŸ”² Pending   Medium  
+  T050   Project threshold-profile config   🔲 Pending   Medium  
+  T051   Readings module + POST /api/v1/readings   ✅ Done   Medium  
+  T051a   Automatic polling ingestion adapter   🔲 Pending   Low  
+  T052   Review queue + actions (approve/reject/correct)   ✅ Done (GET only)   Medium  
+  T052a   Water main-vs-sub variance service + GET /api/v1/projects/{projectId}/water-balance   🔲 Pending   Medium  
+  T053   FE-030 Readings API migration   🔲 Pending   Medium  
+  T054   FE-031 Reading schema + business validation   🔲 Pending   Medium  
+  T055   FE-032 Anomaly review queue   🔲 Pending   Medium  
+  T055a   Water balance UI migration   🔲 Pending   Medium  
+  T056   US2 frontend batch validation + graph refresh   🔲 Pending   Medium  
 
 
-Phase 5: User Story 3 â€” Invoices, Payments, Ledger (P3)
+Phase 5: User Story 3 — Invoices, Payments, Ledger (P3)
 
 Tests (Write First)
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T057   Contract test generateInvoices   âœ… Done   Medium  
-  T058   Contract test issueInvoice   âœ… Done   Medium  
-  T059   Contract test addInvoiceAdjustment   âœ… Done   Medium  
-  T060   Contract test createPayment + reversePayment   ðŸ”² Pending   Medium  
-  T061   Contract test getCustomerStatement   ðŸ”² Pending   Medium  
-  T062   Integration test â€” invoice immutability + adjustment flow   ðŸ”² Pending   Medium  
-  T063   Integration test â€” oldest-due-first allocation   ðŸ”² Pending   Medium  
-  T064   Integration test â€” super-admin-only reversal + audit   ðŸ”² Pending   Medium  
-  T065   Integration test â€” ledger running balance   ðŸ”² Pending   Medium  
+  T057   Contract test generateInvoices   ✅ Done   Medium  
+  T058   Contract test issueInvoice   ✅ Done   Medium  
+  T059   Contract test addInvoiceAdjustment   ✅ Done   Medium  
+  T060   Contract test createPayment + reversePayment   🔲 Pending   Medium  
+  T061   Contract test getCustomerStatement   🔲 Pending   Medium  
+  T062   Integration test — invoice immutability + adjustment flow   🔲 Pending   Medium  
+  T063   Integration test — oldest-due-first allocation   🔲 Pending   Medium  
+  T064   Integration test — super-admin-only reversal + audit   🔲 Pending   Medium  
+  T065   Integration test — ledger running balance   🔲 Pending   Medium  
 
 Backend Implementation (Billing Stubs Done)
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T066   Tariff + billing-period module   ðŸ”² Pending   Medium  
-  T067   Invoice generation POST /api/v1/invoices/generate   âœ… Done (stub)   Medium  
-  T067a   Water difference handling in invoice generation   ðŸ”² Pending   Medium  
-  T068   Invoice issue POST /api/v1/invoices/{invoiceId}/issue   âœ… Done (stub)   Medium  
-  T069   Invoice adjustments POST /api/v1/invoices/{invoiceId}/adjustments   âœ… Done (stub)   Medium  
-  T070   Payments POST /api/v1/payments (oldest-due-first)   ðŸ”² Pending   Medium  
-  T071   Payment reversal POST /api/v1/payments/{paymentId}/reverse   ðŸ”² Pending   Medium  
-  T072   Ledger service + GET /api/v1/customers/{customerId}/statement   ðŸ”² Pending   Medium  
+  T066   Tariff + billing-period module   🔲 Pending   Medium  
+  T067   Invoice generation POST /api/v1/invoices/generate   ✅ Done (stub)   Medium  
+  T067a   Water difference handling in invoice generation   🔲 Pending   Medium  
+  T068   Invoice issue POST /api/v1/invoices/{invoiceId}/issue   ✅ Done (stub)   Medium  
+  T069   Invoice adjustments POST /api/v1/invoices/{invoiceId}/adjustments   ✅ Done (stub)   Medium  
+  T070   Payments POST /api/v1/payments (oldest-due-first)   🔲 Pending   Medium  
+  T071   Payment reversal POST /api/v1/payments/{paymentId}/reverse   🔲 Pending   Medium  
+  T072   Ledger service + GET /api/v1/customers/{customerId}/statement   🔲 Pending   Medium  
 
 Frontend Migration
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T073   FE-040 Invoices API migration + state machine   ðŸ”² Pending   Medium  
-  T074   FE-041 Payments allocation workflow   ðŸ”² Pending   Medium  
-  T075   FE-042 Balances aging + collector tooling   ðŸ”² Pending   Medium  
-  T076   FE-043 Customer statements v1   ðŸ”² Pending   Medium  
-  T076a   Consumption view migration   ðŸ”² Pending   Medium  
-  T077   US3 frontend batch validation + graph refresh   ðŸ”² Pending   Medium  
+  T073   FE-040 Invoices API migration + state machine   🔲 Pending   Medium  
+  T074   FE-041 Payments allocation workflow   🔲 Pending   Medium  
+  T075   FE-042 Balances aging + collector tooling   🔲 Pending   Medium  
+  T076   FE-043 Customer statements v1   🔲 Pending   Medium  
+  T076a   Consumption view migration   🔲 Pending   Medium  
+  T077   US3 frontend batch validation + graph refresh   🔲 Pending   Medium  
 
 
 Phase 6: Polish & Cross-Cutting
 
   ID   Description   Status   Priority  
  ---- ------------- -------- ---------- 
-  T078   Report export jobs (POST + GET)   ðŸ”² Pending   Low  
-  T079   Contract test report endpoints   ðŸ”² Pending   Low  
-  T080   RBAC action-gating + audit coverage tests   ðŸ”² Pending   Low  
-  T081   FE-050 Reports v2 with async exports   ðŸ”² Pending   Low  
-  T082   FE-051 Action-level permission gating   ðŸ”² Pending   Low  
-  T083   FE-052 Alerts â†’ Tickets linkage (out of scope)   ðŸ”² Pending   Low  
-  T084   FE-060 Frontend contract + integration tests in CI   ðŸ”² Pending   Low  
-  T085   FE-061 E2E coverage expansion   ðŸ”² Pending   Low  
-  T086   FE-062 Observability + UX resilience   ðŸ”² Pending   Low  
-  T087   Polish frontend batch validation + graph refresh   ðŸ”² Pending   Low  
-  T088   Reconcile full backend contract suite   ðŸ”² Pending   Low  
-  T089   Run quickstart.md MVP acceptance validation   ðŸ”² Pending   Low  
-  T089a   Backup/restore drill + RPO/RTO verification   ðŸ”² Pending   Low  
-  T090   Ratify project constitution   ðŸ”² Pending   Low  
+  T078   Report export jobs (POST + GET)   🔲 Pending   Low  
+  T079   Contract test report endpoints   🔲 Pending   Low  
+  T080   RBAC action-gating + audit coverage tests   🔲 Pending   Low  
+  T081   FE-050 Reports v2 with async exports   🔲 Pending   Low  
+  T082   FE-051 Action-level permission gating   🔲 Pending   Low  
+  T083   FE-052 Alerts → Tickets linkage (out of scope)   🔲 Pending   Low  
+  T084   FE-060 Frontend contract + integration tests in CI   🔲 Pending   Low  
+  T085   FE-061 E2E coverage expansion   🔲 Pending   Low  
+  T086   FE-062 Observability + UX resilience   🔲 Pending   Low  
+  T087   Polish frontend batch validation + graph refresh   🔲 Pending   Low  
+  T088   Reconcile full backend contract suite   🔲 Pending   Low  
+  T089   Run quickstart.md MVP acceptance validation   🔲 Pending   Low  
+  T089a   Backup/restore drill + RPO/RTO verification   🔲 Pending   Low  
+  T090   Ratify project constitution   🔲 Pending   Low  
 
 
 Summary: 55/90 tasks complete (61%), 35 pending.

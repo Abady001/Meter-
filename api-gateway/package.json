@@ -1,0 +1,17 @@
+{
+  "name": "meter-verse-api-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API Gateway — Security puffer zone for Meter Verse",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "http-proxy-middleware": "^3.0.0",
+    "uuid": "^10.0.0"
+  }
+}

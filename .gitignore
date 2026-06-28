@@ -73,3 +73,19 @@ Frontend/graphify-out/.graphify_root
 
 # Restore points (large backup files)
 restore-point-*/
+
+# Reference systems (huge — 11+ GB total, kept locally only)
+reference/
+
+# Large tools (keep source, ignore node_modules)
+tools/playwright-mcp/node_modules/
+
+# Graphify raw caches
+graphify-out/cache/
+
+# Copy artifacts
+backup files/
+--version/
+
+# Runtime logs
+logs/

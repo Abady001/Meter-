@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="elec_invoice" pageWidth="421" pageHeight="297" orientation="Landscape" columnWidth="413" leftMargin="4" rightMargin="4" topMargin="5" bottomMargin="5" uuid="b3aae808-6eeb-4617-b9a8-226c81ef6df3">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="5"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<parameter name="invoiceId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  i.id,
+  i.[number],
+  i.status,
+  i.issue_date,
+  i.counsumption_month,
+  i.counsumption_value,
+  i.start_reading,
+  i.end_reading,
+  i.meter_serial,
+  i.customer_id,
+  t.name,
+  i.total_amt,
+  c.name_ar,
+  l.unit_no,
+  l.address_ar,
+  l.city,
+  i.balance_after,
+  i.balance_before,
+  (select amount from invoice_details id where invoice_id = $P{invoiceId} and name = 'Cosnumption') 'Cons',
+  (select amount from invoice_details id where invoice_id = $P{invoiceId} and name = 'Admin Fees') 'Admin',
+  (select amount from invoice_details id where invoice_id = $P{invoiceId} and name = 'Sewage') 'Sewage'
+from
+  invoice i,
+  customer c,
+  meter m,
+  tariff t,
+  location l
+where
+  i.customer_id = c.id
+  and i.meter_id = m.id
+  and m.tariff_id = t.id
+  and m.location_id = l.id
+  and i.id = $P{invoiceId}]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="number" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="issue_date" class="java.sql.Timestamp"/>
+	<field name="counsumption_month" class="java.sql.Timestamp"/>
+	<field name="counsumption_value" class="java.lang.Double"/>
+	<field name="start_reading" class="java.lang.Float"/>
+	<field name="end_reading" class="java.lang.Float"/>
+	<field name="meter_serial" class="java.lang.String"/>
+	<field name="customer_id" class="java.lang.Long"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="total_amt" class="java.lang.Float"/>
+	<field name="name_ar" class="java.lang.String"/>
+	<field name="unit_no" class="java.lang.String"/>
+	<field name="address_ar" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="balance_after" class="java.lang.Float"/>
+	<field name="balance_before" class="java.lang.Float"/>
+	<field name="Cons" class="java.lang.Float"/>
+	<field name="Admin" class="java.lang.Float"/>
+	<field name="Sewage" class="java.lang.Float"/>
+	<background>
+		<band height="247"/>
+	</background>
+	<detail>
+		<band height="285" splitType="Stretch">
+			<staticText>
+				<reportElement x="150" y="3" width="100" height="12" uuid="0bbcb40d-b9e1-49a6-8454-fb6ad80729b8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[فاتورة ميــــــاة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="84" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="9d4d41d5-2799-4ae4-89f6-e5d49bfebc91"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[القراءة السابقة (متر مكعب)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="118" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="ba85fa97-cfae-43cb-b5fd-5f2df8793987"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ الإستهلاك
+(متر مكعب)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="50" width="50" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="29193438-b794-4674-b48c-94d9aa07fc41"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[نوع النشاط]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="84" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="80cb4dee-8242-4a96-b552-47ba5d21d1b4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الرصيد السابق (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="150" y="50" width="50" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="13ec0b76-086e-4728-a1bd-46625d7a3e0e"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[اشهر المحاسبة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="118" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="a9db26f3-4e34-4160-9bf6-296a7bf0ca96"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الرصيد الحالي (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="236" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="83457161-c670-421b-be7e-5700184e1cc1"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ دمغات (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="177" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="14e38435-4785-4718-aba5-af9c964b14ee"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ رسوم (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="50" width="50" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="855bdbc0-d308-4243-ad8b-993dcadce525"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تاريخ الإصدار]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="41e00f9d-3e33-4551-873e-7688aa0f0df7"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[صرف صحي (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="34b5d69f-2d34-4a1f-9316-ddd195ce46af"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ خصومات (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="d9a3c8e7-1e51-4525-8901-d1636b99243d"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ الإستهلاك (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="50" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="960ee83a-7728-4c58-a7b7-531df3e7483a"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[القراءة حالية (متر مكعب)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="236" y="84" width="59" height="17" uuid="42e044bc-cd1c-4018-be24-bf095bd8b5ac"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[السيد/السيده:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="59" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="b087612a-a3d3-40e3-910c-6dbc4bd4c474"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ إدارية (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="200" y="50" width="50" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="c6af82a9-e77d-47f3-87a5-8734c8483139"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[رقم العداد]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="118" y="152" width="59" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="dbf8db04-1ec1-4361-b945-879d457c9ea8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ تسويات (جم)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="50" width="50" height="17" forecolor="#000000" backcolor="#CCCCFF" uuid="3859c26f-ae80-4128-90c9-ef0f17c8f124"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[كود العميل]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="236" y="118" width="59" height="17" uuid="41ca1aa8-67a1-4630-812c-87c37921a9b1"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[العنوان:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="67" width="50" height="17" uuid="e72941b7-daab-4810-8009-a71c03717e52"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="67" width="50" height="17" uuid="9bc5ac56-c905-4e48-ad93-34fc4499e15e"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="101" width="236" height="17" uuid="e6a576e4-a0b3-43e6-8b43-3c1544a68bf2"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name_ar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="67" width="50" height="17" uuid="1ce3be8f-d940-448c-84ba-b1592cf74c0c"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_serial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="295" y="135" width="59" height="17" uuid="dd821523-af6c-44a8-8087-d11bc6131d1c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{counsumption_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMM-yyyy">
+				<reportElement x="100" y="67" width="50" height="17" uuid="b9fd9d32-397d-47a9-9500-ae183957e7d4"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{counsumption_month}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="0" y="186" width="59" height="34" uuid="50f8ebaf-1efb-4f14-b974-54b14a9eda61"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amt} / 1000]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="295" y="67" width="59" height="17" uuid="064a11a1-6a24-4736-8172-3bd67543f2e3"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{end_reading}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="295" y="101" width="59" height="17" uuid="c2600344-ca34-421b-b042-75aef4c872b5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{start_reading}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="354" y="169" width="59" height="17" uuid="ad1f0a08-4538-4cb1-a410-e405e9688e8b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Sewage} == null ? "0" : $F{Sewage} / 1000]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="236" y="169" width="59" height="17" uuid="ac24ce57-6f54-4352-ae69-a540ee1195b9"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="177" y="169" width="59" height="17" uuid="172bdc57-b8f3-4e77-a42a-c89d291a364e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="59" y="169" width="59" height="17" uuid="ab2256bb-7969-483e-8f50-cfa99f682f32"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Admin} == null ? "0" : $F{Admin} / 1000]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="295" y="169" width="59" height="17" uuid="d2871f72-4b48-4246-b60d-6702e719d273"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cons} == null ? "0" : $F{Cons} / 1000]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="0" y="135" width="59" height="17" uuid="debcb0a7-3c44-4bad-b581-abf9b03442a6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance_after}.doubleValue() / 1000]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="67" width="50" height="17" uuid="488d5d6e-4ebc-4b71-b341-5798d1c3eeed"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{name}.equals("Residential")? "منزلي": $F{name})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="135" width="236" height="17" uuid="78bf3b52-afdc-4573-b8dd-da18f2bcc5f0"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["مشروع فوكا باي بقرية فوكا مركز الضبعة الساحل الشمالي مرسي مطروح"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="0" y="169" width="59" height="17" uuid="02990534-e2a2-4d6b-89d1-a4894e4e0165"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="59" y="186" width="295" height="34" uuid="6a073651-8f05-4f82-901c-82e50ba0f7b4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amt} != 0 ? com.hypercell.shared.utils.NumberToArabic.convertToArabic( ($F{total_amt}.doubleValue()/1000), "EGP" )
+: "صفر"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="186" width="59" height="34" forecolor="#000000" backcolor="#CCCCFF" uuid="04d3c029-39ec-4eb1-84d8-7de70eff68aa"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[المبلغ الإجمالي]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="0" y="220" width="59" height="34" uuid="573bd782-3dcf-49a7-ba7e-a195bc11eb06"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{balance_after} < 0) ? (-1 * ($F{balance_after}.doubleValue()/1000)) : 0]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="59" y="220" width="295" height="34" uuid="0531e4b7-b19c-4d7b-9919-9faf35fd6258"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amt} != 0 ? com.hypercell.shared.utils.NumberToArabic.convertToArabic( ($F{balance_after}.doubleValue()*-1/1000), "EGP" )
+: "صفر"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="220" width="59" height="34" forecolor="#000000" backcolor="#CCCCFF" uuid="85af059b-f244-44a1-bf47-309584b266fb"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ المطلوب
+سداده]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="118" y="169" width="59" height="17" uuid="fdd6378b-2f9a-437c-8ca4-9a5c9cdab872"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="0" y="101" width="59" height="17" uuid="9dfc206b-e083-4eba-bbb6-52b00ee2ccdf"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance_before}.doubleValue() / 1000]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="84" width="59" height="68" forecolor="#000000" backcolor="#CCCCFF" uuid="28fe4bdb-6c8f-447a-bb0d-26765828838e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[المحافظة: مرسى مطروح  المشروع: فوكا باي]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="50" width="59" height="34" uuid="7150ee21-19ee-4fed-a710-db0533bd331e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[الشركة المصرية للتنمية العمرانية والاستثمار السياحي ]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="-1" y="50" width="382" height="163" forecolor="#FF0033" backcolor="#FFFFFF" uuid="ef7f4dcf-2ef5-46a0-be93-dceeb97f540e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="60" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}.equals("DELETED") ? "ملغيــــة" : ""]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="155" y="255" width="81" height="30" uuid="5b24e01c-b524-4fbd-9ca2-c6836ad5514a"/>
+				<imageExpression><![CDATA["stamp_2.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="97" y="17" width="119" height="13" forecolor="#000000" uuid="95b60266-b423-4e45-b62c-8f2d38c19145"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="216" y="17" width="54" height="13" uuid="48cab165-14ce-4c69-a6cf-20000d0e04c6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[فاتورة رقم: ]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="117" y="30" width="101" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="572817c7-fc7b-4eae-9f41-3875144f6eac"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit_no}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="218" y="30" width="55" height="13" uuid="1b4575fb-bc64-4e0a-a533-9adb8792cbc1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ وحدة رقم:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="4" y="3" width="93" height="41" uuid="290cc422-24cb-40b8-b511-79e9a43b94c5"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA["logo_2.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

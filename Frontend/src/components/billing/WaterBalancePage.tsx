@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockWaterBalanceData, mockProjects, mockBuildings, mockMeters } from '@/lib/mock-data';
+import { useProjectsList } from '@/hooks/use-projects';
 import { useWaterBalance } from '@/hooks/use-water-balance';
 import { PageHeader, StatCard } from '@/components/shared/PageHelpers';
 import { StatusBadge } from '@/components/shared/StatusBadge';
@@ -13,6 +13,7 @@ import SmartTable from '@/components/smart-table/SmartTable';
 import { cn } from '@/lib/utils';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts';
 import { AlertTriangle, Droplets } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 const childMeters = [
   { serial: 'CW-2024-0001', customer: 'Hassan Abdel-Rahim', unit: 'A-102', consumption: 600 },
@@ -25,16 +26,18 @@ const childMeters = [
 ];
 
 export default function WaterBalancePage() {
-  const [selectedProject, setSelectedProject] = useState('PRJ-001');
+  const t = useT();
+  const { data: projects = [] } = useProjectsList();
+  const [selectedProject, setSelectedProject] = useState('');
   const from = '2026-01-01';
   const to = '2026-01-31';
   const { data: apiData } = useWaterBalance(selectedProject, from, to);
-  const latest = apiData ?? mockWaterBalanceData[mockWaterBalanceData.length - 1] as any;
-  const exceedsThreshold = latest.coveragePercentage !== undefined ? latest.coveragePercentage < 80 : latest.differencePercent > latest.threshold;
+  const latest = apiData ?? { mainMeterConsumption: 0, childMetersTotal: 0, difference: 0, differencePercent: 0, threshold: 10, coveragePercentage: 100 } as any;
+  const exceedsThreshold = latest.coveragePercentage !== undefined ? latest.coveragePercentage < 80 : (latest.differencePercent > latest.threshold);
 
   return (
     <div>
-      <PageHeader title="Water Balance" subtitle="Track water balance between main and child meters" />
+      <PageHeader title={t('billing.waterBalance.title')} subtitle={t('billing.waterBalance.subtitle')} />
 
       {/* Selector */}
       <div className="mb-6 flex items-center gap-4">
@@ -43,7 +46,7 @@ export default function WaterBalancePage() {
           <Select value={selectedProject} onValueChange={setSelectedProject}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {mockProjects.filter((p) => p.status === 'active').map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+              {(projects ?? []).filter((p) => p.status === 'active').map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
@@ -51,9 +54,9 @@ export default function WaterBalancePage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        <StatCard label="Main Meter" value={latest.mainMeterConsumption.toLocaleString()} icon={<Droplets className="h-5 w-5" />} />
-        <StatCard label="Child Meters Total" value={latest.childMetersTotal.toLocaleString()} />
-        <StatCard label="Difference" value={latest.difference.toLocaleString()} color={exceedsThreshold ? 'text-red-500' : 'text-emerald-500'} />
+        <StatCard label={t('billing.waterBalance.mainMeter')} value={latest.mainMeterConsumption.toLocaleString()} icon={<Droplets className="h-5 w-5" />} />
+        <StatCard label={t('billing.waterBalance.subMeters')} value={latest.childMetersTotal.toLocaleString()} />
+        <StatCard label={t('billing.waterBalance.variance')} value={latest.difference.toLocaleString()} color={exceedsThreshold ? 'text-red-500' : 'text-emerald-500'} />
         <StatCard label="Difference %" value={`${latest.differencePercent}%`} color={exceedsThreshold ? 'text-red-500' : 'text-emerald-500'} />
         <StatCard label="Threshold" value={`${latest.threshold}%`} />
       </div>
@@ -71,7 +74,7 @@ export default function WaterBalancePage() {
           <CardHeader className="pb-2"><CardTitle className="text-sm">Difference Trend</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={mockWaterBalanceData}>
+              <LineChart data={[]}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
                 <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />

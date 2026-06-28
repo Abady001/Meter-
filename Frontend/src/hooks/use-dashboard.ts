@@ -28,20 +28,23 @@ interface RecentActivityDto {
 export function useDashboardKpis(projectId?: string) {
   return useQuery({
     queryKey: ['dashboard', 'kpis', projectId],
-    queryFn: () => apiGet<KpiSummaryDto>(projectId ? `/projects/${projectId}/dashboard/kpis` : '/dashboard/kpis'),
+    queryFn: () => apiGet<KpiSummaryDto>(`/projects/${projectId}/dashboard/kpis`),
+    enabled: !!projectId,
   });
 }
 
 export function useConsumptionTrend(projectId?: string) {
   return useQuery({
     queryKey: ['dashboard', 'consumption', projectId],
-    queryFn: () => apiGet<ConsumptionTrendDto>(projectId ? `/projects/${projectId}/dashboard/consumption-trend` : '/dashboard/consumption-trend'),
+    queryFn: () => apiGet<ConsumptionTrendDto>(`/projects/${projectId}/dashboard/consumption`),
+    enabled: !!projectId,
   });
 }
 
 export function useRecentActivity(projectId?: string) {
   return useQuery({
     queryKey: ['dashboard', 'activity', projectId],
-    queryFn: () => apiGet<RecentActivityDto>(projectId ? `/projects/${projectId}/dashboard/recent-activity` : '/dashboard/recent-activity'),
+    queryFn: () => apiGet<RecentActivityDto>(`/projects/${projectId}/dashboard/activity`),
+    enabled: !!projectId,
   });
 }

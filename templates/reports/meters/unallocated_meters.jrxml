@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="unallocated_meters" pageWidth="720" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="680" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3cd41ce5-13e0-47c4-a5fa-76d5f4b5d781">
+	<property name="ireport.zoom" value="0.8264462809917358"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Billing"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.1" value="title"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.3" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="Summary"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.4" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.group.5" value="Org Group"/>
+	<style name="alternateStyle" mode="Transparent" backcolor="#FFFFFF" fontName="DejaVu Sans">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></conditionExpression>
+			<style backcolor="#0000FF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="meter_serial" class="java.lang.String"/>
+	<parameter name="meter_type" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+  (select project_title_ar from adm_project where id = meter.project_id) project_title,
+  (select address_ar from adm_project where id = meter.project_id) address,
+  (select img from adm_project where id = meter.project_id) logo,
+  meter.serial AS meter_serial,
+  meter.name AS meter_name,
+  meter.status AS meter_status,
+  '' AS meter_model,
+  meter.type AS meter_type
+FROM
+  meter
+WHERE
+  meter.status = 'NEW'
+  AND (meter.serial = $P{meter_serial} OR $P{meter_serial} IS NULL)
+  AND (meter.type = $P{meter_type} OR $P{meter_type} IS NULL)
+ORDER BY
+  meter.id]]>
+	</queryString>
+	<field name="project_title" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="logo" class="java.lang.String"/>
+	<field name="meter_serial" class="java.lang.String"/>
+	<field name="meter_name" class="java.lang.String"/>
+	<field name="meter_status" class="java.lang.String"/>
+	<field name="meter_model" class="java.lang.String"/>
+	<field name="meter_type" class="java.lang.String"/>
+	<variable name="total_meters" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{meter_serial}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="23" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement mode="Opaque" x="400" y="0" width="280" height="20" forecolor="#333333" backcolor="#CCCCCC" uuid="2c9eddc6-6263-402a-b436-25da42278c39"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="21" width="680" height="1" forecolor="#000066" uuid="8e076839-1401-4be3-b557-2981cd8b9b7f"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="400" height="20" forecolor="#333333" backcolor="#CCCCCC" uuid="09177219-3c5f-4022-b632-9487a91ce839"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Smart Metering Billing System                                                                              ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="14" y="6" width="345" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="d36b6eb2-6cce-4417-83e5-cf4ada46531b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Unallocated Meters]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="14" y="34" width="345" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a613d0da-476d-438d-96e3-4d047348c450"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Shows meters that not yet assigned to a customer or unit]]></text>
+			</staticText>
+			<image>
+				<reportElement x="529" y="8" width="151" height="45" uuid="8d287fb5-2dd6-4520-9eda-c4feaf742acf"/>
+				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{logo}.substring( 22,$F{logo}.length()).getBytes()))]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="359" y="0" width="116" height="30" forecolor="#000000" backcolor="#CCCCFF" uuid="b95f0074-a432-4687-926f-b5036b407b2f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Meter Serial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="475" y="0" width="86" height="30" forecolor="#000000" backcolor="#CCCCFF" uuid="7af08967-22a9-4ffe-90b2-50c2fa408763"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="359" height="30" forecolor="#000000" backcolor="#CCCCFF" uuid="9c52a633-8cee-4631-bbf8-bb34dfa601ce"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Meter Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="561" y="0" width="119" height="30" forecolor="#000000" backcolor="#CCCCFF" uuid="e1352f85-9be4-45d6-ad5e-1b62621ab4f1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Service]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<rectangle>
+				<reportElement x="0" y="0" width="680" height="20" backcolor="#CCCCCC" uuid="f7d6b344-aff1-4493-a45f-276ed6329925">
+					<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="359" y="0" width="116" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e6c96a80-7e10-48c9-a619-ee7d0d892ebc"/>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_serial}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="475" y="0" width="86" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9f525660-dc2a-47b7-ade3-ca5b170fd6a6"/>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_status}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="359" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fcd7b0c3-f464-4a67-b6d6-d67104bee9f8"/>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="561" y="0" width="119" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e27b27a3-1c91-4ef0-9bbe-3d6184cbc83c"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_type}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="24">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="11" width="561" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="f0d68fa3-1540-4f49-bcb9-b17096c33ed2"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="561" y="11" width="119" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="504e4691-f0e9-47fe-8487-3a87992247b8"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy">
+				<reportElement x="0" y="11" width="184" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="72e5f5fb-3b1d-4a32-a5c6-b7e0117e6abf"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="29">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="9" width="359" height="20" forecolor="#000000" backcolor="#CCCCFF" uuid="3de8fda7-d09b-47b8-b880-1f6c58f4002a"/>
+				<box>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total Count ]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="359" y="9" width="321" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5ce8a73d-1cc5-450b-a795-cd992dd05216"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_meters}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

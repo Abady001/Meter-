@@ -1,29 +1,29 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: meter-pulse-db
+    container_name: meter-verse-db
     restart: unless-stopped
     ports:
       - "${DB_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: ${DB_NAME:-meter_pulse}
-      POSTGRES_USER: ${DB_USER:-meter_pulse}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-meter_pulse_dev}
+      POSTGRES_DB: ${DB_NAME:-Meter_Verse_pulse}
+      POSTGRES_USER: ${DB_USER:-Meter_Verse_pulse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-Meter_Verse_pulse_dev}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-meter_pulse} -d ${DB_NAME:-meter_pulse}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-Meter_Verse_pulse} -d ${DB_NAME:-Meter_Verse_pulse}"]
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
-      - meter-pulse-net
+      - meter-verse-net
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: meter-pulse-api
+    container_name: meter-verse-api
     restart: unless-stopped
     ports:
       - "${API_PORT:-3001}:3001"
@@ -31,11 +31,11 @@ services:
       PORT: ${API_PORT:-3001}
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-meter_pulse}
+      DB_NAME: ${DB_NAME:-Meter_Verse_pulse}
       DB_SCHEMA: ${DB_SCHEMA:-sim_system}
-      DB_USER: ${DB_USER:-meter_pulse}
-      DB_PASSWORD: ${DB_PASSWORD:-meter_pulse_dev}
-      DATABASE_URL: postgresql://${DB_USER:-meter_pulse}:${DB_PASSWORD:-meter_pulse_dev}@db:5432/${DB_NAME:-meter_pulse}?schema=${DB_SCHEMA:-sim_system}
+      DB_USER: ${DB_USER:-Meter_Verse_pulse}
+      DB_PASSWORD: ${DB_PASSWORD:-Meter_Verse_pulse_dev}
+      DATABASE_URL: postgresql://${DB_USER:-Meter_Verse_pulse}:${DB_PASSWORD:-Meter_Verse_pulse_dev}@db:5432/${DB_NAME:-Meter_Verse_pulse}?schema=${DB_SCHEMA:-sim_system}
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-3600}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
@@ -43,13 +43,13 @@ services:
       db:
         condition: service_healthy
     networks:
-      - meter-pulse-net
+      - meter-verse-net
 
   frontend:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
-    container_name: meter-pulse-web
+    container_name: meter-verse-web
     restart: unless-stopped
     ports:
       - "${WEB_PORT:-3000}:3000"
@@ -59,10 +59,10 @@ services:
     depends_on:
       - backend
     networks:
-      - meter-pulse-net
+      - meter-verse-net
 
 networks:
-  meter-pulse-net:
+  meter-verse-net:
     driver: bridge
 
 volumes:

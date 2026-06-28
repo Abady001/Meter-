@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { mockMeters } from '@/lib/mock-data';
 import { useMetersList } from '@/hooks/use-meters';
 import { useReplaceMeter } from '@/hooks/use-replace-meter';
 import { PageHeader } from '@/components/shared/PageHelpers';
@@ -16,8 +15,10 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { ArrowRightLeft, Check, Loader2 } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 export default function MeterReplacePage() {
+  const t = useT();
   const [currentMeterId, setCurrentMeterId] = useState('');
   const [newMeterId, setNewMeterId] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -28,7 +29,7 @@ export default function MeterReplacePage() {
   const metersQuery = useMetersList();
   const replaceMutation = useReplaceMeter();
 
-  const allMeters = metersQuery.data ?? mockMeters;
+  const allMeters = metersQuery.data ?? [];
   const currentMeter = allMeters.find((m) => m.id === currentMeterId);
   const assignedMeters = allMeters.filter((m) => m.status === 'active' || m.status === 'offline');
   const availableMeters = currentMeter
@@ -65,15 +66,15 @@ export default function MeterReplacePage() {
 
     try {
       await replaceMutation.mutateAsync({ oldMeterId: currentMeterId, newMeterId, data: payload });
-      toast.success('Meter replaced successfully');
-    } catch {
-      toast.success('Meter replaced successfully (mock)');
+      toast.success(t('meters.replace.success'));
+    } catch (error: any) {
+      toast.error(error?.message || t('common.error'));
     }
   };
 
   return (
     <div>
-      <PageHeader title="Replace Meter" subtitle="Replace an existing meter with a new one" />
+      <PageHeader title={t('meters.replace.title')} subtitle={t('meters.replace.subtitle')} />
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Current Meter */}
@@ -93,13 +94,13 @@ export default function MeterReplacePage() {
 
             {currentMeter && (
               <div className="mt-4 p-4 rounded-lg bg-muted/30 text-sm space-y-2">
-                <div className="flex justify-between"><span className="text-muted-foreground">Serial</span><span className="font-mono">{currentMeter.serialNumber}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Type</span><StatusBadge status={currentMeter.meterType} /></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.serialNumber')}</span><span className="font-mono">{currentMeter.serialNumber}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.type')}</span><StatusBadge status={currentMeter.meterType} /></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Brand/Model</span><span>{currentMeter.brand} {currentMeter.model}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Customer</span><span>{currentMeter.customerName || '-'}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.customer')}</span><span>{currentMeter.customerName || '-'}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Unit</span><span>{currentMeter.unitNumber || '-'}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Last Reading</span><span>{currentMeter.lastReading?.toLocaleString() || '-'}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Status</span><StatusBadge status={currentMeter.status} /></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.lastReading')}</span><span>{currentMeter.lastReading?.toLocaleString() || '-'}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.status')}</span><StatusBadge status={currentMeter.status} /></div>
               </div>
             )}
           </CardContent>
@@ -108,7 +109,7 @@ export default function MeterReplacePage() {
         {/* New Meter */}
         <Card className="glass-card border-border/50">
           <CardContent className="p-6">
-            <h3 className="font-semibold mb-4">New Meter</h3>
+            <h3 className="font-semibold mb-4">{t('meters.replace.newMeter')}</h3>
             <Select value={newMeterId} onValueChange={setNewMeterId}>
               <SelectTrigger><SelectValue placeholder="Select new meter" /></SelectTrigger>
               <SelectContent>
@@ -136,7 +137,7 @@ export default function MeterReplacePage() {
                   {validationErrors.finalReading && <p className="text-xs text-red-500 mt-1">{validationErrors.finalReading}</p>}
                 </div>
                 <div>
-                  <Label>Reason</Label>
+                  <Label>{t('meters.replace.reason')}</Label>
                   <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Enter reason for replacement..." rows={3} />
                   {validationErrors.reason && <p className="text-xs text-red-500 mt-1">{validationErrors.reason}</p>}
                 </div>
@@ -167,7 +168,7 @@ export default function MeterReplacePage() {
             </div>
             <Button className="mt-4 gap-2" onClick={handleConfirm} disabled={replaceMutation.isPending}>
               {replaceMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-              {replaceMutation.isPending ? 'Replacing...' : 'Confirm Replacement'}
+              {replaceMutation.isPending ? t('common.loading').replace('...', '') + '...' : t('meters.replace.submit')}
             </Button>
           </CardContent>
         </Card>

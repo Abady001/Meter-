@@ -7,7 +7,7 @@ export class MeterResponseDto {
   @ApiProperty()
   serialNumber!: string;
 
-  @ApiProperty({ enum: ['electricity', 'water_main', 'water_child'] })
+  @ApiProperty({ enum: ['electricity', 'water_main', 'water_child', 'solar', 'gas', 'chilled_water', 'outdoor_unit'] })
   meterType!: string;
 
   @ApiProperty()
@@ -15,6 +15,18 @@ export class MeterResponseDto {
 
   @ApiProperty()
   model!: string;
+
+  @ApiPropertyOptional()
+  phaseType?: string;
+
+  @ApiPropertyOptional()
+  ampRating?: string;
+
+  @ApiPropertyOptional()
+  diameter?: string;
+
+  @ApiPropertyOptional()
+  solarEnabled?: boolean;
 
   @ApiProperty({
     enum: [

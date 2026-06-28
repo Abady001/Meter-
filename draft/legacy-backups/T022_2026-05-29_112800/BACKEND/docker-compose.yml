@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: meter-verse-db
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-Meter_Verse_pulse}
+      POSTGRES_USER: ${DB_USER:-Meter_Verse_pulse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-Meter_Verse_pulse_dev}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-Meter_Verse_pulse} -d ${DB_NAME:-Meter_Verse_pulse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

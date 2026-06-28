@@ -17,6 +17,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from '../auth/types/role.enum';
 import { Audit } from '../audit/audit.decorator';
+import { NotificationsService } from '../notifications/notifications.service';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -24,20 +25,25 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 @Controller('projects')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(
+    private readonly projectsService: ProjectsService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   @Post()
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('project', 'create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateProjectDto, @Req() req: { user: { userId: string } }) {
-    return this.projectsService.create(dto, req.user.userId);
+    const project = await this.projectsService.create(dto, req.user.userId);
+    this.notificationsService.create({ userId: req.user.userId, title: `Project created: ${project.name}`, type: 'project', referenceType: 'assignment', referenceId: project.id }).catch(() => {});
+    return project;
   }
 
   @Get()
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -50,7 +56,7 @@ export class ProjectsController {
   @Get(':id')
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -61,7 +67,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('project', 'update')
   async update(
     @Param('id', ParseUUIDPipe) id: string,

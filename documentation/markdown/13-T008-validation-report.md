@@ -1,4 +1,4 @@
-# T008 Validation Report — Meter Pulse
+# T008 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T008 — Add Idempotency-Key interceptor

@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Prepaid Statement" language="groovy" pageWidth="1190" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3cd41ce5-13e0-47c4-a5fa-76d5f4b5d781">
+	<property name="ireport.zoom" value="0.7513148009015796"/>
+	<property name="ireport.x" value="178"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="title"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.4" value="summary"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.5" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.5" value="Organization"/>
+	<style name="alternateStyle" mode="Transparent" backcolor="#FFFFFF" fontName="DejaVu Sans">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></conditionExpression>
+			<style backcolor="#0000FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="624af762-9ce3-4c7a-98e4-7f50ddbaf01b"/>
+	<parameter name="customer_code" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="customer_code_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{customer_code} == null  ? "1=1" : "lower(customer.customer_code) like lower('%" + $P{customer_code} + "%')"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organization_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organization_ids_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{organization_ids} == null  ? "1=1" : "organization_portal.organizationid in (" + $P{organization_ids} + ")"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_start" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2014-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_end" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2014-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="database_type" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SQL"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[($P{database_type}.equalsIgnoreCase("ORCL")) ? "to_date(to_char(CHARGE_DATE,'yyyy-MM-dd'),'yyyy-MM-dd')>=to_date('"+$P{date_start}+"','yyyy-MM-dd') and to_date(to_char(CHARGE_DATE,'yyyy-MM-dd'),'yyyy-MM-dd')<=to_date('"+$P{date_end}+"','yyyy-MM-dd') " : " cast(CHARGE_DATE as date)>=cast('"+$P{date_start}+"' as date) and cast(CHARGE_DATE as date)<=cast('"+$P{date_end}+"' as date)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="customer_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="customer_name_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{customer_name} == null  ? "1=1" : ($P{database_type} == "ORCL" ? "lower(customer.customer_name) like lower('%" + $P{customer_name} + "%')" : "lower(customer.customer_name) like lower(N'%" + $P{customer_name} + "%')")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="meter_serial_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{meter_serial} == null  ? "1=1" : "meters.meter_serial like '%" + $P{meter_serial} + "%'"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="meter_serial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="location_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="location_name_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{location_name} == null  ? "1=1" : ($P{database_type} == "ORCL" ? "lower(location.full_location_name) like lower('%" + $P{location_name} + "%')" : "lower(location.full_location_name) like lower(N'%" + $P{location_name} + "%')")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select customer.customer_code,
+customer.customer_name, billing_account.name, meters.meter_serial,
+ prepaid_transaction_details.amount,
+ prepaid_transaction_details.charge_date,
+ lk_charge_type.charge_type_name,
+ prepaid_transaction_details.consumption_current_value,
+  prepaid_transaction_details.consumption_last_value,
+  prepaid_transaction_details.current_balance,
+organization_portal.name ORG_NAME
+ from
+prepaid_transaction_details ,
+ customer, billing_account, meters,lk_charge_type, organization_portal, location
+ where prepaid_transaction_details.customer_id=customer.customer_id
+ and billing_account.customer_id=customer.customer_id
+ and prepaid_transaction_details.billing_account_id=billing_account.billing_account_id
+and customer.organization_id=organization_portal.organizationid
+and meters.meter_id=prepaid_transaction_details.meter_id
+and meters.location_id=location.location_id
+and lk_charge_type.charge_type_id=prepaid_transaction_details.charge_type_id
+and $P!{date_where} and $P!{customer_code_where} and $P!{meter_serial_where} and $P!{organization_ids_where} and $P!{location_name_where}and $P!{customer_name_where}
+order by charge_date asc]]>
+	</queryString>
+	<field name="customer_code" class="java.lang.String"/>
+	<field name="customer_name" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="meter_serial" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="charge_date" class="java.sql.Timestamp"/>
+	<field name="charge_type_name" class="java.lang.String"/>
+	<field name="consumption_current_value" class="java.lang.Double"/>
+	<field name="consumption_last_value" class="java.lang.Double"/>
+	<field name="current_balance" class="java.lang.Double"/>
+	<field name="ORG_NAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="22" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement mode="Opaque" x="400" y="0" width="750" height="20" forecolor="#333333" backcolor="#CCCCCC" uuid="2c9eddc6-6263-402a-b436-25da42278c39"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="21" width="1150" height="1" forecolor="#000066" uuid="8e076839-1401-4be3-b557-2981cd8b9b7f"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="400" height="20" forecolor="#333333" backcolor="#CCCCCC" uuid="09177219-3c5f-4022-b632-9487a91ce839"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Smart Metering Billing System]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="14" y="12" width="345" height="28" forecolor="#990033" backcolor="#FFFFFF" uuid="d36b6eb2-6cce-4417-83e5-cf4ada46531b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Prepaid Statement Report]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="70" y="40" width="142" height="20" forecolor="#666666" uuid="8f672bea-28eb-4e49-aba5-7fad99ec603b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date_start}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="14" y="40" width="56" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1cbe65aa-213e-47ec-bcc9-baca5583c71f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="253" y="40" width="106" height="20" forecolor="#666666" uuid="8f8003d6-c36a-4e20-94c6-b05fdb044bd0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date_end}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="212" y="40" width="41" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c857b2f2-a51e-4196-8c56-72fb70eb4245"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="1025" y="20" width="125" height="30" uuid="3bbd2648-4f48-4b4f-b58e-699e7c728ff5"/>
+				<imageExpression><![CDATA["logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="48" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="25e67423-8f92-4929-a883-c497b778b1f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="48" y="0" width="164" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="afe7048b-66ba-4094-9d86-970d1314eb36"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="212" y="0" width="88" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="5f28b92a-4d22-4628-b917-3c3b9ba26233"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Meter Serial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="0" width="78" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="760fa4a7-5065-4632-a2aa-18cf7c5f2bbc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Unit No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="708" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="bf411eda-7772-4333-b98f-430575235c42"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Previous Reading]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="488" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="f0cd3e5d-992c-499f-a9f8-2d1d165f8673"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="598" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="00cb890e-52ee-4b42-8ada-cca95d7b2f15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="378" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="fdf8cf86-e748-4809-a9a4-e4d2b6d9a37e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Amount
+(LE)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="818" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="ec982e7b-d79e-4a36-ab8e-d5f1448a626c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Current Reading]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="928" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="781e9c39-e3a1-4ae6-bed1-4496ac4c99d5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Balance Before]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1038" y="0" width="112" height="30" forecolor="#FFFFFF" backcolor="#990000" uuid="ba6bd6d5-60d9-4c24-9dc5-32fe02f6c315"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Balance After]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<rectangle>
+				<reportElement x="0" y="0" width="1150" height="20" backcolor="#CCCCCC" uuid="c37a746f-3408-4b0b-a1af-5d5624a320c5">
+					<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="0" y="0" width="48" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="708ac20f-c21e-4614-98d7-e04dae38db92"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="48" y="0" width="164" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1fa7412f-0148-4577-b563-1dd998a4394c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="212" y="0" width="88" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7a4e8d00-f5e8-4b9f-aea2-f222a380a7db"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meter_serial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="488" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1f053afe-06e5-45fd-8b69-851bd89354ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{charge_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="300" y="0" width="78" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="97582699-8018-4e5c-83ff-5b5158848206"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="598" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="3c8fa05c-52a6-4e14-bc99-2164d06216a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{charge_type_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.000" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="708" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="27ed373b-2b7d-45e3-b51d-ca700a33cdd1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consumption_last_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="378" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="96603c34-5200-4345-90a8-98d52a38f463"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}/100]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.000" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="818" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="84bf004c-49be-49ab-9e86-e92b3e8528cd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consumption_current_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="928" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1029b047-814e-4016-a651-c207a631569e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{charge_type_name}.equalsIgnoreCase("recharge") ? ($F{current_balance}-$F{amount})/100 : ($F{current_balance}+$F{amount})/100 )]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="alternateStyle" mode="Transparent" x="1038" y="0" width="112" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ec0671c2-22b0-44d6-bf6c-5a9d5f695634"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{current_balance}/100]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="24">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="11" width="1095" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="f0d68fa3-1540-4f49-bcb9-b17096c33ed2"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="1095" y="11" width="55" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="504e4691-f0e9-47fe-8487-3a87992247b8"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="1" y="11" width="100" height="13" forecolor="#333333" backcolor="#CCCCCC" uuid="72e5f5fb-3b1d-4a32-a5c6-b7e0117e6abf"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

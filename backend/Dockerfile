@@ -1,18 +1,19 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production && cp -R node_modules /prod_modules && npm ci
+RUN npm ci
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
-FROM node:20-alpine
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+FROM node:20-alpine AS runner
 WORKDIR /app
-COPY --from=builder /prod_modules ./node_modules
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nestjs
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package*.json ./
-RUN npx prisma generate
-USER appuser
+USER nestjs
 EXPOSE 3001
-CMD ["node", "dist/main.js"]
+ENV NODE_ENV=production
+CMD ["node", "--max-old-space-size=2048", "dist/src/main.js"]

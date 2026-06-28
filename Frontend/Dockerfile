@@ -1,17 +1,21 @@
-FROM oven/bun:1 AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package*.json bun.lock* ./
-RUN bun install --frozen-lockfile
+COPY package*.json ./
+RUN npm ci
 COPY . .
-RUN bun run build
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
 
-FROM oven/bun:1-slim
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+FROM node:20-alpine AS runner
 WORKDIR /app
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/scripts ./scripts
-USER appuser
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+USER nextjs
 EXPOSE 3000
-CMD ["bun", "server.js"]
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+CMD ["node", "server.js"]

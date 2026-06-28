@@ -1,0 +1,33 @@
+bbe4065 T021: FE-002 React Query Integration Pattern
+8db1f3a docs: update graphify after T020 completion
+1b73182 T020: add master deployment guide, finished tasks log, next-section prompt
+831b8f2 T020: fix build script for Windows cross-platform compatibility
+efd6f6a T020: add validation report + update documentation and task checklist
+05b686a T020: add FE-001 API client foundation
+6936e2f T019: add derived views migration (3 views)
+9f379c7 T018: add AuditLog index + ReportJob migration
+ca24c9a MCP: add Notion + Odoo MCP server config and git:save command
+af734ae docs: comprehensive documentation update to 2026-05-28
+336e0e0 docs: mark T001-T017 as [X] completed in tasks.md
+1912d9d T012: contract test harness with YAML spec loading, deref, AJV validation
+0c6d32b Merge pull request #3 from Kirllos360/feature/t005-postgres-docker
+d03bb8e Merge pull request #7 from Kirllos360/feature/t011-api-versioning
+2d9a245 docs: update commit hash for T011, update index and memory log
+a18038f build(backend): wire api versioning and openapi for T011
+2cc229a docs: add T010 validation reports, update index and memory log
+d0d72b4 build(backend): implement append-only audit logging for T010
+4f12da5 build(backend): add correlation middleware for T007
+3905f3a build(backend): implement global error envelope for T006
+cb4560c docs: update commit hash references for T009 to 8c03a81
+8c03a81 build(backend): implement jwt auth and rbac for T009
+9035b8e T005: mark complete, update memory log
+e46c26a build(backend): add postgres docker compose for T005
+10572df docs: add T001-T004 validation reports in 5 formats
+0629776 T004: init Prisma ORM
+fb979f6 chore(backend): configure lint format test tooling for T003
+81884a1 feat(backend): add config and postgres connection for T002
+111a9c0 chore: ignore local Graphify root marker
+7f01e4e docs(spec): mark T001 backend scaffold complete
+bbe05db feat(backend): scaffold NestJS service for T001
+b3386ee chore: refresh Graphify project maps
+82e7fc6 chore: initial Meter Verse project baseline

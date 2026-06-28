@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { mockProjects, mockMeters, mockCustomers, mockUnits } from '@/lib/mock-data';
+import { useState, useMemo } from 'react';
+import { useProjectsList } from '@/hooks/use-projects';
+import { useMetersList } from '@/hooks/use-meters';
+import { useCustomersList } from '@/hooks/use-customers';
 import { PageHeader, BackButton } from '@/components/shared/PageHelpers';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { Button } from '@/components/ui/button';
@@ -12,7 +14,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { useCreateReading } from '@/hooks/use-readings';
+import { useReadingsList, useCreateReading } from '@/hooks/use-readings';
 import { z } from 'zod';
 
 const readingSchema = z.object({
@@ -23,8 +25,10 @@ const readingSchema = z.object({
 });
 import { cn } from '@/lib/utils';
 import { AlertTriangle, AlertCircle, CheckCircle } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 export default function ReadingNewPage() {
+  const t = useT();
   const [form, setForm] = useState({
     projectId: '',
     meterId: '',
@@ -33,30 +37,34 @@ export default function ReadingNewPage() {
     source: 'manual',
     notes: '',
   });
+  const { data: projects = [] } = useProjectsList();
+  const { data: meters = [] } = useMetersList();
+  const { data: customers = [] } = useCustomersList(form.projectId);
+  const { data: readings = [] } = useReadingsList();
 
   const projectMeters = form.projectId
-    ? mockMeters.filter((m) => m.projectId === form.projectId && (m.status === 'active' || m.status === 'offline'))
+    ? (meters ?? []).filter((m) => m.projectId === form.projectId && (m.status === 'active' || m.status === 'offline'))
     : [];
 
-  const selectedMeter = mockMeters.find((m) => m.id === form.meterId);
+  const selectedMeter = (meters ?? []).find((m) => m.id === form.meterId);
   const meterReadings = selectedMeter
-    ? mockReadings.filter((r) => r.meterId === selectedMeter.id).sort((a, b) => new Date(b.readingDate).getTime() - new Date(a.readingDate).getTime())
+    ? (readings ?? []).filter((r) => r.meterId === selectedMeter.id).sort((a, b) => new Date(b.readingDate).getTime() - new Date(a.readingDate).getTime())
     : [];
   const lastReading = meterReadings.length > 0 ? meterReadings[0] : null;
   const currentReading = parseFloat(form.currentReading) || 0;
   const consumption = currentReading > 0 && lastReading ? currentReading - lastReading.currentReading : 0;
-  const unit = selectedMeter?.unitId ? mockUnits.find((u) => u.id === selectedMeter.unitId) : null;
-  const customer = selectedMeter?.customerId ? mockCustomers.find((c) => c.id === selectedMeter.customerId) : null;
+  const unit = selectedMeter?.unitId ? ([] as { id: string; unitNumber: string }[]).find((u) => u.id === selectedMeter.unitId) : null;
+  const customer = selectedMeter?.customerId ? (customers ?? []).find((c) => c.id === selectedMeter.customerId) : null;
 
   const warnings = useMemo(() => {
     const w: { type: 'error' | 'warning'; message: string }[] = [];
     if (selectedMeter?.status === 'terminated') w.push({ type: 'error', message: 'This meter is terminated' });
     if (!lastReading) w.push({ type: 'error', message: 'No previous reading found for this meter' });
-    if (currentReading > 0 && lastReading && currentReading < lastReading.currentReading) w.push({ type: 'warning', message: `Current reading (${currentReading}) is less than previous (${lastReading.currentReading})` });
-    if (consumption > 0 && lastReading && consumption > lastReading.consumption * 3) w.push({ type: 'warning', message: `Consumption (${consumption}) is unusually high compared to average` });
-    if (lastReading && consumption === 0 && currentReading > 0) w.push({ type: 'warning', message: 'Consumption is zero' });
+    if (currentReading > 0 && lastReading && currentReading < lastReading.currentReading) w.push({ type: 'warning', message: t('readings.negativeWarning') });
+    if (consumption > 0 && lastReading && consumption > lastReading.consumption * 3) w.push({ type: 'warning', message: t('readings.highWarning') });
+    if (lastReading && consumption === 0 && currentReading > 0) w.push({ type: 'warning', message: t('readings.zeroWarning') });
     return w;
-  }, [currentReading, lastReading, selectedMeter, consumption]);
+  }, [currentReading, lastReading, selectedMeter, consumption, t]);
 
   const createReading = useCreateReading();
 
@@ -82,7 +90,7 @@ export default function ReadingNewPage() {
 
   return (
     <div>
-      <PageHeader title="New Reading" subtitle="Submit a new manual meter reading" />
+      <PageHeader title={t('readings.newReading')} subtitle={t('readings.newReadingSubtitle')} />
       <BackButton fallback="readings" />
 
       <div className="max-w-2xl space-y-6">
@@ -93,13 +101,13 @@ export default function ReadingNewPage() {
               <Select value={form.projectId} onValueChange={(v) => setForm({ ...form, projectId: v, meterId: '' })}>
                 <SelectTrigger><SelectValue placeholder="Select project" /></SelectTrigger>
                 <SelectContent>
-                  {mockProjects.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                  {(projects ?? []).map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Meter</label>
+              <label className="text-sm text-muted-foreground mb-1 block">{t('readings.meter')}</label>
               <Select value={form.meterId} onValueChange={(v) => setForm({ ...form, meterId: v })}>
                 <SelectTrigger><SelectValue placeholder="Select meter" /></SelectTrigger>
                 <SelectContent>
@@ -112,13 +120,13 @@ export default function ReadingNewPage() {
               <div className="p-3 rounded-lg bg-muted/30 text-sm space-y-1">
                 <div className="flex justify-between"><span className="text-muted-foreground">Unit</span><span>{unit?.unitNumber || '-'}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Customer</span><span>{customer?.name || '-'}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Previous Reading</span><span className="font-bold">{lastReading?.currentReading?.toLocaleString() || 'None'}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Previous Date</span><span>{lastReading ? new Date(lastReading.readingDate).toLocaleDateString() : '-'}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('billing.consumption.previousReading')}</span><span className="font-bold">{lastReading?.currentReading?.toLocaleString() || t('common.no')}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('billing.consumption.period')}</span><span>{lastReading ? new Date(lastReading.readingDate).toLocaleDateString() : '-'}</span></div>
               </div>
             )}
 
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Current Reading *</label>
+              <label className="text-sm text-muted-foreground mb-1 block">{t('readings.value')} *</label>
               <Input
                 type="number"
                 value={form.currentReading}
@@ -130,7 +138,7 @@ export default function ReadingNewPage() {
             {currentReading > 0 && lastReading && (
               <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Auto-calculated Consumption</span>
+                  <span className="text-sm">{t('billing.consumption.consumption')}</span>
                   <span className={cn('text-xl font-bold', consumption < 0 ? 'text-red-500' : consumption === 0 ? 'text-amber-500' : 'text-emerald-500')}>
                     {consumption}
                   </span>
@@ -140,7 +148,7 @@ export default function ReadingNewPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-muted-foreground mb-1 block">Date/Time</label>
+                <label className="text-sm text-muted-foreground mb-1 block">{t('readings.date')}</label>
                 <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
               </div>
               <div>
@@ -157,7 +165,7 @@ export default function ReadingNewPage() {
             </div>
 
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Notes</label>
+              <label className="text-sm text-muted-foreground mb-1 block">{t('meters.assign.notes')}</label>
               <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Optional notes..." rows={2} />
             </div>
           </CardContent>
@@ -182,7 +190,7 @@ export default function ReadingNewPage() {
         )}
 
         <Button className="gap-2 w-full sm:w-auto" onClick={handleSubmit} disabled={warnings.some((w) => w.type === 'error')}>
-          <CheckCircle className="h-4 w-4" /> Submit Reading
+          <CheckCircle className="h-4 w-4" /> {t('readings.submit')}
         </Button>
       </div>
     </div>

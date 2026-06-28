@@ -1,4 +1,4 @@
-# Security Roadmap — Meter Pulse Platform
+# Security Roadmap — Meter Verse Platform
 
 **Date**: 2026-05-31
 **Phase**: Security Weaver Phase 3
@@ -144,7 +144,7 @@
 |-------|-------|
 | **Gap** | M-04 |
 | **Effort** | 1 hour |
-| **Files** | `specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml` |
+| **Files** | `specs/001-metering-billing-platform/contracts/meter-verse-api.yaml` |
 | **Action** | Document allowed origins, rate-limit headers, request-size limits in OAS |
 | **Validation** | Spec lint passes with security annotations |
 

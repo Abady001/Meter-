@@ -1,4 +1,4 @@
-# Conversation Log — Meter Pulse Setup Session
+# Conversation Log — Meter Verse Setup Session
 
 > Complete record of all prompts and responses during initial project setup.
 > Date: 2026-05-26
@@ -240,11 +240,11 @@ b3386ee  2026-05-25 16:59  chore: refresh Graphify maps
 
 ## 19. T012 — Contract Test Harness
 
-**Prompt**: Proceed with T012 — Build contract-test harness against meter-pulse-api.yaml
+**Prompt**: Proceed with T012 — Build contract-test harness against meter-verse-api.yaml
 
 **Response**: Created `setup.ts` (YAML loading, custom `$ref` dereference to avoid ESM-only `@apidevtools/swagger-parser`, AJV validation, supertest test app factory). 8 contract tests covering spec loading, $ref resolution, health endpoint status + schema. Added missing `GET /health` with `healthCheck` operationId + `System` tag to the YAML contract.
 
-**Files**: `backend/test/contract/setup.ts`, `backend/test/contract/setup.spec.ts`, `specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml`
+**Files**: `backend/test/contract/setup.ts`, `backend/test/contract/setup.spec.ts`, `specs/001-metering-billing-platform/contracts/meter-verse-api.yaml`
 
 **Packages added**: `supertest`, `ajv`, `ajv-formats`, `js-yaml` (+ types)
 
@@ -272,9 +272,9 @@ b3386ee  2026-05-25 16:59  chore: refresh Graphify maps
 
 **Response**: Added Meter (unique serial_number, types electricity/water_main/water_child), SIMCard (unique iccid), MeterAssignment, SIMAssignment models. Partial unique indexes via raw SQL: `WHERE end_at IS NULL`.
 
-**Files**: `backend/prisma/schema.prisma`, `backend/prisma/migrations/*_meter_sim/`
+**Files**: `backend/prisma/schema.prisma`, `backend/prisma/migrations/*_Meter_Verse_sim/`
 
-**Validation**: Unique serial_number ✅, unique iccid ✅, partial unique on (meter_id) WHERE end_at IS NULL ✅
+**Validation**: Unique serial_number ✅, unique iccid ✅, partial unique on (Meter_Verse_id) WHERE end_at IS NULL ✅
 
 ---
 
@@ -282,7 +282,7 @@ b3386ee  2026-05-25 16:59  chore: refresh Graphify maps
 
 **Prompt**: Proceed with T015 — Migration for Reading, ReadingReview, TariffPlan, BillingPeriod
 
-**Response**: Added Reading (unique meter_id+reading_at+source, status enum, snapshots jsonb, raw_payload jsonb), ReadingReview, TariffPlan, BillingPeriod models. DECIMAL(12,3) for consumption/rate.
+**Response**: Added Reading (unique Meter_Verse_id+reading_at+source, status enum, snapshots jsonb, raw_payload jsonb), ReadingReview, TariffPlan, BillingPeriod models. DECIMAL(12,3) for consumption/rate.
 
 **Files**: `backend/prisma/schema.prisma`, `backend/prisma/migrations/*_readings_tariff/`
 
@@ -325,7 +325,7 @@ b3386ee  2026-05-25 16:59  chore: refresh Graphify maps
 - Updated `10-progress-health-report.md` — 20% complete (17/85 tasks)
 - Updated `06-github-packages-needed.md` with T012 packages (AJV, js-yaml, etc.)
 - Updated memory files, email log, audit log CSV, commit log CSV, packages CSV
-- Synced to OneDrive at `C:\Users\EPower\OneDrive - Epower\kirllos\app\meter-pulse`
+- Synced to OneDrive at `C:\Users\EPower\OneDrive - Epower\kirllos\app\meter-verse`
 
 **Key metrics**: 17 tasks complete, 7 open PRs on Abady001/Meter-, 82 documentation files across 5 formats
 

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meter Verse — Administration Center</title>
+<style>
+  :root { --bg: #0f172a; --surface: #1e293b; --surface2: #334155; --primary: #3b82f6; --primary-h: #2563eb; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b; --text: #f1f5f9; --text2: #94a3b8; --border: #475569; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header h1 span { color: var(--primary); }
+  .header .subtitle { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .header .user-info { font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 12px; }
+  .header .user-info .role-badge { background: var(--primary); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat-card .label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .value { font-size: 32px; font-weight: 700; margin-top: 4px; }
+  .stat-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .nav-tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface); border-radius: 10px; padding: 4px; border: 1px solid var(--border); flex-wrap: wrap; }
+  .nav-tabs button { padding: 10px 20px; border: none; background: transparent; color: var(--text2); cursor: pointer; border-radius: 8px; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+  .nav-tabs button:hover { color: var(--text); background: var(--surface2); }
+  .nav-tabs button.active { background: var(--primary); color: #fff; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--text2); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  tr:hover { background: var(--surface2); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--success); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: var(--warning); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: var(--primary); }
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-h); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .status-dot.online { background: var(--success); }
+  .status-dot.offline { background: var(--danger); }
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+  .modal h3 { margin-bottom: 16px; }
+  .modal .form-group { margin-bottom: 12px; }
+  .modal label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .modal input, .modal select, .modal textarea { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; }
+  .modal .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+  .empty { text-align: center; padding: 40px; color: var(--text2); }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 2000; display: none; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+  .toast.show { display: block; animation: slideIn 0.3s ease; }
+  @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @media (max-width: 768px) { .container { padding: 12px; } .stats-row { grid-template-columns: repeat(2, 1fr); } table { font-size: 12px; } th, td { padding: 6px 8px; } }
+  .accordion { margin-bottom: 8px; }
+  .accordion-header { background: var(--surface2); padding: 12px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 500; }
+  .accordion-header:hover { background: var(--border); }
+  .accordion-body { padding: 16px; display: none; }
+  .accordion.open .accordion-body { display: block; }
+  .accordion.open .accordion-header { border-radius: 8px 8px 0 0; }
+  .search-bar { width: 100%; padding: 10px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; margin-bottom: 16px; }
+  .matrix-grid { display: grid; grid-template-columns: 200px repeat(auto-fill, minmax(80px, 1fr)); gap: 2px; font-size: 12px; }
+  .matrix-grid .header-cell { background: var(--surface2); padding: 6px; font-weight: 600; text-align: center; }
+  .matrix-grid .cell { padding: 6px; text-align: center; }
+  .matrix-grid .row-label { padding: 6px; color: var(--text2); }
+  .matrix-grid .cell.checked { background: rgba(34,197,94,0.2); color: var(--success); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1><span>Meter Verse</span> Administration Center</h1>
+    <div class="subtitle">Enterprise Governance Console — Port 4002</div>
+  </div>
+  <div class="user-info" id="userInfo">
+    <span id="loginPrompt"><a href="#" onclick="showLogin()" style="color:var(--primary)">Login</a></span>
+  </div>
+</div>
+
+<div class="container" id="app">
+  <!-- Login Screen -->
+  <div id="loginScreen" class="section active">
+    <div style="max-width:400px;margin:60px auto">
+      <div class="card">
+        <h2>Administrator Login</h2>
+        <div class="form-group"><label>Username</label><input type="text" id="loginUser" placeholder="Enter username"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn btn-primary" onclick="doLogin()" style="width:100%;margin-top:8px">Login</button>
+        <div id="loginError" style="color:var(--danger);margin-top:8px;font-size:13px;display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="mainDashboard" class="section">
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="nav-tabs" id="navTabs">
+      <button class="active" data-tab="tabDashboard">Dashboard</button>
+      <button data-tab="tabAreas">Areas</button>
+      <button data-tab="tabProjects">Projects</button>
+      <button data-tab="tabUsers">Users</button>
+      <button data-tab="tabGroups">Groups</button>
+      <button data-tab="tabPermissions">Permissions</button>
+      <button data-tab="tabRoles">Roles</button>
+      <button data-tab="tabAudit">Audit Log</button>
+      <button data-tab="tabSync">Sync Gateways</button>
+      <button data-tab="tabSystem">System</button>
+    </div>
+
+    <div id="tabDashboard" class="section active">Loading dashboard...</div>
+    <div id="tabAreas" class="section"></div>
+    <div id="tabProjects" class="section"></div>
+    <div id="tabUsers" class="section"></div>
+    <div id="tabGroups" class="section"></div>
+    <div id="tabPermissions" class="section"></div>
+    <div id="tabRoles" class="section"></div>
+    <div id="tabAudit" class="section"></div>
+    <div id="tabSync" class="section"></div>
+    <div id="tabSystem" class="section"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal" id="modalContent"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+let token = localStorage.getItem('admin_token');
+let user = JSON.parse(localStorage.getItem('admin_user') || 'null');
+let BASE = '/api/admin';
+
+// Init
+if (token && user) { showDashboard(); renderDashboard(); }
+else { showLogin(); }
+
+function showLogin() { document.getElementById('loginScreen').classList.add('active'); document.getElementById('mainDashboard').classList.remove('active'); }
+function showDashboard() { document.getElementById('loginScreen').classList.remove('active'); document.getElementById('mainDashboard').classList.add('active'); updateUserInfo(); }
+
+function updateUserInfo() {
+  if (user) document.getElementById('userInfo').innerHTML = `<span>${user.username}</span><span class="role-badge">${user.role}</span><button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>`;
+}
+
+async function doLogin() {
+  const username = document.getElementById('loginUser').value;
+  const password = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  try {
+    const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+    const d = await r.json();
+    if (!r.ok) { errEl.textContent = d.error; errEl.style.display = 'block'; return; }
+    token = d.token; user = d.user;
+    localStorage.setItem('admin_token', token);
+    localStorage.setItem('admin_user', JSON.stringify(user));
+    showDashboard();
+    renderDashboard();
+  } catch(e) { errEl.textContent = 'Connection failed'; errEl.style.display = 'block'; }
+}
+
+function logout() {
+  token = null; user = null;
+  localStorage.removeItem('admin_token');
+  localStorage.removeItem('admin_user');
+  showLogin();
+}
+
+// API helper
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...opts.headers };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const r = await fetch(BASE + path, { ...opts, headers });
+  const d = await r.json();
+  if (!r.ok) { toast(d.error || 'API Error', 'error'); throw new Error(d.error); }
+  return d;
+}
+
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderLeft = `4px solid ${type === 'error' ? 'var(--danger)' : type === 'success' ? 'var(--success)' : 'var(--primary)'}`;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Tab navigation
+document.getElementById('navTabs').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('#navTabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section[id^="tab"]').forEach(s => s.classList.remove('active'));
+  document.getElementById(btn.dataset.tab).classList.add('active');
+  const tab = btn.dataset.tab;
+  if (tab === 'tabDashboard') renderDashboard();
+  if (tab === 'tabAreas') renderAreas();
+  if (tab === 'tabProjects') renderProjects();
+  if (tab === 'tabUsers') renderUsers();
+  if (tab === 'tabGroups') renderGroups();
+  if (tab === 'tabPermissions') renderPermissions();
+  if (tab === 'tabRoles') renderRoles();
+  if (tab === 'tabAudit') renderAudit();
+  if (tab === 'tabSync') renderSync();
+  if (tab === 'tabSystem') renderSystem();
+});
+
+function openModal(html) { document.getElementById('modal').classList.add('show'); document.getElementById('modalContent').innerHTML = html; }
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+async function renderDashboard() {
+  const el = document.getElementById('tabDashboard');
+  try {
+    const [health, stats] = await Promise.all([api('/system/health'), api('/audit/stats')]);
+    el.innerHTML = `
+      <div class="stats-row">
+        <div class="stat-card"><div class="label">Database</div><div class="value" style="color:var(--success)">${health.database}</div><div class="sub">${health.timestamp}</div></div>
+        <div class="stat-card"><div class="label">Areas</div><div class="value">${health.counts.find(c=>c.name==='areas').cnt}</div><div class="sub">Enterprise governance</div></div>
+        <div class="stat-card"><div class="label">Projects</div><div class="value">${health.counts.find(c=>c.name==='projects').cnt}</div><div class="sub">Across all areas</div></div>
+        <div class="stat-card"><div class="label">Users</div><div class="value">${health.counts.find(c=>c.name==='users').cnt}</div><div class="sub">Active accounts</div></div>
+        <div class="stat-card"><div class="label">Audit Entries</div><div class="value">${health.counts.find(c=>c.name==='audit_logs').cnt.toLocaleString()}</div><div class="sub">${stats.data.last_24h} last 24h</div></div>
+        <div class="stat-card"><div class="label">Permissions</div><div class="value">${health.counts.find(c=>c.name==='permissions').cnt}</div><div class="sub">Across ${health.counts.find(c=>c.name==='roles').cnt} roles</div></div>
+      </div>
+      <div class="card"><h2>System Status</h2>
+        <table>
+          <tr><td>Service</td><td>Meter Verse Administration Center</td></tr>
+          <tr><td>Port</td><td>4002</td></tr>
+          <tr><td>Database</td><td><span class="badge badge-green">Connected</span></td></tr>
+          <tr><td>PostgreSQL</td><td>${health.counts.map(c => `${c.name}: ${c.cnt}`).join(' · ')}</td></tr>
+        </table>
+      </div>
+    `;
+  } catch(e) { el.innerHTML = `<div class="empty">Failed to load dashboard: ${e.message}</div>`; }
+}
+
+async function renderAreas() {
+  const el = document.getElementById('tabAreas');
+  try {
+    const d = await api('/areas');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Area Management (${d.total})</h2>
+        <button class="btn btn-primary" onclick="showCreateArea()">+ Create Area</button>
+      </div>
+      <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Projects</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>${d.data.map(a => `<tr>
+          <td><code>${a.area_code}</code></td><td>${a.area_name}</td><td>${a.project_count}</td>
+          <td><span class="badge ${a.is_active ? 'badge-green' : 'badge-red'}">${a.is_active ? 'Active' : 'Inactive'}</span></td>
+          <td>${new Date(a.created_at).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick='editArea(${JSON.stringify(a).replace(/'/g,"\\'")})'>Edit</button>
+            <button class="btn btn-sm ${a.is_active ? 'btn-danger' : 'btn-primary'}" onclick="toggleArea('${a.id}', ${a.is_active})">${a.is_active ? 'Deactivate' : 'Activate'}</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteArea('${a.id}')">Archive</button>
+            ${user && user.role === 'super_admin' ? `<button class="btn btn-sm btn-danger" onclick="hardDeleteArea('${a.id}')">Hard Delete</button>` : ''}
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+function showCreateArea() {
+  openModal(`
+    <h3>Create Area</h3>
+    <div class="form-group"><label>Area Code</label><input id="areaCode" placeholder="e.g. north_coast"></div>
+    <div class="form-group"><label>Area Name</label><input id="areaName" placeholder="e.g. North Coast Area"></div>
+    <div class="form-group"><label>Database Name</label><input id="areaDb" placeholder="Optional"></div>
+    <div class="form-group"><label>Connection String</label><input id="areaConn" placeholder="Optional"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="createArea()">Create</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function createArea() {
+  try {
+    await api('/areas', { method: 'POST', body: JSON.stringify({
+      areaCode: document.getElementById('areaCode').value,
+      areaName: document.getElementById('areaName').value,
+      databaseName: document.getElementById('areaDb').value,
+      connectionString: document.getElementById('areaConn').value
+    })});
+    toast('Area created', 'success'); closeModal(); renderAreas();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function editArea(a) {
+  openModal(`
+    <h3>Edit Area: ${a.area_name}</h3>
+    <div class="form-group"><label>Area Name</label><input id="eAreaName" value="${a.area_name}"></div>
+    <div class="form-group"><label>Database Name</label><input id="eAreaDb" value="${a.database_name || ''}"></div>
+    <div class="form-group"><label>Connection String</label><input id="eAreaConn" value="${a.connection_string || ''}"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="updateArea('${a.id}')">Save</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function updateArea(id) {
+  try {
+    await api(`/areas/${id}`, { method: 'PUT', body: JSON.stringify({
+      areaName: document.getElementById('eAreaName').value
+    })});
+    toast('Area updated', 'success'); closeModal(); renderAreas();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function toggleArea(id, current) {
+  try { await api(`/areas/${id}/toggle-active`, { method: 'PATCH' }); toast(current ? 'Deactivated' : 'Activated', 'success'); renderAreas(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function deleteArea(id) {
+  if (!confirm('Archive this area?')) return;
+  try { await api(`/areas/${id}`, { method: 'DELETE' }); toast('Area archived', 'success'); renderAreas(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function hardDeleteArea(id) {
+  if (!confirm('PERMANENTLY DELETE this area? This cannot be undone.')) return;
+  try { await api(`/areas/${id}/hard`, { method: 'DELETE' }); toast('Area permanently deleted', 'success'); renderAreas(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function renderProjects() {
+  const el = document.getElementById('tabProjects');
+  try {
+    const d = await api('/projects');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Project Management (${d.total})</h2>
+        <button class="btn btn-primary" onclick="showCreateProject()">+ Create Project</button>
+      </div>
+      <table>
+        <thead><tr><th>Area</th><th>Code</th><th>Name</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>${d.data.map(p => `<tr>
+          <td>${p.area_name}</td><td><code>${p.project_code}</code></td><td>${p.project_name}</td>
+          <td><span class="badge ${p.is_active ? 'badge-green' : 'badge-red'}">${p.is_active ? 'Active' : 'Inactive'}</span></td>
+          <td>${new Date(p.created_at).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick='editProject(${JSON.stringify(p).replace(/'/g,"\\'")})'>Edit</button>
+            <button class="btn btn-sm ${p.is_active ? 'btn-danger' : 'btn-primary'}" onclick="toggleProject('${p.id}', ${p.is_active})">${p.is_active ? 'Deactivate' : 'Activate'}</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProject('${p.id}')">Archive</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function showCreateProject() {
+  const areas = await api('/areas');
+  openModal(`
+    <h3>Create Project</h3>
+    <div class="form-group"><label>Area</label><select id="pAreaId">${areas.data.map(a => `<option value="${a.id}">${a.area_name}</option>`).join('')}</select></div>
+    <div class="form-group"><label>Project Code</label><input id="pCode" placeholder="e.g. GOLF_VIEWS"></div>
+    <div class="form-group"><label>Project Name</label><input id="pName" placeholder="e.g. Golf Views"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="createProject()">Create</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function createProject() {
+  try {
+    await api('/projects', { method: 'POST', body: JSON.stringify({
+      areaId: document.getElementById('pAreaId').value,
+      projectCode: document.getElementById('pCode').value,
+      projectName: document.getElementById('pName').value
+    })});
+    toast('Project created', 'success'); closeModal(); renderProjects();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function editProject(p) {
+  openModal(`
+    <h3>Edit Project: ${p.project_name}</h3>
+    <div class="form-group"><label>Project Name</label><input id="ePName" value="${p.project_name}"></div>
+    <div class="form-group"><label>Project Code</label><input id="ePCode" value="${p.project_code}"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="updateProject('${p.id}')">Save</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function updateProject(id) {
+  try {
+    await api(`/projects/${id}`, { method: 'PUT', body: JSON.stringify({
+      projectName: document.getElementById('ePName').value,
+      projectCode: document.getElementById('ePCode').value
+    })});
+    toast('Project updated', 'success'); closeModal(); renderProjects();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function toggleProject(id, current) {
+  try { await api(`/projects/${id}/toggle-active`, { method: 'PATCH' }); toast(current ? 'Deactivated' : 'Activated', 'success'); renderProjects(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function deleteProject(id) {
+  if (!confirm('Archive this project?')) return;
+  try { await api(`/projects/${id}`, { method: 'DELETE' }); toast('Project archived', 'success'); renderProjects(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function renderUsers() {
+  const el = document.getElementById('tabUsers');
+  try {
+    const d = await api('/users');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>User Management (${d.total})</h2>
+        <button class="btn btn-primary" onclick="showCreateUser()">+ Create User</button>
+      </div>
+      <table>
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Last Login</th><th>Failed Attempts</th><th>Actions</th></tr></thead>
+        <tbody>${d.data.map(u => `<tr>
+          <td><strong>${u.username}</strong></td><td>${u.email}</td><td><span class="badge badge-blue">${u.role_code}</span></td>
+          <td><span class="badge ${u.status === 'active' ? 'badge-green' : u.status === 'locked' ? 'badge-red' : 'badge-yellow'}">${u.status}</span></td>
+          <td>${u.last_login_at ? new Date(u.last_login_at).toLocaleString() : 'Never'}</td>
+          <td>${u.failed_login_attempts}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="viewUser('${u.id}')">View</button>
+            <button class="btn btn-sm ${u.status === 'locked' ? 'btn-primary' : 'btn-danger'}" onclick="toggleLockUser('${u.id}')">${u.status === 'locked' ? 'Unlock' : 'Lock'}</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')">Suspend</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function showCreateUser() {
+  const roles = await api('/system/roles');
+  const areas = await api('/areas');
+  openModal(`
+    <h3>Create User</h3>
+    <div class="form-group"><label>Username</label><input id="uUsername"></div>
+    <div class="form-group"><label>Email</label><input id="uEmail" type="email"></div>
+    <div class="form-group"><label>Password</label><input id="uPassword" type="password"></div>
+    <div class="form-group"><label>Role</label><select id="uRole">${roles.data.map(r => `<option value="${r.role_code}">${r.role_name} (${r.role_code})</option>`).join('')}</select></div>
+    <div class="form-group"><label>Areas (hold Ctrl to select multiple)</label><select id="uAreas" multiple style="height:100px">${areas.data.map(a => `<option value="${a.id}">${a.area_name}</option>`).join('')}</select></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="createUser()">Create</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function createUser() {
+  try {
+    const select = document.getElementById('uAreas');
+    const areaIds = Array.from(select.selectedOptions).map(o => o.value);
+    await api('/users', { method: 'POST', body: JSON.stringify({
+      username: document.getElementById('uUsername').value,
+      email: document.getElementById('uEmail').value,
+      password: document.getElementById('uPassword').value,
+      roleCode: document.getElementById('uRole').value,
+      areaIds: areaIds.length ? areaIds : undefined
+    })});
+    toast('User created', 'success'); closeModal(); renderUsers();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function viewUser(id) {
+  try {
+    const d = await api(`/users/${id}`);
+    const u = d.data;
+    const history = await api(`/users/${id}/login-history`);
+    openModal(`
+      <h3>User: ${u.username}</h3>
+      <table>
+        <tr><td>Email</td><td>${u.email}</td></tr>
+        <tr><td>Role</td><td>${u.role_name} (${u.role_code})</td></tr>
+        <tr><td>Status</td><td>${u.status}</td></tr>
+        <tr><td>Last Login</td><td>${u.last_login_at || 'Never'}</td></tr>
+        <tr><td>Password Changed</td><td>${u.password_changed_at || 'Never'}</td></tr>
+        <tr><td>Failed Attempts</td><td>${u.failed_login_attempts}</td></tr>
+      </table>
+      ${history.data && history.data.length ? `<h4 style="margin-top:16px">Recent Login History</h4><table><tr><th>Action</th><th>Time</th><th>IP</th></tr>${history.data.slice(0,10).map(h => `<tr><td>${h.action_type}</td><td>${new Date(h.created_at).toLocaleString()}</td><td>${h.ip_address || '-'}</td></tr>`).join('')}</table>` : '<p style="margin-top:16px;color:var(--text2)">No login history recorded</p>'}
+      <div class="btn-row"><button class="btn" onclick="closeModal()">Close</button></div>
+    `);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function toggleLockUser(id) {
+  try { await api(`/users/${id}/toggle-lock`, { method: 'PATCH' }); toast('User lock toggled', 'success'); renderUsers(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function deleteUser(id) {
+  if (!confirm('Suspend this user?')) return;
+  try { await api(`/users/${id}`, { method: 'DELETE' }); toast('User suspended', 'success'); renderUsers(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function renderGroups() {
+  const el = document.getElementById('tabGroups');
+  try {
+    const d = await api('/groups');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>User Group Management (${d.total})</h2>
+        <button class="btn btn-primary" onclick="showCreateGroup()">+ Create Group</button>
+      </div>
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th>Members</th><th>Active</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>${d.data.map(g => `<tr>
+          <td><strong>${g.group_name}</strong></td><td>${g.description || '-'}</td><td>${g.member_count}</td>
+          <td><span class="badge ${g.is_active ? 'badge-green' : 'badge-red'}">${g.is_active ? 'Yes' : 'No'}</span></td>
+          <td>${new Date(g.created_at).toLocaleDateString()}</td>
+          <td><button class="btn btn-sm btn-primary" onclick="viewGroup('${g.id}')">View</button><button class="btn btn-sm btn-danger" onclick="deleteGroup('${g.id}')">Delete</button></td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+function showCreateGroup() {
+  openModal(`
+    <h3>Create Group</h3>
+    <div class="form-group"><label>Group Name</label><input id="gName"></div>
+    <div class="form-group"><label>Description</label><textarea id="gDesc" rows="3"></textarea></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="createGroup()">Create</button><button class="btn" onclick="closeModal()">Cancel</button></div>
+  `);
+}
+
+async function createGroup() {
+  try {
+    await api('/groups', { method: 'POST', body: JSON.stringify({
+      groupName: document.getElementById('gName').value,
+      description: document.getElementById('gDesc').value
+    })});
+    toast('Group created', 'success'); closeModal(); renderGroups();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function viewGroup(id) { toast('Group detail view', 'info'); }
+async function deleteGroup(id) {
+  if (!confirm('Delete this group?')) return;
+  try { await api(`/groups/${id}`, { method: 'DELETE' }); toast('Group deleted', 'success'); renderGroups(); }
+  catch(e) { toast(e.message, 'error'); }
+}
+
+async function renderPermissions() {
+  const el = document.getElementById('tabPermissions');
+  try {
+    const [list, matrix] = await Promise.all([api('/permissions'), api('/permissions/matrix')]);
+    el.innerHTML = `
+      <h2>Permission Management (${list.total})</h2>
+      <div class="card">
+        <h2>Permission Matrix</h2>
+        <div style="overflow-x:auto">
+          <div class="matrix-grid" style="grid-template-columns:200px repeat(${matrix.roles.length}, minmax(100px,1fr))">
+            <div class="header-cell">Module / Permission</div>
+            ${matrix.roles.map(r => `<div class="header-cell">${r.role_code}</div>`).join('')}
+            ${matrix.permissions.map(p => `
+              <div class="row-label">${p.module} / ${p.display_name}</div>
+              ${matrix.roles.map(r => {
+                const assigned = matrix.matrix.find(m => m.role.id === r.id);
+                const has = assigned && assigned.permissions.find(ap => ap.id === p.id);
+                return `<div class="cell ${has ? 'checked' : ''}">${has ? '✓' : '-'}</div>`;
+              }).join('')}
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      <h2 style="margin-top:24px">All Permissions</h2>
+      <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Module</th><th>Assigned Roles</th></tr></thead>
+        <tbody>${list.data.map(p => `<tr><td><code>${p.permission_code}</code></td><td>${p.display_name}</td><td><span class="badge badge-blue">${p.module}</span></td><td>${(p.assigned_roles || []).filter(Boolean).join(', ') || '-'}</td></tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function renderRoles() {
+  const el = document.getElementById('tabRoles');
+  try {
+    const d = await api('/system/roles');
+    el.innerHTML = `
+      <h2>Role Management (${d.data.length})</h2>
+      <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Description</th><th>System</th><th>Users Assigned</th></tr></thead>
+        <tbody>${d.data.map(r => `<tr>
+          <td><code>${r.role_code}</code></td><td><strong>${r.role_name}</strong></td><td>${r.description || '-'}</td>
+          <td><span class="badge ${r.is_system ? 'badge-yellow' : 'badge-green'}">${r.is_system ? 'System' : 'Custom'}</span></td>
+          <td>${r.assigned_users}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function renderAudit() {
+  const el = document.getElementById('tabAudit');
+  try {
+    const [logs, stats, retention] = await Promise.all([api('/audit?limit=50'), api('/audit/stats'), api('/audit/retention')]);
+    el.innerHTML = `
+      <div class="stats-row">
+        <div class="stat-card"><div class="label">Total Entries</div><div class="value">${stats.data.total_entries}</div></div>
+        <div class="stat-card"><div class="label">Last 24h</div><div class="value">${stats.data.last_24h}</div></div>
+        <div class="stat-card"><div class="label">Last 7 Days</div><div class="value">${stats.data.last_7d}</div></div>
+        <div class="stat-card"><div class="label">Last 30 Days</div><div class="value">${stats.data.last_30d}</div></div>
+        <div class="stat-card"><div class="label">Storage</div><div class="value" style="font-size:18px">${stats.data.storage ? stats.data.storage.size_pretty : '-'}</div></div>
+      </div>
+      <div class="card">
+        <h2>Retention Management
+          <span>
+            <button class="btn btn-sm btn-primary" onclick="compressAudit()">Compress &gt;7d</button>
+          </span>
+        </h2>
+        ${retention.data ? `
+          <table>
+            <tr><td>Compressible (&gt;7 days old)</td><td>${retention.data.compressible_7d} records</td></tr>
+            <tr><td>Deletable (&gt;30 days old)</td><td>${retention.data.deletable_30d} records</td></tr>
+            <tr><td>Archived</td><td>${retention.data.archived_count} records</td></tr>
+            <tr><td>Oldest record</td><td>${retention.data.oldest ? new Date(retention.data.oldest).toLocaleString() : '-'}</td></tr>
+            <tr><td>Newest record</td><td>${retention.data.newest ? new Date(retention.data.newest).toLocaleString() : '-'}</td></tr>
+          </table>` : ''}
+      </div>
+      <h2>Recent Audit Log Entries</h2>
+      <table>
+        <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Entity</th><th>ID</th></tr></thead>
+        <tbody>${logs.data.map(l => `<tr>
+          <td style="white-space:nowrap">${new Date(l.created_at).toLocaleString()}</td>
+          <td>${l.username || l.user_id.substring(0,8)}</td>
+          <td><span class="badge badge-blue">${l.action_type}</span></td>
+          <td>${l.entity_type}</td>
+          <td style="font-size:11px;color:var(--text2)">${l.entity_id ? l.entity_id.substring(0,8)+'...' : '-'}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function compressAudit() {
+  try {
+    const r = await api('/audit/compress', { method: 'POST', body: JSON.stringify({ olderThanDays: 7 }) });
+    toast(r.message, 'success'); renderAudit();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function renderSync() {
+  const el = document.getElementById('tabSync');
+  try {
+    const d = await api('/sync');
+    el.innerHTML = `
+      <h2>Sync Gateway Status</h2>
+      <div style="margin:16px 0"><span class="badge badge-green">${d.online} Online</span> <span class="badge badge-red">${d.offline} Offline</span></div>
+      <table>
+        <thead><tr><th>Gateway</th><th>Area</th><th>Port</th><th>Status</th><th>Latency</th><th>Message</th></tr></thead>
+        <tbody>${d.data.map(g => `<tr>
+          <td><strong>${g.name}</strong></td><td><code>${g.areaCode}</code></td><td>${g.port}</td>
+          <td><span class="status-dot ${g.online ? 'online' : 'offline'}"></span>${g.online ? 'Online' : 'Offline'}</td>
+          <td>${g.latency !== null ? g.latency + 'ms' : '-'}</td>
+          <td style="color:var(--text2);font-size:12px">${g.message || ''}</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function renderSystem() {
+  const el = document.getElementById('tabSystem');
+  try {
+    const [schemas, config] = await Promise.all([api('/system/schemas'), api('/settings/database')]);
+    el.innerHTML = `
+      <h2>System Configuration</h2>
+      <div class="card"><h2>Database Info</h2>
+        <table>
+          <tr><td>Database</td><td>${config.data.database_name}</td></tr>
+          <tr><td>PostgreSQL Version</td><td>${config.data.postgres_version}</td></tr>
+          <tr><td>Areas</td><td>${config.data.area_count}</td></tr>
+          <tr><td>Projects</td><td>${config.data.project_count}</td></tr>
+          <tr><td>Users</td><td>${config.data.user_count}</td></tr>
+          <tr><td>Roles</td><td>${config.data.role_count}</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Schema Overview</h2>
+        <div style="overflow-x:auto">
+          ${Object.entries(schemas.data || {}).map(([schema, tables]) => `
+            <div class="accordion">
+              <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                <span><strong>${schema}</strong> (${tables.length} tables)</span>
+                <span>▼</span>
+              </div>
+              <div class="accordion-body">
+                <table>
+                  <tr><th>Table</th><th>Columns</th></tr>
+                  ${tables.map(t => `<tr><td>${t.name}</td><td>${t.columns}</td></tr>`).join('')}
+                </table>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+</script>
+</body>
+</html>

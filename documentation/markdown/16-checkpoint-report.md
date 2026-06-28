@@ -1,4 +1,4 @@
-# Checkpoint Report — Meter Pulse Platform
+# Checkpoint Report — Meter Verse Platform
 
 **Date**: 2026-05-31
 **Branch**: `feature/t047-readings-review-queue` (working tree)

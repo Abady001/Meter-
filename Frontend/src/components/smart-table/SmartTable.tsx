@@ -117,12 +117,14 @@ export interface SmartTableColumn<T = any> {
   key: string;
   label: string;
   sortable?: boolean;
+  width?: string;
   render?: (value: any, row: T) => ReactNode;
 }
 
 export interface SmartTableFilter {
   key: string;
   label: string;
+  type?: string;
   options: { label: string; value: string }[];
 }
 
@@ -477,8 +479,8 @@ export default function SmartTable<T extends Record<string, any>>({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All {filter.label}</SelectItem>
-                  {filter.options.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
+                  {filter.options.map((opt, oi) => (
+                    <SelectItem key={opt.value ?? `opt-${oi}`} value={opt.value}>
                       {opt.label}
                     </SelectItem>
                   ))}
@@ -597,5 +599,4 @@ export default function SmartTable<T extends Record<string, any>>({
   );
 }
 
-// Re-export StatusBadge for convenience
-export { StatusBadge };
+// StatusBadge is already exported above

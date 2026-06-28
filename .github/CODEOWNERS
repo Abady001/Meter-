@@ -1,0 +1,166 @@
+# Meter Verse — CODEOWNERS
+# Each line is a file pattern followed by one or more owners.
+# Order matters: the last matching pattern takes precedence.
+
+# Global owners for everything not matched below
+* @meterverse/leads
+
+# ============================================================
+# REPORTING ENGINE
+# ============================================================
+
+# Reporting engine core modules
+/reporting/ @meterverse/reporting-team
+/reporting/src/ @meterverse/reporting-team
+/reporting/pom.xml @meterverse/reporting-team @meterverse/devops-team
+
+# JasperReports font extension
+/jasperreports-fonts-extension/ @meterverse/reporting-team
+
+# JRXML templates
+/templates/ @meterverse/reporting-team
+/templates/invoice/ @meterverse/reporting-team @meterverse/billing-team
+/templates/payment/ @meterverse/reporting-team @meterverse/billing-team
+/templates/reports/ @meterverse/reporting-team
+
+# Reporting engine Docker
+/reporting/Dockerfile @meterverse/reporting-team @meterverse/devops-team
+
+# ============================================================
+# BACKEND (NestJS)
+# ============================================================
+
+# Billing module
+/backend/src/billing/ @meterverse/billing-team
+/backend/src/billing/billing.controller.ts @meterverse/billing-team @meterverse/reporting-team
+/backend/src/billing/billing.service.ts @meterverse/billing-team
+
+# Invoice module
+/backend/src/invoices/ @meterverse/backend-team @meterverse/billing-team
+
+# Core backend modules
+/backend/src/auth/ @meterverse/backend-team @meterverse/security-team
+/backend/src/audit/ @meterverse/backend-team
+/backend/src/common/ @meterverse/backend-team
+/backend/src/customers/ @meterverse/backend-team
+/backend/src/meters/ @meterverse/backend-team
+/backend/src/readings/ @meterverse/backend-team
+/backend/src/payments/ @meterverse/billing-team
+/backend/src/reports/ @meterverse/backend-team @meterverse/reporting-team
+/backend/src/sync/ @meterverse/backend-team
+/backend/src/settings/ @meterverse/backend-team
+
+# Backend configuration
+/backend/src/main.ts @meterverse/backend-team @meterverse/devops-team
+/backend/src/app.module.ts @meterverse/backend-team
+
+# Prisma schema and migrations
+/backend/prisma/ @meterverse/backend-team @meterverse/dba-team
+/backend/prisma/schema.prisma @meterverse/backend-team @meterverse/dba-team
+/backend/prisma/migrations/ @meterverse/dba-team
+
+# Backend tests
+/backend/test/ @meterverse/qa-team
+/backend/test/auth/ @meterverse/backend-team @meterverse/qa-team
+/backend/test/billing/ @meterverse/billing-team @meterverse/qa-team
+/backend/test/contract/ @meterverse/qa-team
+
+# Backend configuration files
+/backend/package.json @meterverse/backend-team @meterverse/devops-team
+/backend/tsconfig.json @meterverse/backend-team
+/backend/Dockerfile @meterverse/backend-team @meterverse/devops-team
+/backend/docker-compose.yml @meterverse/devops-team
+
+# ============================================================
+# FRONTEND (Next.js)
+# ============================================================
+
+# Billing components
+/Frontend/src/components/billing/ @meterverse/frontend-team @meterverse/billing-team
+/Frontend/src/components/invoices/ @meterverse/frontend-team @meterverse/billing-team
+
+# General frontend
+/Frontend/src/ @meterverse/frontend-team
+/Frontend/src/app/ @meterverse/frontend-team
+/Frontend/src/lib/ @meterverse/frontend-team
+/Frontend/src/hooks/ @meterverse/frontend-team
+
+# Frontend configuration
+/Frontend/next.config.ts @meterverse/frontend-team @meterverse/devops-team
+/Frontend/package.json @meterverse/frontend-team @meterverse/devops-team
+/Frontend/Dockerfile @meterverse/frontend-team @meterverse/devops-team
+
+# Playwright tests
+/Frontend/e2e/ @meterverse/qa-team @meterverse/frontend-team
+
+# ============================================================
+# DOCUMENTATION
+# ============================================================
+
+# Architecture and planning docs
+/draft/ @meterverse/architects
+/draft/specs/ @meterverse/architects
+/draft/reports/ @meterverse/architects
+
+# User documentation
+/docs/ @meterverse/docs-team
+/docs/*_GUIDE.md @meterverse/docs-team
+
+# API documentation
+/docs/api/ @meterverse/backend-team @meterverse/reporting-team
+
+# System documentation
+/documentation/ @meterverse/docs-team
+
+# ============================================================
+# CI/CD & DEVOPS
+# ============================================================
+
+# GitHub configuration
+/.github/ @meterverse/devops-team
+/.github/workflows/ @meterverse/devops-team
+/.github/dependabot.yml @meterverse/devops-team
+/.github/CODEOWNERS @meterverse/leads
+
+# CI/CD pipeline files
+/ci-cd/ @meterverse/devops-team
+
+# Docker
+/docker-compose.yml @meterverse/devops-team
+
+# Scripts
+/scripts/ @meterverse/devops-team
+/install-services.ps1 @meterverse/devops-team
+/install-services.bat @meterverse/devops-team
+
+# ============================================================
+# SECURITY
+# ============================================================
+
+# Security policy
+/SECURITY.md @meterverse/security-team @meterverse/leads
+
+# Security audit reports
+/reports/security-*.md @meterverse/security-team
+
+# ============================================================
+# REPOSITORY ROOT
+# ============================================================
+
+# Root-level files
+/*.md @meterverse/leads
+/README.md @meterverse/leads @meterverse/docs-team
+/CHANGELOG.md @meterverse/leads
+/SECURITY.md @meterverse/security-team @meterverse/leads
+
+# Root configuration
+/package.json @meterverse/devops-team
+/.gitignore @meterverse/devops-team
+/.husky/ @meterverse/devops-team
+
+# ============================================================
+# ARCHIVED / LEGACY
+# ============================================================
+
+/draft/legacy-*/ @meterverse/architects
+/backup\ files/ @meterverse/architects

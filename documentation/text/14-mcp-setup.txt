@@ -1,8 +1,8 @@
-﻿MCP Server Setup â€” Meter Pulse
+MCP Server Setup — Meter Verse
 
 Date: 2026-05-28
 Config: .opencode/opencode.json
-Status: Configured â€” requires credentials to activate
+Status: Configured — requires credentials to activate
 
 
 Overview
@@ -24,7 +24,7 @@ Setup
 1. Go to https://www.notion.so/profile/integrations
 2. Create a new Internal Integration or select an existing one
 3. Copy the Internal Integration Secret (ntn_xxx)
-4. Connect relevant pages/databases to the integration (share page â†’ "Connect to" â†’ your integration)
+4. Connect relevant pages/databases to the integration (share page → "Connect to" → your integration)
 5. Set the token in .opencode/opencode.json:
 
 
@@ -65,7 +65,7 @@ MCP servers are activated on opencode restart. After filling in credentials:
 
 
 
-Note: Both servers are disabled by default until credentials are provided. The config file serves as documentation and ready-to-use template â€” just fill in the values and restart.
+Note: Both servers are disabled by default until credentials are provided. The config file serves as documentation and ready-to-use template — just fill in the values and restart.
 
 
 Git Command

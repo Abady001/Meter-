@@ -11,28 +11,26 @@ export class ProjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateProjectDto, userId: string): Promise<ProjectResponseDto> {
-    const project = await this.prisma.project.create({
+    const project = await this.prisma.coreProject.create({
       data: {
-        code: dto.code,
-        name: dto.name,
-        taxEnabled: dto.taxEnabled ?? false,
-        taxRate: dto.taxRate ?? undefined,
-        readingThresholdProfileId: dto.readingThresholdProfileId ?? undefined,
-        waterDifferenceMode: dto.waterDifferenceMode ?? 'report_only',
-        createdBy: userId,
-        updatedBy: userId
-      }
+        projectCode: dto.code,
+        projectName: dto.name,
+        areaId: dto.areaId || '',
+        isActive: true,
+      },
     });
     return this.toResponse(project);
   }
 
   async findAll(): Promise<ProjectResponseDto[]> {
-    const projects = await this.prisma.project.findMany({ orderBy: { createdAt: 'desc' } });
+    const projects = await this.prisma.coreProject.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
     return projects.map(this.toResponse);
   }
 
   async findOne(id: string): Promise<ProjectResponseDto> {
-    const project = await this.prisma.project.findUnique({ where: { id } });
+    const project = await this.prisma.coreProject.findUnique({ where: { id } });
     if (!project) {
       throw new NotFoundException(`Project ${id} not found`);
     }
@@ -41,53 +39,40 @@ export class ProjectsService {
 
   async update(id: string, dto: UpdateProjectDto, userId: string): Promise<ProjectResponseDto> {
     await this.findOne(id);
-    const project = await this.prisma.project.update({
-      where: { id },
-      data: {
-        code: dto.code,
-        name: dto.name,
-        taxEnabled: dto.taxEnabled,
-        taxRate: dto.taxRate,
-        readingThresholdProfileId: dto.readingThresholdProfileId,
-        waterDifferenceMode: dto.waterDifferenceMode,
-        status: dto.status,
-        updatedBy: userId
-      }
-    });
+    const data: any = {};
+    if (dto.code !== undefined) data.projectCode = dto.code;
+    if (dto.name !== undefined) data.projectName = dto.name;
+    if (dto.status !== undefined) data.isActive = dto.status === 'active';
+    if (dto.areaId !== undefined) data.areaId = dto.areaId;
+    const project = await this.prisma.coreProject.update({ where: { id }, data });
     return this.toResponse(project);
   }
 
   async remove(id: string, userId: string): Promise<void> {
     await this.findOne(id);
-    await this.prisma.project.update({
+    await this.prisma.coreProject.update({
       where: { id },
-      data: { status: 'inactive', updatedBy: userId }
+      data: { isActive: false },
     });
   }
 
   private toResponse(project: {
     id: string;
-    code: string;
-    name: string;
-    status: string;
-    taxEnabled: boolean;
-    taxRate?: any;
-    readingThresholdProfileId?: string | null;
-    waterDifferenceMode: string;
+    projectCode: string;
+    projectName: string;
+    areaId: string;
+    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
   }): ProjectResponseDto {
     return {
       id: project.id,
-      code: project.code,
-      name: project.name,
-      status: project.status,
-      taxEnabled: project.taxEnabled,
-      taxRate: project.taxRate ? Number(project.taxRate) : null,
-      readingThresholdProfileId: project.readingThresholdProfileId ?? null,
-      waterDifferenceMode: project.waterDifferenceMode,
+      code: project.projectCode,
+      name: project.projectName,
+      status: project.isActive ? 'active' : 'inactive',
+      areaId: project.areaId,
       createdAt: project.createdAt,
-      updatedAt: project.updatedAt
-    };
+      updatedAt: project.updatedAt,
+    } as any;
   }
 }

@@ -1,4 +1,4 @@
-# Memory Files — Meter Pulse
+# Memory Files — Meter Verse
 
 > All agent memory files: AGENTS.md, Speckit constitution, skills, OpenCode config, Graphify.
 > Last updated: 2026-05-28
@@ -57,7 +57,7 @@
 - **Story**: Foundational
 - **Status**: Complete
 - **What changed**: Created setup.ts (YAML loading, custom $ref deref, AJV validation, supertest app factory), 8 contract tests, added GET /health to OpenAPI spec
-- **Files**: `test/contract/setup.ts`, `test/contract/setup.spec.ts`, `specs/*/contracts/meter-pulse-api.yaml`
+- **Files**: `test/contract/setup.ts`, `test/contract/setup.spec.ts`, `specs/*/contracts/meter-verse-api.yaml`
 - **Packages**: supertest, ajv, ajv-formats, js-yaml (@apidevtools/swagger-parser removed — ESM-only)
 - **Validation**: 77 tests passing, build clean
 - **Next task**: T013
@@ -86,7 +86,7 @@
 
 - **Story**: Phase 2 (schema)
 - **Status**: Complete
-- **What changed**: Reading with unique (meter_id, reading_at, source), jsonb defaults, DECIMAL(12,3)
+- **What changed**: Reading with unique (Meter_Verse_id, reading_at, source), jsonb defaults, DECIMAL(12,3)
 - **Next task**: T016
 
 ---

@@ -1,3 +1,32 @@
 {
-  "feature_directory": "specs/001-metering-billing-platform"
+  "features": [
+    {
+      "id": "001-metering-billing-platform",
+      "path": "specs/001-metering-billing-platform",
+      "title": "Meter Pulse Original — T001-T085",
+      "active": true,
+      "tasks_range": "T001-T085"
+    },
+    {
+      "id": "002-meter-verse-core",
+      "path": "specs/002-meter-verse-core",
+      "title": "Meter Verse Core — Core DB, RBAC, i18n, Availability",
+      "active": true,
+      "tasks_range": "T086-T092"
+    },
+    {
+      "id": "003-symbiot-integration",
+      "path": "specs/003-symbiot-integration",
+      "title": "Symbiot Integration — Bridge, TCP/HTTP Multiplex",
+      "active": true,
+      "tasks_range": "T091"
+    },
+    {
+      "id": "004-migration-plans",
+      "path": "specs/004-migration-plans",
+      "title": "Migration Plans — SBill, Collection, Solar Wallet",
+      "active": true,
+      "tasks_range": "T107-T111"
+    }
+  ]
 }

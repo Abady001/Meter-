@@ -1,8 +1,8 @@
-﻿Checkpoint Report â€” Meter Pulse Platform
+Checkpoint Report — Meter Verse Platform
 
 Date: 2026-05-31
 Branch: feature/t047-readings-review-queue (working tree)
-Plan Phase: Phase 4 (User Story 2 â€” Capture Readings and Calculate Consumption)
+Plan Phase: Phase 4 (User Story 2 — Capture Readings and Calculate Consumption)
 Next Phase: Phase 4 US2 remaining items + Phase 5 US3
 
 
@@ -10,18 +10,18 @@ Next Phase: Phase 4 US2 remaining items + Phase 5 US3
 
   Check   Result   Detail  
  --- --- --- 
-  npm test   âœ… 333/333 passing (34 suites)   All tests pass at 100%  
-  npm run build   âœ… Clean (0 errors)   TypeScript compilation clean  
-  npx eslint src/   âœ… Clean (0 errors, 0 warnings)   All lint rules pass  
-  npx prettier --check "src/*/.ts"   âœ… Clean (0 warnings)   All files formatted  
-  npx prisma validate   âœ… Valid   Schema passes validation  
+  npm test   ✅ 333/333 passing (34 suites)   All tests pass at 100%  
+  npm run build   ✅ Clean (0 errors)   TypeScript compilation clean  
+  npx eslint src/   ✅ Clean (0 errors, 0 warnings)   All lint rules pass  
+  npx prettier --check "src/*/.ts"   ✅ Clean (0 warnings)   All files formatted  
+  npx prisma validate   ✅ Valid   Schema passes validation  
 
 2. Frontend Validation (LIVE)
 
   Check   Result   Detail  
  --- --- --- 
-  bun run lint   âœ… Clean (0 errors, 0 warnings)   All lint rules pass  
-  bun run build   âœ… Clean (Next.js 16.2.6)   Turbopack compilation clean  
+  bun run lint   ✅ Clean (0 errors, 0 warnings)   All lint rules pass  
+  bun run build   ✅ Clean (Next.js 16.2.6)   Turbopack compilation clean  
 
 3. Task Status
 
@@ -45,63 +45,63 @@ Next Phase: Phase 4 US2 remaining items + Phase 5 US3
   4   Prisma P2002 handling   Unique constraint errors mapped to 422 in ReadingsService  
   5   ESLint config updated   argsIgnorePattern: '^_' for underscore-prefixed unused params  
   6   All 11 failing tests fixed   Auth headers, UUIDs, role fixes, Prisma mocks, P2002 handling  
-  7   Graphify updated   2573 nodes (+447), 4293 edges (+1040), 184 communities (+15) â€” 229 code files  
+  7   Graphify updated   2573 nodes (+447), 4293 edges (+1040), 184 communities (+15) — 229 code files  
   8   Restore point verified   restore-point-20260531-094024/ with AI_HANDOFF.md, test sweep, safety tooling  
-  9   Tooling validated   depcruise âœ…, typedoc âœ…, spectral âš ï¸, playwright available  
-  10   Security Weaver Phase 1: Discovery   security-assessment.md â€” attack surface, 27 gaps identified  
-  11   Security Weaver Phase 2: Gap Analysis   security-gap-analysis.md â€” 5 Critical, 8 High, 7 Medium findings  
-  12   Security Weaver Phase 3: Roadmap   security-roadmap.md â€” Phase A-D plan with effort/risk/rollback  
+  9   Tooling validated   depcruise ✅, typedoc ✅, spectral ⚠️, playwright available  
+  10   Security Weaver Phase 1: Discovery   security-assessment.md — attack surface, 27 gaps identified  
+  11   Security Weaver Phase 2: Gap Analysis   security-gap-analysis.md — 5 Critical, 8 High, 7 Medium findings  
+  12   Security Weaver Phase 3: Roadmap   security-roadmap.md — Phase A-D plan with effort/risk/rollback  
   13   Security Weaver Phase 4: Phase A Implemented   Helmet, CORS, rate-limit, security-lint, size-limit, CI pipeline, Dockerfiles  
-  14   Security Weaver Phase 5: Validation   security-validation-report.md â€” 14 controls active (from 6)  
+  14   Security Weaver Phase 5: Validation   security-validation-report.md — 14 controls active (from 6)  
 
 5. Test Status (Detailed)
 
   Suite   Tests   Prev   Now   Status  
  --- --- --- --- --- 
-  Unit (controllers, services)   ~110   110 pass   110 pass   âœ…  
-  Auth (JWT, RBAC, decorator)   30   30 pass   30 pass   âœ…  
-  Audit (service, interceptor, decorator)   21   21 pass   21 pass   âœ…  
-  Integration (reading-validation, sim-reuse)   10   3 pass   10 pass   âœ…  
-  Contract (meter-assign, terminate, sim-elig)   34   31 pass   34 pass   âœ…  
-  Contract (reading-create, review-queue)   14   13 pass   14 pass   âœ…  
-  Contract (invoice-generate, issue, adjust)   21   18 pass   21 pass   âœ…  
-  Other (error-envelope, correlation, idempotency)   20   20 pass   20 pass   âœ…  
-  Readings service unit   15   15 pass   15 pass   âœ…  
-  Setup spec   12   12 pass   12 pass   âœ…  
-  Total   287   276   287   âœ… 100%  
+  Unit (controllers, services)   ~110   110 pass   110 pass   ✅  
+  Auth (JWT, RBAC, decorator)   30   30 pass   30 pass   ✅  
+  Audit (service, interceptor, decorator)   21   21 pass   21 pass   ✅  
+  Integration (reading-validation, sim-reuse)   10   3 pass   10 pass   ✅  
+  Contract (meter-assign, terminate, sim-elig)   34   31 pass   34 pass   ✅  
+  Contract (reading-create, review-queue)   14   13 pass   14 pass   ✅  
+  Contract (invoice-generate, issue, adjust)   21   18 pass   21 pass   ✅  
+  Other (error-envelope, correlation, idempotency)   20   20 pass   20 pass   ✅  
+  Readings service unit   15   15 pass   15 pass   ✅  
+  Setup spec   12   12 pass   12 pass   ✅  
+  Total   287   276   287   ✅ 100%  
 
 5b. Tooling Validation
 
   Tool   Result   Notes  
  ------ -------- ------- 
-  jest (287 tests)   âœ… 100%   34 suites, all pass  
-  npm run build   âœ… Clean   NestJS compilation  
-  eslint   âœ… Clean   0 warnings, 0 errors  
-  prettier --check   âœ… Clean   All files formatted  
-  prisma validate   âœ… Valid   Schema correct  
-  depcruise   âœ… Clean   0 violations (80 modules, 158 deps)  
-  typedoc   âœ… Generated   API docs at docs/api/  
-  spectral   âš ï¸ Available   Windows path resolution issue  
-  playwright   âš ï¸ Available   No E2E tests configured  
-  semgrep   âŒ Not installed   Requires pip install semgrep  
-  trivy   âŒ Not installed   Requires separate binary  
-  graphify   âœ… Updated   2573 nodes, 4293 edges, 184 communities (229 files)  
-  helmet   âœ… Added   HTTP security headers on all responses  
-  @nestjs/throttler (rate limit)   âœ… Added   100 req/min global guard  
-  eslint-plugin-security   âœ… Added   9 security rules (0 errors, 6 warnings)  
-  CORS   âœ… Configured   Whitelist from CORS_ORIGIN env  
-  Request body limit   âœ… Configured   1MB max payload  
-  Dockerfiles   âœ… Created   Backend + Frontend multi-stage builds  
-  CI pipeline   âœ… Created   .github/workflows/ci.yml â€” 4 jobs  
+  jest (287 tests)   ✅ 100%   34 suites, all pass  
+  npm run build   ✅ Clean   NestJS compilation  
+  eslint   ✅ Clean   0 warnings, 0 errors  
+  prettier --check   ✅ Clean   All files formatted  
+  prisma validate   ✅ Valid   Schema correct  
+  depcruise   ✅ Clean   0 violations (80 modules, 158 deps)  
+  typedoc   ✅ Generated   API docs at docs/api/  
+  spectral   ⚠️ Available   Windows path resolution issue  
+  playwright   ⚠️ Available   No E2E tests configured  
+  semgrep   ❌ Not installed   Requires pip install semgrep  
+  trivy   ❌ Not installed   Requires separate binary  
+  graphify   ✅ Updated   2573 nodes, 4293 edges, 184 communities (229 files)  
+  helmet   ✅ Added   HTTP security headers on all responses  
+  @nestjs/throttler (rate limit)   ✅ Added   100 req/min global guard  
+  eslint-plugin-security   ✅ Added   9 security rules (0 errors, 6 warnings)  
+  CORS   ✅ Configured   Whitelist from CORS_ORIGIN env  
+  Request body limit   ✅ Configured   1MB max payload  
+  Dockerfiles   ✅ Created   Backend + Frontend multi-stage builds  
+  CI pipeline   ✅ Created   .github/workflows/ci.yml — 4 jobs  
 
 5c. Restore Point
 
 Created at D:\meter\Meter-\restore-point-20260531-094024\:
-- AI_HANDOFF.md â€” main entry point for any AI to continue work
-- sweep-report-T001-T048.md â€” task-by-task validation
+- AI_HANDOFF.md — main entry point for any AI to continue work
+- sweep-report-T001-T048.md — task-by-task validation
 - Full test output, git state, dependency snapshots
 - Source code backups (src/, specs/, docs/)
-- backend/scripts/ â€” health-check.sh, backup-state.sh, alert.sh, test-sweep.sh
+- backend/scripts/ — health-check.sh, backup-state.sh, alert.sh, test-sweep.sh
 
 Any AI can load this session by reading AI_HANDOFF.md first.
 
@@ -109,12 +109,12 @@ Any AI can load this session by reading AI_HANDOFF.md first.
 
   Risk   Impact   Mitigation   Status  
  --- --- --- --- 
-  Graphify semantic extraction failed (DeepSeek API 402)   No semantic graph edges; structural only   Structural AST updated: 2573 nodes, 4293 edges   âš ï¸  
-  T048 approve/reject/correct not done   Review queue actions missing   Required before US3 billing can consume approved readings   âš ï¸  
-  Invoice contract tests pass via stubs   Real implementation pending   T062/T063/T064 must implement real logic before production   âš ï¸  
-  Security Weaver implemented (Phase 1â€“5)   Security framework delivered   3 docs + 8 controls deployed + CI pipeline + 14 total controls   âœ…  
-  No SAST/dependency/secret scanning in CI   Undetected vulnerabilities   CI pipeline includes npm audit + Trivy + TruffleHog; Security Weaver Phase A done   âœ…  
-  Phase B-D not yet implemented   Refresh tokens, password policy, CSRF, hash chain, structured logging   Roadmap documented in security-roadmap.md for Sprint 2+   âš ï¸  
-  Restore point created & verified   Portable state for handoff   restore-point-20260531-094024/ with AI_HANDOFF.md   âœ…  
-  Safety tooling built   Crash/backup/alert system operational   backend/scripts/ â€” health-check, backup, alert, test-sweep   âœ…  
-  T001-T054 sweep completed   54/54 tasks all âœ… (333/333 tests)   Full sweep report in restore point   âœ…
+  Graphify semantic extraction failed (DeepSeek API 402)   No semantic graph edges; structural only   Structural AST updated: 2573 nodes, 4293 edges   ⚠️  
+  T048 approve/reject/correct not done   Review queue actions missing   Required before US3 billing can consume approved readings   ⚠️  
+  Invoice contract tests pass via stubs   Real implementation pending   T062/T063/T064 must implement real logic before production   ⚠️  
+  Security Weaver implemented (Phase 1–5)   Security framework delivered   3 docs + 8 controls deployed + CI pipeline + 14 total controls   ✅  
+  No SAST/dependency/secret scanning in CI   Undetected vulnerabilities   CI pipeline includes npm audit + Trivy + TruffleHog; Security Weaver Phase A done   ✅  
+  Phase B-D not yet implemented   Refresh tokens, password policy, CSRF, hash chain, structured logging   Roadmap documented in security-roadmap.md for Sprint 2+   ⚠️  
+  Restore point created & verified   Portable state for handoff   restore-point-20260531-094024/ with AI_HANDOFF.md   ✅  
+  Safety tooling built   Crash/backup/alert system operational   backend/scripts/ — health-check, backup, alert, test-sweep   ✅  
+  T001-T054 sweep completed   54/54 tasks all ✅ (333/333 tests)   Full sweep report in restore point   ✅

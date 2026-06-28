@@ -1,4 +1,4 @@
-# Security Assessment — Meter Pulse Platform
+# Security Assessment — Meter Verse Platform
 
 **Date**: 2026-05-31
 **Framework**: OWASP ASVS v4.0.3, NIST CSF 2.0, OWASP Top 10 2021, CIS Controls v8
@@ -147,8 +147,8 @@ JWT_SECRET=dev-jwt-secret-do-not-use-in-production
 ```
 
 This is acceptable for development but **must** be replaced with a strong, randomly generated secret before any production deployment. The env file also contains database credentials in plaintext:
-- `DB_USER=meter_pulse`
-- `DB_PASSWORD=meter_pulse_dev`
+- `DB_USER=Meter_Verse_pulse`
+- `DB_PASSWORD=Meter_Verse_pulse_dev`
 - Full connection string with credentials
 
 **Risk**: If `.env` is accidentally committed or the development server is exposed, any attacker can forge JWTs and gain authenticated access.

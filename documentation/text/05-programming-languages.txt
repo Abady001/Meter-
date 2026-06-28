@@ -1,4 +1,4 @@
-Programming Languages — Meter Pulse
+Programming Languages — Meter Verse
 
 All programming languages used and planned across the full project.
 Last updated: 2026-05-26
@@ -7,7 +7,7 @@ Last updated: 2026-05-26
   JavaScript  |  ES2022  |  Frontend config files  |  ESLint config, Next.js config, PostCSS config  
   CSS  |  —  |  Frontend/src/app/globals.css  |  Tailwind CSS v4 with custom dark theme, glassmorphism, animations  
   SQL  |  —  |  Prisma schema + migrations (backend/prisma/)  |  Database schema definition, partial unique indexes, derived views  
-  YAML  |  —  |  specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml  |  OpenAPI 3.1 API contract definition  
+  YAML  |  —  |  specs/001-metering-billing-platform/contracts/meter-verse-api.yaml  |  OpenAPI 3.1 API contract definition  
   Markdown  |  —  |  specs/, documentation/, AGENTS.md  |  Documentation, specifications, agent instructions  
   JSON  |  —  |  package.json, tsconfig.json, .specify/*.json  |  Configuration files  
   PowerShell  |  5.1  |  .specify/scripts/  |  Speckit automation scripts (Windows)  

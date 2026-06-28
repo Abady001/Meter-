@@ -37,4 +37,9 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsEnum(['active', 'inactive'] as const)
   status?: 'active' | 'inactive';
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  areaId?: string;
 }

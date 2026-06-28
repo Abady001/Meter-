@@ -11,19 +11,19 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('kpis')
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN, Role.FINANCE, Role.SUPPORT)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN, Role.FINANCE, Role.SUPPORT)
   async getKpis(@Param('projectId', ParseUUIDPipe) projectId: string) {
     return this.dashboardService.getKpis(projectId);
   }
 
   @Get('consumption')
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN, Role.FINANCE, Role.SUPPORT)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN, Role.FINANCE, Role.SUPPORT)
   async getConsumption(@Param('projectId', ParseUUIDPipe) projectId: string) {
     return this.dashboardService.getConsumptionTrend(projectId);
   }
 
   @Get('activity')
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN, Role.SUPPORT)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN, Role.SUPPORT)
   async getActivity(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Query('limit') limit?: string

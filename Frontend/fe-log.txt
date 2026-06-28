@@ -1,0 +1,23 @@
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.22.208.1:3000
+- Environments: .env.local
+✓ Ready in 1659ms
+
+ GET / 200 in 6.9s (next.js: 4.5s, application-code: 2.4s)
+ GET / 200 in 489ms (next.js: 35ms, application-code: 455ms)
+ GET / 200 in 435ms (next.js: 13ms, application-code: 422ms)
+ GET / 200 in 495ms (next.js: 30ms, application-code: 465ms)
+ GET /login 200 in 503ms (next.js: 235ms, application-code: 268ms)
+ GET /login 200 in 193ms (next.js: 14ms, application-code: 178ms)
+ GET / 200 in 192ms (next.js: 12ms, application-code: 180ms)
+ GET / 200 in 685ms (next.js: 215ms, application-code: 470ms)
+ GET / 200 in 150ms (next.js: 19ms, application-code: 131ms)
+ GET / 200 in 1624ms (next.js: 214ms, application-code: 1411ms)
+ GET / 200 in 160ms (next.js: 14ms, application-code: 146ms)
+Error [PageNotFoundError]: Cannot find module for page: /meters
+    at ignore-listed frames {
+  code: 'ENOENT'
+}
+ GET / 200 in 285ms (next.js: 50ms, application-code: 235ms)
+[?25h

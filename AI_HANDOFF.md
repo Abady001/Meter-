@@ -1,9 +1,8 @@
-# AI Handoff — Meter Pulse
-
+# AI Handoff — Meter Verse (v2.0.0)
 > **Purpose**: Single file containing EVERYTHING an AI agent needs to continue work on this project.
-> **Generated**: 2026-05-29 | **Last Updated**: 2026-06-01 (RCA Sprint + CI Fixes)
-> **Last Completed**: RCA Sprint (deep scan fixes + CI workflow fixes) + T061-T065
-> **Next Task**: T062a (Water difference billing policy) or T066 (Payment reversal)
+> **Generated**: 2026-06-13 | **Last Updated**: 2026-06-13 (Meter Verse v2.0.0 — Planning Complete)
+> **Last Completed**: T001-T085 (original Meter Pulse) + Planning docs (12 files) + Specs/002-004 (9 files)
+> **Next Task**: T086 (Core DB schema — 15 tables)
 
 ---
 
@@ -11,40 +10,73 @@
 
 | Field | Value |
 |---|---|
-| Name | Meter Pulse — Utility Metering & Billing Platform |
-| Stack (Backend) | NestJS + PostgreSQL + Prisma ORM |
+| Name | Meter Verse — Unified Utility Metering & Billing Platform |
+| Stack (Backend) | NestJS + PostgreSQL + Prisma ORM (multi-schema) |
 | Stack (Frontend) | Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui |
+| Stack (Collection) | Flask 3.1.3 + Bootstrap 5 RTL + Chart.js 4.4.1 (reference) |
 | Runtime (Frontend) | Bun (NOT npm/yarn — use `bun` commands) |
 | Runtime (Backend) | Node 20+ (use `npm` commands) |
+| Runtime (Collection) | Python 3.x |
 | Author | Kirllos Hany <kirllos.hany@epower.com.eg> |
-| GitHub Upstream | **Abady001/Meter-** (PR destination) |
-| GitHub Fork | **Kirllos360/Meter-** (origin remote) |
+| GitHub | **https://github.com/Kirllos360/Meter** (new unified repo) |
 | Git Author | `Kirllos Hany <kirllos.hany@epower.com.eg>` |
-| Git Remotes | `abady` (upstream), `origin` (fork) |
-| Current Branch | `feature/t055-payments-contract` |
-| Tests | 373/373 passing (47 suites) |
-| CI Status | ✅ All 5 jobs green (backend, frontend, security, sbom, secret-scan) |
+| Git Remote | `origin https://github.com/Kirllos360/Meter.git` |
+| Current Branch | `main` |
+| Tests | 373/373 passing (47 suites) — original Meter Pulse backend |
+| Architecture | 3 Plans (Full / Safety / Failover) × 15 Areas |
+| Reference Systems | 7 systems in `reference/` (collection-system, sbill, symbiot, ims, meter-department, energy-360, all-last-update) |
 
 ---
 
 ## 2. Repository Structure
 
 ```
-D:\meter\Meter-\     <-- The ACTUAL git repository root
-├── specs/001-metering-billing-platform/  # Speckit artifacts (source of truth)
-├── backend/                              # NestJS backend (Prisma + PostgreSQL)
-├── Frontend/                             # Next.js frontend (Bun runtime)
-├── documentation/                        # All docs (markdown, sql, text, excel, pdf)
-├── .specify/                             # Speckit tooling config
-├── .agents/                              # AI agent skills (9 speckit skills)
-├── AGENTS.md                             # Main agent instructions
-├── MASTER-DEPLOYMENT-GUIDE.md            # Full deployment guide
-├── PROJECT_ARCHITECTURE_AND_TREE.md      # Full architecture + tree
-├── AI_HANDOFF.md                         # THIS FILE — AI handoff
-├── RESTORE_POINT.md                      # Restore point
-├── T001-T020-FINISHED-TASKS.md           # Completed tasks log
-├── NEXT-SECTION-PROMPT.md                # Next task prompt
-└── metering_system_prd_brainstorm.md     # Original PRD (1538 lines)
+D:\meter\Meter\          <-- The ACTUAL git repository root (was Meter-\)
+├── specs/
+│   ├── 001-metering-billing-platform/  # T001-T085 (original 85 tasks)
+│   ├── 002-meter-verse-core/           # T086-T092 (Core DB, Auth, 16 profiles)
+│   ├── 003-symbiot-integration/        # Symbiot bridge (10 TCP × 100 HTTP)
+│   └── 004-migration-plans/            # Data migration + parallel run
+├── backend/                             # NestJS backend (Prisma + PostgreSQL)
+├── Frontend/                            # Next.js frontend (Bun runtime)
+├── reference/                           # ALL reference systems (7 dirs)
+│   ├── collection-system/               # Flask billing system (priority features)
+│   ├── sbill/                           # SBill Palm Hills + Estates
+│   ├── symbiot/                         # Symbiot SEP integration
+│   ├── ims/                             # IMS system
+│   ├── meter-department/               # Meter department files
+│   ├── energy-360/                      # Energy 360 mobile app
+│   └── all-last-update/                # Latest system updates
+├── tools/playwright-mcp/               # Playwright MCP for E2E tests
+├── docs/
+│   ├── architecture/                     # Architecture specs
+│   ├── migration/                        # Migration guides
+│   └── planning/                         # 12 planning docs with Mermaid diagrams
+│       ├── v2.0.0-planning-strategy.md
+│       ├── v2.0.0-implementation-roadmap.md
+│       ├── v2.0.0-tasks.md
+│       ├── v2.0.0-workflow.md
+│       ├── v2.0.0-stories.md
+│       ├── v2.0.0-data-model.md
+│       ├── v2.0.0-security.md
+│       ├── v2.0.0-migration-plan.md
+│       ├── v2.0.0-symbiot-integration.md
+│       ├── v2.0.0-test-plan.md
+│       ├── v2.0.0-deployment-guide.md
+│       └── v2.0.0-upcoming-updates.md
+├── scripts/                            # Utility scripts
+├── ci-cd/                              # CI/CD pipeline configs
+├── documentation/                      # All docs (markdown, sql, text, excel, pdf)
+├── .specify/                           # Speckit tooling config
+├── .agents/                            # AI agent skills
+├── AGENTS.md                           # Main agent instructions
+├── MASTER-DEPLOYMENT-GUIDE.md          # Full deployment guide (dual platform)
+├── PROJECT_ARCHITECTURE_AND_TREE.md    # Full architecture + tree
+├── AI_HANDOFF.md                       # THIS FILE — AI handoff
+├── RESTORE_POINT.md                    # Restore point (v3)
+├── T001-T022-FINISHED-TASKS.md         # Completed tasks log (T001-T085)
+├── NEXT-SECTION-PROMPT.md              # Next task prompt
+└── metering_system_prd_brainstorm.md   # Original PRD
 ```
 
 ---
@@ -166,7 +198,7 @@ npx prisma generate      # Generate Prisma client
 | T068-T071a | Frontend FE-040, FE-041, FE-042, FE-043, FE-consumption | T062-T067, T022 |
 | T072 | US3 batch validation | T068-T071a |
 
-### Phase 6 — Polish (T073-T085) ❌ ALL PENDING
+### Phase 6 — Polish (T073-T085) ❌ ALL PENDING (legacy, migrated to v2.0.0)
 | ID | Description | Depends On |
 |---|---|---|
 | T073-T074 | Report export jobs + contract test | T018, T009, T012 |
@@ -183,9 +215,77 @@ npx prisma generate      # Generate Prisma client
 | T084a | Backup/restore drill | T002, T005, T084 |
 | T085 | Ratify constitution | T084, T084a |
 
----
+### Phase 7 — Meter Verse v2.0.0 (T086-T150) 🚀 PLANNED
 
-## 6. T022 — JUST COMPLETED (FE-003 Feature Flags + Multi-Tool Validation)
+#### Phase 0: Foundation (T086-T090)
+| ID | Description | Depends On |
+|---|---|---|
+| T086 | Create Core DB schema (15 tables: User, Role, Permission, Area, Project, etc.) | None (new project) |
+| T087 | Create Features DB schema (10 tables: Tariff, Charge, Report, Job, etc.) | T086 |
+| T088 | Create Area DB template (45 tables) | T087 |
+| T089 | Implement 16-profile RBAC with area middleware | T086 |
+| T090 | i18n engine: 676 AR/EN keys | T086 |
+
+#### Phase 1: Infrastructure (T091-T092)
+| ID | Description | Depends On |
+|---|---|---|
+| T091 | Symbiot bridge: 10 TCP × 100 HTTP multiplex | T086 |
+| T092 | 3 availability plans (Full/Safety/Failover) | T086, T087, T088 |
+
+#### Phase 2: Core Pages (T093-T098)
+| ID | Description | Depends On |
+|---|---|---|
+| T093 | Customer page (3×5 business cards design) | T086, T088, T090 |
+| T094 | Meter page (type icons, relay signals, 11 actions) | T086, T088 |
+| T095 | Balances page (5 tabs: Water/Electric/Solar/Chilled/Gas) | T086, T088 |
+| T096 | Payments page (search → history → pay flow) | T086, T088 |
+| T097 | Invoices page (preview + pay + delete + under review) | T086, T088 |
+| T098 | Readings page (unified + quarantine + solar wallet) | T086, T088, T091 |
+
+#### Phase 3: Features (T099-T106)
+| ID | Description | Depends On |
+|---|---|---|
+| T099 | Meter Lifecycle + Data Hub (4-stage + all processes) | T094, T098 |
+| T100 | Tariffs page (unified with charges + measurement points) | T087, T090 |
+| T101 | Workspace (alerts + tickets + assign requests) | T093-T098 |
+| T102 | 32 reports (port 93 JasperReports one-by-one) | T087 |
+| T103 | Admin + Superadmin merged page | T089, T090 |
+| T104 | Locations page (renamed units + smart search) | T086, T088 |
+| T105 | Login page (Meter Verse theme, role redirect) | T089 |
+| T106 | Dashboard (per-area KPIs + 5 Recharts) | T093-T098 |
+
+#### Phase 4: Migration (T107-T111)
+| ID | Description | Depends On |
+|---|---|---|
+| T107 | Solar wallet + historical data migration | T098 |
+| T108 | Data migration: SBill Palm Hills → Area DBs | T088 |
+| T109 | Data migration: SBill Estates → Area DBs | T088 |
+| T110 | Data migration: Collection Tracker → new structure | T088 |
+| T111 | 30-day parallel run validation | T108-T110 |
+
+#### Phase 5: Quality (T112-T116)
+| ID | Description | Depends On |
+|---|---|---|
+| T112 | Security audit + penetration testing | T086-T106 |
+| T113 | Load test (20 concurrent users) | T086-T106 |
+| T114 | Graphify 1000-node certification | T086-T106 |
+| T115 | SpeckIt loop testing per phase | T086-T106 |
+| T116 | CI/CD pipeline (Linux + Windows) | T086-T106 |
+
+#### Phase 6: Launch (T117-T120)
+| ID | Description | Depends On |
+|---|---|---|
+| T117 | Deploy: Core on Linux, Symbiot bridge on Windows | T116 |
+| T118 | Cutover + DNS switch | T117 |
+| T119 | Documentation freeze + user training | T118 |
+| T120 | Post-launch monitoring (30 days) | T119 |
+
+#### Reserved (T121-T150)
+| ID | Description |
+|---|---|
+| T121-T150 | Reserved for bug fixes + enhancements post-launch |
+
+---
 
 ### What Was Created
 | File | Purpose |
@@ -342,11 +442,11 @@ After merge: `cd backend && npx prisma migrate deploy && npx prisma generate`
 PORT=3001
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_NAME=meter_pulse
+DB_NAME=Meter_Verse_pulse
 DB_SCHEMA=sim_system
-DB_USER=meter_pulse
-DB_PASSWORD=meter_pulse_dev
-DATABASE_URL=postgresql://meter_pulse:meter_pulse_dev@127.0.0.1:5432/meter_pulse?schema=sim_system
+DB_USER=Meter_Verse_pulse
+DB_PASSWORD=Meter_Verse_pulse_dev
+DATABASE_URL=postgresql://Meter_Verse_pulse:Meter_Verse_pulse_dev@127.0.0.1:5432/Meter_Verse_pulse?schema=sim_system
 JWT_SECRET=dev-jwt-secret-do-not-use-in-production
 JWT_EXPIRES_IN=3600
 
@@ -360,25 +460,33 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
 
 | Issue | Details |
 |---|---|
-| WSL bash relay | `execvpe(/bin/bash) failed` — SpeckKit bash scripts can't run |
+| WSL bash relay | `execvpe(/bin/bash) failed` — SpeckKit bash scripts can't run on Windows |
 | `bunx` spawn on Windows | `smoke-all-pages.mjs` uses `bunx` which fails on Windows |
-| open-interpreter | pip install timed out — not yet installed |
-| Constitution | `.specify/memory/constitution.md` is still template placeholders — must be ratified in T085 |
-| `.opencode` at root | Root `D:\meter\.opencode\` has fresh .git with no commits — the real repo is in `Meter-\` |
+| Constitution | `.specify/memory/constitution.md` template placeholders — must be ratified |
+| `.opencode` at root | Two `.opencode/` dirs exist (`Meter\` root + `D:\meter\.opencode\`) — consolidate |
+| Playwright MCP | Installed at `tools/playwright-mcp/` but not configured in opencode.json yet |
+| Original Meter- repo | `D:\meter\Meter-\` still exists with old .git — archive after migration verified |
+| Reference sizes | Large reference dirs (meter-department 4.1 GB, sbill 2.1 GB) — exclude from git |
+| Git LFS | Not set up — large reference files should use Git LFS or `.gitignore` |
 
 ---
 
 ## 12. Important File Paths (Quick Reference)
 
-| What | Path (relative to Meter-/) |
+| What | Path (relative to Meter/) |
 |---|---|
-| All 85 Tasks | `specs/001-metering-billing-platform/tasks.md` |
+| All Tasks (original) | `specs/001-metering-billing-platform/tasks.md` |
+| All Tasks (v2.0.0) | `specs/002-meter-verse-core/tasks.md` (T086+) |
 | Spec (FRs) | `specs/001-metering-billing-platform/spec.md` |
 | Implementation Plan | `specs/001-metering-billing-platform/plan.md` |
 | Data Model | `specs/001-metering-billing-platform/data-model.md` |
-| API Contract | `specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml` |
+| API Contract | `specs/001-metering-billing-platform/contracts/meter-verse-api.yaml` |
 | Agent Instructions | `AGENTS.md` |
 | Deployment Guide | `MASTER-DEPLOYMENT-GUIDE.md` |
+| Execution Strategy | `specs/002-meter-verse-core/execution-plan.md` |
+| Collection System Plan | `reference/collection-system/docs/specs/PLAN_EXECUTION_STRATEGY.md` |
+| Three-System Comparison | `reference/collection-system/docs/specs/THREE_SYSTEM_COMPARISON.md` |
+| Gap Analysis | `reference/collection-system/docs/specs/COLLECTION_SYSTEM_GAP_ANALYSIS.md` |
 | Frontend Build | `Frontend/FRONTEND_BUILD.md` |
 | Frontend Backlog | `Frontend/FRONTEND_SPRINT_BACKLOG.md` |
 | Graph Report | `Frontend/graphify-out/GRAPH_REPORT.md` |
@@ -400,29 +508,41 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
 | Error Envelope | `backend/src/common/http/error-envelope.ts` |
 | Correlation ID | `backend/src/common/http/correlation.middleware.ts` |
 | Idempotency Key | `backend/src/common/http/idempotency.interceptor.ts` |
-| Route of Data (Architecture Map) | `ROUTE_OF_DATA.md` |
+| Route of Data | `ROUTE_OF_DATA.md` |
 | Feature Flags | `Frontend/src/lib/feature-flags.ts` |
 | Feature Flags API | `Frontend/src/pages/api/features.ts` |
 | Tree + Architecture | `PROJECT_ARCHITECTURE_AND_TREE.md` |
 | AI Handoff (this file) | `AI_HANDOFF.md` |
 | Restore Point | `RESTORE_POINT.md` |
+| Collection System Models | `reference/collection-system/app/models.py` (~50 tables) |
+| Collection System Routes | `reference/collection-system/app/routes_*.py` (16 files) |
+| Playwright MCP | `tools/playwright-mcp/` |
 
 ---
 
-## 14. Session Checkpoint / Backup
+## 14. Session Checkpoint / Backup (v2.0.0 Migration)
 
 The last session checkpoint is located at:
-- **`backup files/T022_2026-05-29_112800/`**
-- Start with: `LAST_SESSION_CHECKPOINT.md` — contains full session summary, all files created/changed, validation results, and complete restore instructions
-- That folder contains ALL documentation, source code, backend config, specs, and agent configs needed to continue seamlessly
+- **`backup files/v2.0.0-migration_2026-06-13/`**
+- Start with: `RESTORE_POINT.md` (v3 — updated for Meter Verse v2.0.0)
+- That folder contains the full workspace snapshot before migration
 
 To restore from scratch:
 ```bash
-git clone https://github.com/Kirllos360/Meter-.git
-git checkout feature/t022-validation-docs
+git clone https://github.com/Kirllos360/Meter.git
+cd Meter
+# Backend
 cd backend && npm install && docker compose up -d db && npx prisma generate && npx prisma migrate deploy
+# Frontend
 cd ../Frontend && bun install && bun run build
+# Playwright MCP (optional, for E2E tests)
+cd ../tools/playwright-mcp && npm install
 ```
+
+### Migration Archive
+- Old repo (`Meter-\`) kept at `D:\meter\Meter-\` until v2.0.0 stable
+- Collection System kept at `D:\Collection System\` (running production) — mirrored to `reference/collection-system/`
+- All 7 reference systems mirrored at `D:\meter\Meter\reference\`
 
 ---
 
@@ -479,10 +599,37 @@ cd ../Frontend && bun install && bun run build
 
 ### Restore Point
 - RCA Report: `test-agent/reports/RCA-REPORT-20260601.md`
-- OneDrive: `C:\Users\EPower\OneDrive - EPower\kirllos\app\meter-pulse\Meter-\`
+- OneDrive: `C:\Users\EPower\OneDrive - EPower\kirllos\app\meter-verse\Meter-\`
 
 ### Next Tasks
 - T062a: Water difference billing policy
 - T066: Payment reversal (`POST /payments/:id/reverse`)
 - T067: Ledger service + `GET /customers/:id/statement`
 - T068-T072: Frontend API migration
+
+---
+
+## 15. docs/planning/ — Quick Reference
+
+| File | Description | Size |
+|------|-------------|------|
+| v2.0.0-planning-strategy.md | 15+2 DB arch, 3 plans, 14 pages, 16 profiles, 15 areas | ~16 KB |
+| v2.0.0-implementation-roadmap.md | 12-phase plan with gantt chart | ~16 KB |
+| v2.0.0-tasks.md | T086-T150 (65 tasks with deps, acceptance, rollback) | ~33 KB |
+| v2.0.0-workflow.md | 9 Mermaid diagrams (meter lifecycle, invoice, payment, etc.) | ~22 KB |
+| v2.0.0-stories.md | 34 user stories across 14 pages | ~21 KB |
+| v2.0.0-data-model.md | Core DB (15), Features DB (10), Area DB template (45) | ~35 KB |
+| v2.0.0-security.md | 16-profile RBAC, RSA 2048, JWT, immutable invoices | ~12 KB |
+| v2.0.0-migration-plan.md | Zero-downtime migration, rollback per phase | ~17 KB |
+| v2.0.0-symbiot-integration.md | 10 TCP × 100 HTTP, per-area bridge model | ~7 KB |
+| v2.0.0-test-plan.md | 600+ test target, categories, coverage | ~5 KB |
+| v2.0.0-deployment-guide.md | Linux Core + Windows Symbiot dual deployment | ~7 KB |
+| v2.0.0-upcoming-updates.md | Reserved future features (mobile, AI, blockchain) | ~2 KB |
+
+### Specs Reference
+
+| Path | Description | Files |
+|------|-------------|-------|
+| specs/002-meter-verse-core/ | Core DB, RBAC, i18n, Availability | spec.md, plan.md, data-model.md |
+| specs/003-symbiot-integration/ | Symbiot bridge TCP/HTTP | spec.md, plan.md, data-model.md |
+| specs/004-migration-plans/ | Data migration plans | spec.md, plan.md, data-model.md |

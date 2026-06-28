@@ -148,7 +148,7 @@ cd backend && npm audit fix
 ```
 
 ### 4. Add OpenAPI spec metadata
-Add contact, license, and tags descriptions to `meter-pulse-api.yaml`.
+Add contact, license, and tags descriptions to `meter-verse-api.yaml`.
 
 ### 5. Complete FE tasks T035-T042
 Run `graphify query` for each before implementing.

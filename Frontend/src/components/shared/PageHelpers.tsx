@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useT } from '@/lib/i18n/context';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { usePageStore } from '@/lib/router-store';
@@ -26,6 +27,7 @@ export function PageHeader({
 }
 
 export function BackButton({ fallback }: { fallback?: string }) {
+  const t = useT();
   const { goBack, navigate } = usePageStore();
   return (
     <Button variant="ghost" size="sm" className="gap-2 mb-4" onClick={() => {
@@ -33,12 +35,12 @@ export function BackButton({ fallback }: { fallback?: string }) {
       else goBack();
     }}>
       <ArrowLeft className="h-4 w-4" />
-      Back
+      {t('common.back')}
     </Button>
   );
 }
 
-export function StatCard({ label, value, icon, color }: { label: string; value: string | number; icon?: React.ReactNode; color?: string }) {
+export function StatCard({ label, value, icon, color, onClick }: { label: string; value: string | number; icon?: React.ReactNode; color?: string; onClick?: () => void }) {
   return (
     <div className="glass-card rounded-xl p-4">
       <div className="flex items-center justify-between">
@@ -53,15 +55,17 @@ export function StatCard({ label, value, icon, color }: { label: string; value: 
 }
 
 export function EmptyState({ message }: { message?: string }) {
+  const t = useT();
   return (
     <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-      <p>{message || 'No data available'}</p>
+      <p>{message || t('common.noData')}</p>
     </div>
   );
 }
 
-export function formatCurrency(amount: number) {
-  return `EGP ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+export function formatCurrency(amount: number | null | undefined) {
+  if (amount == null || isNaN(Number(amount))) return 'EGP 0.00';
+  return `EGP ${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function formatDate(dateStr?: string) {

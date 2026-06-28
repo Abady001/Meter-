@@ -1,7 +1,7 @@
-# Meter Pulse — Master Deployment Guide
+# Meter Verse — Master Deployment Guide
 
-> Auto-generated 2026-05-28 | Consensus: 3/3 AI agents at 100%
-> Next: T021 (FE-002 React Query) | T022 (FE-003 Feature Flags)
+> Auto-generated 2026-06-13 | Meter Verse v2.0.0 Migration
+> Architecture: 3-Plan, 15-Area | Deployment: Linux Core + Windows Symbiot Bridge
 
 ---
 
@@ -9,45 +9,59 @@
 
 | Field | Value |
 |---|---|
-| Name | Meter Pulse — Utility Metering & Billing Platform |
-| Stack | Backend: NestJS + PostgreSQL + Prisma ORM |
+| Name | Meter Verse — Unified Utility Metering & Billing Platform |
+| Stack | Backend: NestJS + PostgreSQL + Prisma ORM (multi-schema) |
 | | Frontend: Next.js 16 + React 19 + TypeScript + Tailwind v4 + shadcn/ui |
-| Runtime | Bun (frontend) / Node 20+ (backend) |
+| | Collection System: Flask 3.1.3 + Bootstrap 5 RTL + Chart.js 4.4.1 |
+| Runtime | Bun (frontend) / Node 20+ (backend) / Python 3.x (collection system) |
 | Author | Kirllos Hany <kirllos.hany@epower.com.eg> |
-| GitHub | Kirllos360/Meter- (fork) → Abady001/Meter- (upstream) |
+| GitHub | https://github.com/Kirllos360/Meter |
 
 ---
 
-## 2. Architecture Summary
+## 2. Architecture (3-Plan, 15-Area)
 
+### Three Availability Plans
+
+| Plan | Components | When Used |
+|------|-----------|-----------|
+| **Full** | Core DB + Features DB + 15 Area DBs + NestJS + Frontend + Symbiot Bridge | Normal production |
+| **Safety** | Core DB + 15 Area DBs + Metering only (no billing) | Maintenance window, billing freeze |
+| **Failover** | Core DB (read-only replica) + cached frontend | Disaster recovery, primary DB down |
+
+### Database Architecture
 ```
-Frontend/src/lib/
-├── api/
-│   ├── client.ts     # Centralized fetch wrapper (GET/POST/PUT/PATCH/DELETE)
-│   ├── errors.ts     # ApiError class matching ErrorEnvelope contract
-│   ├── auth.ts       # Token storage + refreshToken() hook
-│   └── index.ts      # Barrel exports
-├── mock-auth.ts      # Zustand store — uses setToken/clearToken from api/
-├── mock-data.ts      # Mock data (all entities)
-├── types.ts          # TypeScript interfaces + enums
-├── navigation.ts     # Role-based nav config
-├── router-store.ts   # Zustand page router
-└── utils.ts          # cn() helper
+┌────────────────────────────────────────────────────────────┐
+│                    PostgreSQL Cluster                       │
+├────────────────────────────────────────────────────────────┤
+│  Core DB (public)    │  Features DB (billing)  │  15×Area  │
+│  - users             │  - tariffs             │  - customers│
+│  - roles/permissions │  - charges             │  - meters   │
+│  - projects          │  - reports             │  - readings  │
+│  - audit_log         │  - scheduled_jobs      │  - invoices  │
+│  - system_config     │  - export_history      │  - payments  │
+│  - notification_queue│                       │  - ledger    │
+└────────────────────────────────────────────────────────────┘
+```
 
-backend/src/
-├── auth/             # JWT + RBAC (7 roles)
-├── audit/            # Append-only audit log
-├── common/
-│   ├── config/       # ConfigModule + DatabaseModule
-│   ├── database/     # PrismaService
-│   └── http/         # ErrorEnvelope, CorrelationMiddleware, Idempotency, AllExceptionsFilter
-├── common/openapi/   # Swagger/OpenAPI setup
-├── app.module.ts
-└── main.ts           # /api/v1 prefix, global pipes
-
-backend/prisma/
-├── schema.prisma     # All 20+ models, 24+ enums
-└── migrations/       # 7 migrations applied
+### Symbiot Integration Bridge
+```
+Meters (10 TCP channels, 100 HTTP each)
+       │
+       ▼
+┌──────────────────┐
+│  Symbiot Bridge   │  ← Windows Service (WinService)
+│  - 10 TCP sockets │  ← Load-balanced across 10 ports
+│  - 100 HTTP/conn  │  ← Multiplexed per channel
+│  - Failover logic │  ← Auto-detect dead channel → reroute
+│  - Auto-reconnect │  ← Exponential backoff + health check
+└──────┬───────────┘
+       │
+       ▼
+┌──────────────────┐
+│   Core API        │  ← Linux (NestJS)
+│   POST /readings  │
+└──────────────────┘
 ```
 
 ---
@@ -69,7 +83,7 @@ backend/prisma/
 | T011 | API versioning /api/v1 + OpenAPI | ✅ Done | `backend/src/main.ts`, `openapi.setup.ts` |
 | T012 | Contract test harness | ✅ Done | `backend/test/contract/setup.ts` |
 | T013 | Core org migration (Project, LocationNode, Customer) | ✅ Done | `backend/prisma/migrations/*_core_org/` |
-| T014 | Meter/SIM migration | ✅ Done | `backend/prisma/migrations/*_meter_sim/` |
+| T014 | Meter/SIM migration | ✅ Done | `backend/prisma/migrations/*_Meter_Verse_sim/` |
 | T015 | Reading/Tariff migration | ✅ Done | `backend/prisma/migrations/*_readings_tariff/` |
 | T016 | Invoice migration | ✅ Done | `backend/prisma/migrations/*_invoices/` |
 | T017 | Payment/Ledger migration | ✅ Done | `backend/prisma/migrations/*_payments_ledger/` |
@@ -159,11 +173,11 @@ After merge, run: `cd backend && npx prisma migrate deploy && npx prisma generat
 PORT=3001
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_NAME=meter_pulse
+DB_NAME=Meter_Verse_pulse
 DB_SCHEMA=sim_system
-DB_USER=meter_pulse
-DB_PASSWORD=meter_pulse_dev
-DATABASE_URL=postgresql://meter_pulse:meter_pulse_dev@127.0.0.1:5432/meter_pulse?schema=sim_system
+DB_USER=Meter_Verse_pulse
+DB_PASSWORD=Meter_Verse_pulse_dev
+DATABASE_URL=postgresql://Meter_Verse_pulse:Meter_Verse_pulse_dev@127.0.0.1:5432/Meter_Verse_pulse?schema=sim_system
 JWT_SECRET=dev-jwt-secret-do-not-use-in-production
 JWT_EXPIRES_IN=3600
 
@@ -189,21 +203,107 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
 
 ---
 
-## 9. Deployment Checklist
+## 9. Deployment Strategy (Dual Platform)
 
-- [ ] Abady merges PRs in order: #12 → #13 → #15 → #16 → #17 → #18 → #19 → #21 → #22
-- [ ] Run `cd backend && npx prisma migrate deploy` after merge
-- [ ] Run `cd backend && npm test` (77/77)
-- [ ] Run `cd Frontend && bun run build`
-- [ ] Sync Kirllos360 fork main: `git branch -f main abady/main && git push origin main --force`
-- [ ] Update `documentation/markdown/09-git-commit-log.md`
-- [ ] Update `graphify update .`
-- [ ] Save validation PDF to Desktop
-- [ ] Sync OneDrive
+### Linux Deployment (Core API + Frontend)
+```bash
+# Target: Ubuntu 22.04 LTS server
+# Components: PostgreSQL 16, NestJS API, Next.js Frontend, Nginx
+
+# 1. System dependencies
+sudo apt update && sudo apt install -y postgresql-16 nginx certbot python3-certbot-nginx
+
+# 2. Database setup
+sudo -u postgres psql -c "CREATE USER meter_verse WITH PASSWORD '****';"
+sudo -u postgres psql -c "CREATE DATABASE meter_verse_core;"
+sudo -u postgres psql -c "CREATE DATABASE meter_verse_features;"
+for i in 1..15; do sudo -u postgres psql -c "CREATE DATABASE meter_verse_area_$i;"; done
+
+# 3. Backend deployment
+cd /opt/meter-verse/backend
+npm ci --production
+npx prisma generate
+npx prisma migrate deploy
+pm2 start dist/main.js --name meter-verse-api
+
+# 4. Frontend deployment
+cd /opt/meter-verse/Frontend
+bun install --production
+bun run build
+pm2 start npm --name meter-verse-web -- start
+
+# 5. Nginx reverse proxy
+# /etc/nginx/sites-available/meter-verse
+# API → localhost:3001/api/v1
+# Frontend → localhost:3000
+```
+
+### Windows Deployment (Symbiot Bridge)
+```powershell
+# Target: Windows Server 2022
+# Component: Symbiot Bridge (10 TCP × 100 HTTP channels)
+
+# 1. Create Windows Service
+New-Service -Name "MeterVerseSymbiotBridge" `
+  -BinaryPathName "C:\meter-verse\symbiot-bridge\bridge.exe --config config.json" `
+  -StartupType Automatic
+
+# 2. Configure 10 TCP channels
+# config.json:
+# {
+#   "channels": [
+#     {"protocol": "tcp", "port": 5010, "max_connections": 100},
+#     ... × 10 (ports 5010-5019)
+#   ],
+#   "core_api": "https://core.meter-verse.internal/api/v1",
+#   "failover_strategy": "auto_reroute",
+#   "health_check_interval_s": 30,
+#   "auto_reconnect": true
+# }
+
+# 3. Start service
+Start-Service MeterVerseSymbiotBridge
+Get-Service MeterVerseSymbiotBridge | Format-List Status, DisplayName
+```
+
+### Collection System (Legacy, Windows)
+```powershell
+# Kept running alongside for data migration (Phase 5)
+cd D:\meter\Meter\reference\collection-system
+waitress-serve --host=0.0.0.0 --port=5000 app:app
+
+# During Phase 5 parallel run, both systems serve the same data
+# with nightly reconciliation reports
+```
 
 ---
 
-## 10. Key Files Reference
+## 10. Deployment Checklist (v2.0.0)
+
+### Production Cutover
+- [ ] All 373 backend tests passing
+- [ ] Core DB + Features DB + 15 Area DB provisioned
+- [ ] Symbiot bridge 10 TCP channels confirmed healthy
+- [ ] SSL certificates installed (Nginx)
+- [ ] Redis cache warmed
+- [ ] Load test: 20 concurrent users passes
+- [ ] Security audit passes
+- [ ] Data migration from SBill PH + Estates + Collection Tracker → 15 Area DBs
+- [ ] 30-day parallel run validated (both old + new systems)
+- [ ] DNS switched to new frontend
+- [ ] OneDrive backup confirmed
+- [ ] Documentation freeze completed
+
+### Post-Launch Monitoring (30 days)
+- [ ] Daily reconciliation: old system totals vs new system totals per area
+- [ ] Error rate < 0.1% on new routes
+- [ ] Page load < 2s for all new pages
+- [ ] Symbiot bridge uptime > 99.9%
+- [ ] Zero data loss confirmed across all 15 area DBs
+
+---
+
+## 11. Key Files Reference
 
 | Purpose | Path |
 |---|---|
@@ -212,7 +312,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
 | Spec document | `specs/001-metering-billing-platform/spec.md` |
 | Implementation plan | `specs/001-metering-billing-platform/plan.md` |
 | Data model | `specs/001-metering-billing-platform/data-model.md` |
-| API contract | `specs/001-metering-billing-platform/contracts/meter-pulse-api.yaml` |
+| API contract | `specs/001-metering-billing-platform/contracts/meter-verse-api.yaml` |
 | Documentation index | `documentation/markdown/00-index.md` |
 | Git commit log | `documentation/markdown/09-git-commit-log.md` |
 | Validation reports | `documentation/markdown/13-T*-validation-report.md` |

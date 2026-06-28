@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupOpenApi(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('Meter Pulse API')
+    .setTitle('???? ????????? API')
     .setDescription('Utility metering and billing platform API')
     .setVersion('1.0')
     .addServer('/api/v1')

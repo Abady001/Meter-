@@ -10,6 +10,10 @@ export class CreateProjectDto {
   @IsString()
   name!: string;
 
+  @ApiProperty()
+  @IsString()
+  areaId!: string;
+
   @ApiPropertyOptional({ default: true })
   @IsOptional()
   @IsBoolean()

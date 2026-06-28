@@ -1,4 +1,4 @@
-import { IsString, IsUUID, IsDateString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsUUID, IsDateString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateMeterDto {
@@ -6,9 +6,9 @@ export class CreateMeterDto {
   @IsString()
   serialNumber!: string;
 
-  @ApiProperty({ enum: ['electricity', 'water_main', 'water_child'] })
-  @IsEnum(['electricity', 'water_main', 'water_child'] as const)
-  meterType!: 'electricity' | 'water_main' | 'water_child';
+  @ApiProperty({ enum: ['electricity', 'water_main', 'water_child', 'solar', 'gas', 'chilled_water', 'outdoor_unit'] })
+  @IsEnum(['electricity', 'water_main', 'water_child', 'solar', 'gas', 'chilled_water', 'outdoor_unit'] as const)
+  meterType!: 'electricity' | 'water_main' | 'water_child' | 'solar' | 'gas' | 'chilled_water' | 'outdoor_unit';
 
   @ApiProperty()
   @IsString()
@@ -17,6 +17,26 @@ export class CreateMeterDto {
   @ApiProperty()
   @IsString()
   model!: string;
+
+  @ApiPropertyOptional({ enum: ['1PH', '3PH'] })
+  @IsOptional()
+  @IsString()
+  phaseType?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  ampRating?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  diameter?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  solarEnabled?: boolean;
 
   @ApiProperty({ format: 'date-time' })
   @IsDateString()

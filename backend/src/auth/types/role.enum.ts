@@ -1,9 +1,18 @@
 export enum Role {
   SUPER_ADMIN = 'super_admin',
-  PROJECT_ADMIN = 'project_admin',
+  SYSTEM_ADMIN = 'system_admin',
+  ADMIN = 'admin',
+  AREA_MANAGER = 'area_manager',
+  TEAM_LEADER = 'team_leader',
   OPERATOR = 'operator',
   TECHNICIAN = 'technician',
   FINANCE = 'finance',
   SUPPORT = 'support',
-  CUSTOMER = 'customer'
+  CUSTOMER = 'customer',
+  COLLECTOR = 'collector',
+  METER_READER = 'meter_reader',
+  INSPECTOR = 'inspector',
+  SUPERVISOR = 'supervisor',
+  ACCOUNTANT = 'accountant',
+  VIEWER = 'viewer',
 }
