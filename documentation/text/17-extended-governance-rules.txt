@@ -1,10 +1,10 @@
-﻿Meter Pulse Extended Governance Rules
+Meter Verse Extended Governance Rules
 
 Enforced starting from T022 closeout.
 Last updated: 2026-05-29
 
 
-Rule 1 â€” Multi-Tool Validation Chain
+Rule 1 — Multi-Tool Validation Chain
 
 After every completed task, execute validation in this order:
 
@@ -16,14 +16,14 @@ After every completed task, execute validation in this order:
 
 Generate a consolidated validation report.
 
-If any tool identifies: defect, architecture conflict, dependency issue, regression risk, or documentation gap â€” STOP. Create issue report. Apply fixes. Restart validation sequence.
+If any tool identifies: defect, architecture conflict, dependency issue, regression risk, or documentation gap — STOP. Create issue report. Apply fixes. Restart validation sequence.
 
 Repeat until: Acceptance criteria PASS, Build PASS, Tests PASS, Documentation PASS, Architecture PASS.
 
 Target confidence: 95%+ (do not claim 100% certainty).
 
 
-Rule 2 â€” Cross-Task Compatibility Validation
+Rule 2 — Cross-Task Compatibility Validation
 
 After task validation completes, re-test the current task plus all dependency tasks plus all previously completed tasks that directly interact.
 
@@ -32,23 +32,23 @@ Example: T021 must test T020 and any components consuming API Client, React Quer
 Generate: Compatibility Report, Regression Report, Dependency Health Report.
 
 
-Rule 3 â€” Phase-Wide Validation
+Rule 3 — Phase-Wide Validation
 
-At the end of every task, run a phase-level review covering T001 â†’ Current Task.
+At the end of every task, run a phase-level review covering T001 → Current Task.
 
 Verify: No schema conflicts, no API conflicts, no architectural conflicts, no dependency conflicts, no documentation drift.
 
 Generate: Phase Health Report.
 
 
-Rule 4 â€” Documentation Synchronization
+Rule 4 — Documentation Synchronization
 
 After every task, update: README, Architecture documents, Validation reports, Graph memory, Task history, Implementation notes, SpecKit documentation, Deployment documentation.
 
 Verify documentation matches implementation.
 
 
-Rule 5 â€” Repository Structure Review
+Rule 5 — Repository Structure Review
 
 After every task, review repository structure and create/update ROUTE_OF_DATA.md.
 
@@ -57,7 +57,7 @@ Document: Folder structure, Data flow, API flow, Dependency flow, Database flow,
 Recommend improvements if needed. Do not perform large-scale restructuring without approval.
 
 
-Rule 6 â€” Backup and Recovery Package
+Rule 6 — Backup and Recovery Package
 
 After every task, create backup-files/task-TXXX_TIMESTAMP/ with:
 
@@ -76,23 +76,23 @@ After every task, create backup-files/task-TXXX_TIMESTAMP/ with:
 Timestamp format: YYYYMMDD_HHMMSS
 
 
-Rule 7 â€” AI Recovery Context
+Rule 7 — AI Recovery Context
 
-Maintain resume-context.md â€” a self-contained file allowing any AI system to continue work.
+Maintain resume-context.md — a self-contained file allowing any AI system to continue work.
 
 Include: Project Overview, Current Phase, Completed Tasks, Pending Tasks, Active Branch, Last Commit, Latest Checkpoint, Latest Validation Status, Open Issues, Next Recommended Step.
 
 The file must be self-contained (no external references required).
 
 
-Rule 8 â€” Tool and Dependency Inventory
+Rule 8 — Tool and Dependency Inventory
 
 Maintain requirements-inventory.md tracking: Tools, Services, MCP Servers, GitHub Dependencies, NPM Packages, Docker Services, External Systems.
 
-For each item: Purpose, Installation Steps, Repository URL, Version, Usage in Meter Pulse. Update after every task.
+For each item: Purpose, Installation Steps, Repository URL, Version, Usage in Meter Verse. Update after every task.
 
 
-Rule 9 â€” GitHub Synchronization Review
+Rule 9 — GitHub Synchronization Review
 
 After every task, review git status and git diff. Generate GitHub Sync Report.
 
@@ -101,7 +101,7 @@ If PR creation is possible, prepare: Commit Summary, PR Summary, Validation Evid
 If GitHub permissions are unavailable, document required actions. Do not assume PR creation succeeded.
 
 
-Rule 10 â€” Task Closeout Question
+Rule 10 — Task Closeout Question
 
 Before moving to the next task, ask:
 

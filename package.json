@@ -1,21 +1,21 @@
 {
-  "name": "meter-pulse-workspace",
-  "private": true,
-  "scripts": {
-    "postinstall": "husky",
-    "lint-staged": "lint-staged"
-  },
-  "devDependencies": {
-    "husky": "^9.1.7",
-    "lint-staged": "^15.0.0"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yaml}": [
-      "prettier --write"
-    ]
-  }
+    "name":  "meter-verse-workspace",
+    "private":  true,
+    "scripts":  {
+                    "postinstall":  "husky",
+                    "lint-staged":  "lint-staged"
+                },
+    "devDependencies":  {
+                            "husky":  "^9.1.7",
+                            "lint-staged":  "^15.0.0"
+                        },
+    "lint-staged":  {
+                        "*.{ts,tsx}":  [
+                                           "eslint --fix",
+                                           "prettier --write"
+                                       ],
+                        "*.{json,md,yaml}":  [
+                                                 "prettier --write"
+                                             ]
+                    }
 }

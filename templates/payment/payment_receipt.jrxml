@@ -1,0 +1,1950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payment_receipt" columnDirection="RTL" pageWidth="684" pageHeight="842" columnWidth="644" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="759a3312-2e0b-412f-a38e-8ba664caa48d">
+	<property name="ireport.zoom" value="1.1269722013523686"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="303"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="billing_new_iskra"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#CCCCCC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="payment reading details" uuid="ebf092ee-bc1c-4c8d-af50-0eda31e50d44">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="billing_new_iskra"/>
+		<parameter name="paymentId" class="java.lang.Long">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+			<defaultValueExpression><![CDATA[$P{paymentId}]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+    p.reading_type_name,
+    p.reading_value,
+    p.reading_date,
+CASE 
+	  when r.[service_type] like 'ELECTRICITY%' then 'kWh'
+	  when r.[service_type] like 'WATER%' then 'm³'
+	  when r.[service_type]='SOLAR' then 'kWh'
+	  else NULL 
+  END AS unitEn,
+  CASE 
+	  when r.[service_type] like 'ELECTRICITY%' then N'ك.و.س'
+	  when r.[service_type] like 'WATER%' then N'م³'
+	  when r.[service_type]='SOLAR' then N'ك.و.س'
+	  else NULL 
+  END AS unitAr
+FROM 
+    payment_reading_details p
+JOIN 
+    reading_type r ON p.reading_type_name = r.reading_type_name
+WHERE 
+    p.payment_id = $P{paymentId}
+    AND r.view_in_report = 1;]]>
+		</queryString>
+		<field name="reading_type_name" class="java.lang.String"/>
+		<field name="reading_value" class="java.lang.Double"/>
+		<field name="reading_date" class="java.sql.Timestamp"/>
+		<field name="unitEn" class="java.lang.String"/>
+		<field name="unitAr" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="paymentId" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[select
+  (select project_title_ar from adm_project where id = m.project_id) project_title,
+  (select project_title_en from adm_project where id = m.project_id) project_title_en,
+  (select address_ar from adm_project where id = m.project_id) address,
+  (select address_en from adm_project where id = m.project_id) address_en,
+  (select license from adm_project where id = m.project_id) license,
+  (select bank_details from adm_project where id = m.project_id) bank_details,
+  (select img from adm_project where id = m.project_id) logo,
+  (select signature from adm_project where id = m.project_id ) signature,
+  p.id,
+  p.status,
+  c.id customer_id,
+  c.commercial_name,
+  m.project_id  project_id,
+  c.tenant_name,
+  l.unit_no,
+  l.additional_info,
+  c.name_ar,
+  c.name_en,
+--  SUBSTRING( ( SELECT ' - ' + name_ar AS [text()] FROM dbo.[contact_person] WHERE customer_id = p.customer_id FOR XML PATH ('') ), 2, 1000) names_ar,
+--  SUBSTRING( ( SELECT ' - ' + name_en AS [text()] FROM dbo.[contact_person] WHERE customer_id = p.customer_id FOR XML PATH ('') ), 2, 1000) names_en,
+  p.type,
+  p.total_amt,
+  p.receipt_no,
+  p.payment_date,
+  c.name_en,
+  c.name_ar,
+  m.serial,
+  m.[type] meter_type,
+  p.created_by,
+  p.cheque_number,
+  p.transfer_number,
+  p.bank_name,
+  p.balance_before,
+  p.balance_after,
+  p.last_reading_date,
+  p.last_reading_value,
+  p.payment_fees,
+  p.settlement_amount,
+    CASE 
+	  when m.[type] like 'ELECTRICITY%' then 'kWh'
+	  when m.[type] like 'WATER%' then 'm³'
+	  when m.[type]='SOLAR' then 'kWh'
+	  else NULL 
+  END AS unitEn,
+  CASE 
+	  when m.[type] like 'ELECTRICITY%' then N'ك.و.س'
+	  when m.[type] like 'WATER%' then N'م³'
+	  when m.[type]='SOLAR' then N'ك.و.س'
+	  else NULL 
+  END AS unitAr
+from
+  payment p,
+  customer c,
+  meter m,
+  unit l
+where
+  p.id = $P{paymentId}
+  and p.customer_id = c.id
+  and m.unit_id = l.id
+  and m.customer_id = c.id
+  and m.id = p.meter_id
+  and p.contractual_request_id is null]]>
+	</queryString>
+	<field name="project_title" class="java.lang.String"/>
+	<field name="project_title_en" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="address_en" class="java.lang.String"/>
+	<field name="license" class="java.lang.String"/>
+	<field name="bank_details" class="java.lang.String"/>
+	<field name="logo" class="java.lang.String"/>
+	<field name="signature" class="java.lang.String"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="customer_id" class="java.lang.Long"/>
+	<field name="commercial_name" class="java.lang.String"/>
+	<field name="project_id" class="java.lang.Long"/>
+	<field name="tenant_name" class="java.lang.String"/>
+	<field name="unit_no" class="java.lang.String"/>
+	<field name="additional_info" class="java.lang.String"/>
+	<field name="name_ar" class="java.lang.String"/>
+	<field name="name_en" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="total_amt" class="java.lang.Long"/>
+	<field name="receipt_no" class="java.lang.String"/>
+	<field name="payment_date" class="java.sql.Timestamp"/>
+	<field name="serial" class="java.lang.String"/>
+	<field name="meter_type" class="java.lang.String"/>
+	<field name="created_by" class="java.lang.String"/>
+	<field name="cheque_number" class="java.lang.String"/>
+	<field name="transfer_number" class="java.lang.String"/>
+	<field name="bank_name" class="java.lang.String"/>
+	<field name="balance_before" class="java.lang.Long"/>
+	<field name="balance_after" class="java.lang.Long"/>
+	<field name="last_reading_date" class="java.sql.Timestamp"/>
+	<field name="last_reading_value" class="java.lang.Double"/>
+	<field name="payment_fees" class="java.lang.Long"/>
+	<field name="settlement_amount" class="java.lang.Long"/>
+	<field name="COLUMN_23" class="java.lang.String"/>
+	<field name="COLUMN_24" class="java.lang.String"/>
+	<field name="unitEn" class="java.lang.String"/>
+	<field name="unitAr" class="java.lang.String"/>
+	<background>
+		<band height="610">
+			<staticText>
+				<reportElement mode="Transparent" x="46" y="31" width="554" height="152" forecolor="#FF0000" backcolor="#E5E5E5" uuid="58a4597f-1c13-4172-9a3d-fb8ae97e1af7">
+					<printWhenExpression><![CDATA[$F{status}.equals("DELETED")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="48" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[لا غــــــــــــــــــــي]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="46" y="414" width="554" height="152" forecolor="#FF0000" backcolor="#E5E5E5" uuid="12ccad0b-a936-4c9c-9da9-5f5dfe713c25">
+					<printWhenExpression><![CDATA[$F{status}.equals("DELETED")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="DejaVu Sans" size="48" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[لا غــــــــــــــــــــي]]></text>
+			</staticText>
+		</band>
+	</background>
+	<detail>
+		<band height="699" splitType="Stretch">
+			<frame>
+				<reportElement mode="Transparent" x="18" y="0" width="617" height="70" forecolor="#333333" backcolor="#FFFFFF" uuid="cb758044-68fb-4a01-9a13-0334d2aec050"/>
+				<image>
+					<reportElement x="5" y="3" width="111" height="35" uuid="9957e7a5-85a5-4c32-9a35-0d4d835a0713"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{logo}.substring( 22,$F{logo}.length()).getBytes()))]]></imageExpression>
+				</image>
+				<line>
+					<reportElement x="0" y="48" width="616" height="1" forecolor="#333333" uuid="7350812b-446f-4a77-8d11-a2a0720e81c0"/>
+					<graphicElement>
+						<pen lineWidth="4.0"/>
+					</graphicElement>
+				</line>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="159" y="28" width="200" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="412687af-4dbd-4a0d-a544-a05a5940bb9c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{receipt_no}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement mode="Transparent" x="427" y="0" width="188" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="1567c1ec-6f8c-4a35-b871-ed97b6e611ee"/>
+					<box rightPadding="0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{project_title}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement mode="Transparent" x="427" y="30" width="188" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="c6649549-caa2-4541-a721-6ee6cdcb16f7"/>
+					<box rightPadding="0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="427" y="14" width="188" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="fc7415ab-87ba-4c95-8aab-b625e7fa4087"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{license}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="159" y="10" width="200" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="408c9877-1b98-4297-baa9-860804e53346"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{meter_type}.equals("ELECTRICITY") ? "إيصال دفع - شحن عداد كهرباء"
+ : "إيصال دفع - شحن عداد المياه"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="4" y="52" width="640" height="288" uuid="fb47a3d5-b075-4036-9b0b-10d44cd8d6bf"/>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="13" y="0" width="533" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="114378cc-8d2e-4035-bd70-eda49c18288d"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name_ar}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="546" y="16" width="85" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="d7ef949c-e583-4113-ac01-f813d15d233b"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[رقم الوحدة:]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="13" y="16" width="533" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="b21881a7-59a3-4064-836d-582ee2e2f967"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{additional_info}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="546" y="0" width="85" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="9175bf13-27bb-4532-8e1c-fdf6f238e80f"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[الإســـم: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="360" y="32" width="50" height="31" backcolor="#CCCCCC" uuid="f8712b82-51b3-4de0-9915-359ca727834e"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[طريقة الدفع]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="546" y="32" width="85" height="31" backcolor="#CCCCCC" uuid="fe1a4d46-7890-4a47-a6e9-d9f57c22130d"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ الدفع]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="474" y="32" width="72" height="31" backcolor="#CCCCCC" uuid="d77bbd59-df7f-4e34-9000-2b3c28e50489"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[رقم العداد]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="546" y="103" width="85" height="31" backcolor="#CCCCCC" uuid="44c5b36e-c08d-4227-bd01-5f363636c101"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[المبلغ
+ (بالحروف)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="410" y="32" width="64" height="31" backcolor="#CCCCCC" uuid="dd9ef7fb-92f6-416a-a555-064ee4e27188"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[نوع الخدمة]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="474" y="63" width="72" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="8465424c-b33f-4eca-8f93-822fab1cf2b8"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{serial}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="410" y="63" width="64" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="16501db2-7030-41e5-99c6-d1d1968ed4ed"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{meter_type}.equals("ELECTRICITY") ? "كهربـاء" : "ميـاه"]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="546" y="63" width="85" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="132ea2e3-d018-43a5-bb18-14c71b6fd81b"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="361" y="63" width="49" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="23874ea7-8929-4295-ae55-f1a19db3effc"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{type}.equals("CASH") ? "كـــاش"
+ : $F{type}.equals("CHEQUE") ? "شيـــك"
+  : $F{type}.equals("VISA") ? "فيزا"
+    : $F{type}.equals("ONLINE") ? "اونلاين"
+      : $F{type}.equals("TRANSFER") ? "تحويل" : "أخري"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="14" y="103" width="532" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="19c6df6d-ad29-4ba6-ae77-62b0af492f17">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_amt} != 0 ?
+  com.hypercell.shared.utils.NumberToArabic.convertToArabic(
+    ($F{payment_fees} == null ?
+      ($F{total_amt}.doubleValue()/1000) :
+      (($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)
+    ), "EGP" )
+: "صفر"]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="77" y="184" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="87a5e409-88e4-40a2-b4a1-f0fe74fec28d">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{created_by}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="537" y="184" width="95" height="16" backcolor="#E5E5E5" uuid="25466f54-6d7d-4ee9-9ca5-61a8e0fcd1d8">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[اسم المستخدم:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="537" y="200" width="95" height="16" backcolor="#E5E5E5" uuid="7a99107e-15eb-446e-b79b-fa4f408d73ab">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ ووقت العملية: ]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="77" y="200" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="e28183d8-0622-44fa-9788-83df0eace66a">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="431" y="152" width="106" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="223e0003-2c90-44b0-bd1b-71eca4f8029d">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="77" y="152" width="307" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="a3cf6b8b-d259-455f-b940-65b3628c11b9">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="384" y="152" width="47" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="97729474-dc19-457d-8799-54716545ea8d">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[بنك:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="537" y="152" width="95" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="82be4cf2-5d2b-423a-8eca-aa9618291fd4">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[شيك رقم:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="14" y="32" width="55" height="31" backcolor="#CCCCCC" uuid="1e6b8136-eee0-4a12-b883-149131147ab7">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[قيمة اخر
+قراءة]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="14" y="63" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="ab21d2ea-3dee-477d-b09d-de9122dcc464">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{last_reading_value}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="306" y="32" width="55" height="31" backcolor="#CCCCCC" uuid="9de60e4d-d2fc-4f2b-a018-ecafc5b00d35"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[الرصيد قبل
+ (جم)]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="306" y="63" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="59df52e9-5784-4145-9989-57cb9edb14db"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{balance_before}.doubleValue()/1000]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="251" y="32" width="55" height="31" backcolor="#CCCCCC" uuid="be1e0f52-8a1f-46ec-9dd9-59bab533c1d6"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[المبلغ
+ (جم)]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="251" y="63" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="8a965c1f-5821-4bf2-9080-b971d28f3197"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_fees} == null ?
+  ($F{total_amt}.doubleValue()/1000) :
+  (($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="69" y="32" width="70" height="31" backcolor="#CCCCCC" uuid="39c2aa11-7b34-46ea-967c-08efcc836a75">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ اخر
+قراءة]]></text>
+				</staticText>
+				<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="69" y="63" width="70" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="4c0fcf56-0b8a-4964-8e06-5d5c45286d7d">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{last_reading_date}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="537" y="216" width="95" height="16" backcolor="#E5E5E5" uuid="5858462e-c894-4cdd-82bc-6fb08c8cf64a">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ ووقت الطباعة :]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="77" y="216" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="af17e567-c1d3-42b8-8c1a-b188b0141d20">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="537" y="168" width="95" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="65a9ec37-6001-488f-86cd-e3f0b31da6cc">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[رقم التحويل:]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="77" y="168" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="24a27163-2027-4559-a0d7-04444ded95c1">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{transfer_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="139" y="63" width="57" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="bbab034d-fc7b-493f-97a7-292b44b608db"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{balance_after}.doubleValue()/1000]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="139" y="32" width="57" height="31" backcolor="#CCCCCC" uuid="48cefa71-8a6f-4621-b6ae-d8a91642cf93"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[الرصيد بعد
+ (جم)]]></text>
+				</staticText>
+				<image>
+					<reportElement x="19" y="184" width="100" height="30" uuid="8692de7f-75b0-4bdd-970d-ac75f18ce0c7"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{signature}.substring( 22,$F{signature}.length()).getBytes()))]]></imageExpression>
+				</image>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="196" y="63" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="867bb3c3-8d9c-437c-b298-c4e51112c0b0"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{settlement_amount} == null ? 0 : ($F{settlement_amount}.doubleValue()/1000)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="196" y="32" width="55" height="31" backcolor="#CCCCCC" uuid="ecc01f42-bd82-4217-b266-3a6389e75dcf"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[المديونية
+(جم)]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="139" y="103" width="406" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="8c2b83a4-dccc-4322-bfd1-14db8d7aab39">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_amt} != 0 ?
+  com.hypercell.shared.utils.NumberToArabic.convertToArabic(
+    ($F{payment_fees} == null ?
+      ($F{total_amt}.doubleValue()/1000) :
+      (($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)
+    ), "EGP" )
+: "صفر"]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement x="139" y="138" width="491" height="62" uuid="816bb9ca-f438-459b-9920-d956c9aac881">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="payment reading details" uuid="41a568c1-289a-463f-b24f-a46194a7b7b6">
+							<datasetParameter name="paymentId">
+								<datasetParameterExpression><![CDATA[$P{paymentId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="165" uuid="8b79e19e-3ee1-48db-b094-864a4f1fe612">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="165" height="30" uuid="707c8c87-3933-4faa-9eb1-e6606ff8adf3">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[نوع القراءة]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField>
+									<reportElement x="0" y="0" width="165" height="30" uuid="758b9b76-1337-4ff0-ae8f-c38bda3a1d54">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_type_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="164" uuid="3dd30b70-77ba-4954-92df-12f0a3896b31">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="164" height="30" uuid="a695ac38-f563-4e7d-833b-1f21f3f97d5a">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[قيمة القراءة]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField>
+									<reportElement x="0" y="0" width="164" height="30" uuid="b8302080-d35f-40bd-a971-c18b0ff24795">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_value}]]></textFieldExpression>
+								</textField>
+								<textField>
+									<reportElement x="12" y="0" width="43" height="30" uuid="3a209af1-695b-4318-879a-b934c67de520">
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{unitAr}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="164" uuid="9886ea32-10b7-490c-9156-91e7368ab3cc">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="164" height="30" uuid="6eb6eed6-2283-4dd6-874b-26e58c02c347">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[تاريخ القراءة]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="yyyy-MM-dd">
+									<reportElement x="0" y="0" width="164" height="30" uuid="2e91df87-4c64-45a4-9f0c-bc7d0f74309b">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_date}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="77" y="208" width="307" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="31694182-07cc-448b-b3b6-ed3c9fa1db52">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="537" y="208" width="95" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="5a92921a-5617-4a81-833b-2f274b111c3c">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[شيك رقم:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="77" y="256" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="dfa6d4ff-9736-45fc-8b4e-ac1e6898789f">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="537" y="224" width="95" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="1ed620c9-ccd9-4f6a-a84f-b489ea1a5d37">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[رقم التحويل:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="537" y="256" width="95" height="16" backcolor="#E5E5E5" uuid="c43169e8-476f-4f32-867c-b013daf58be1">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ ووقت العملية: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="537" y="240" width="95" height="16" backcolor="#E5E5E5" uuid="34365d54-a459-404c-94aa-6b16d9a1a95e">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[اسم المستخدم:]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="77" y="224" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="6c3404ee-fb53-4e40-bbc8-f36e3a6377b7">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{transfer_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="431" y="208" width="106" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="9e868cef-4e3d-4ce5-916e-d13f5b97aa3b">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="false">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="77" y="272" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="2a7b5070-d13b-45a2-a026-87cff1651f49">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="77" y="240" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="89aee22c-e222-4c4d-8a8d-2b1dfce8cdbb">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{created_by}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="537" y="272" width="95" height="16" backcolor="#E5E5E5" uuid="7e1af133-2515-4b8c-96c3-3d9327b3b960">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[تاريخ ووقت الطباعة :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="384" y="208" width="47" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="02877e05-4293-43b5-b2b8-5af87f18f46e">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[بنك:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="14" y="83" width="55" height="20" uuid="c5202d02-50be-4948-a0ae-8855221e263e">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{unitAr}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement mode="Transparent" x="18" y="341" width="612" height="79" forecolor="#333333" backcolor="#FFFFFF" uuid="8f9ee760-dbc1-4b69-9c42-57ac192064b4"/>
+				<image>
+					<reportElement x="498" y="7" width="111" height="35" uuid="916c2e73-0a15-440c-9a63-21f42611ed2f"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{logo}.substring( 22,$F{logo}.length()).getBytes()))]]></imageExpression>
+				</image>
+				<line>
+					<reportElement x="0" y="57" width="609" height="1" forecolor="#333333" uuid="f55d963e-cccc-45a6-a75e-b72a868efc9a"/>
+					<graphicElement>
+						<pen lineWidth="4.0"/>
+					</graphicElement>
+				</line>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="220" y="32" width="200" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="fbbbff43-6449-4950-8540-59d497dfd2d4"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{receipt_no}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement mode="Transparent" x="1" y="37" width="188" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ac017d57-5c18-461e-b16f-14e68b65ab30"/>
+					<box rightPadding="0"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{address_en}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement mode="Transparent" x="1" y="3" width="188" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="4cb9a671-6f0d-4f17-b9a0-85153887413d"/>
+					<box rightPadding="0"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{project_title_en}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="220" y="14" width="200" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="0e9f5a8c-5e29-46e2-9277-e05c10b52de5"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{meter_type}.equals("ELECTRICITY") ? "Payment Receipt - Electricity"
+ : "Payment Receipt - Water"]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement mode="Transparent" x="1" y="17" width="188" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="34555e02-61a7-49d9-a864-bb72a9c946f8"/>
+					<box rightPadding="0"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{license}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="-1" y="404" width="644" height="294" uuid="a01738fd-a670-43b5-ad2a-ee4e33e7f3f7"/>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="104" y="0" width="524" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="40ccbb6f-825b-481d-961c-1808b32cfcf8"/>
+					<textElement verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name_en}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="19" y="16" width="85" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="3425bc31-ac5a-4ca8-aed6-79219f6217a3"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Unit No: ]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="104" y="16" width="524" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="66601b56-c2c0-43f0-b6df-71bfbc98e069"/>
+					<textElement verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{additional_info}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="19" y="0" width="85" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="58d86541-fc3e-4c4b-89a7-7bb824528d22"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Name: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="241" y="37" width="50" height="31" backcolor="#CCCCCC" uuid="2fb18af6-9f5f-4ef0-a244-92a38d280428"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Payment Type]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="20" y="37" width="85" height="31" backcolor="#CCCCCC" uuid="1035c661-c4f4-4ae4-92f6-56c277decbc8"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Payment Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="105" y="37" width="72" height="31" backcolor="#CCCCCC" uuid="3c5f54a7-ef76-470e-a452-84164ce44ebd"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Meter Serial]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="20" y="108" width="85" height="31" backcolor="#CCCCCC" uuid="20711b60-8686-43f0-bf65-693609da2edd"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Amount
+(in words)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="177" y="37" width="64" height="31" backcolor="#CCCCCC" uuid="308506dc-1034-4570-a18f-09df25ee675d"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Service Type]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="105" y="68" width="72" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="75d44712-44b6-4fce-b616-a23559d0ca49"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{serial}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="177" y="68" width="64" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="04929e22-3927-4409-8a7f-7f254f7e939d"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{meter_type}.equalsIgnoreCase("ELECTRICITY") ? "Electricity" : "Water"]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="20" y="68" width="85" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="ddb4dafc-d715-4949-ad5d-1f39c2cb91ec"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="241" y="68" width="49" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="280e4a03-17ae-4b2a-ad11-0a84a641bcf8"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{type}.equals("CASH") ? "Cash"
+ : $F{type}.equals("CHEQUE") ? "Cheque"
+  : $F{type}.equals("VISA") ? "Visa"
+    : $F{type}.equals("ONLINE") ? "Online"
+      : $F{type}.equals("TRANSFER") ? "Transfer" : "Other"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="512" y="37" width="70" height="31" backcolor="#CCCCCC" uuid="98a28320-03c4-40ff-8e00-391a0ab8f1c8">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Last Reading Date]]></text>
+				</staticText>
+				<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="512" y="68" width="70" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="651b0d36-cbd2-4a17-8320-dc02611edf7d">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{last_reading_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="267" y="146" width="307" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="0f1b73fe-d608-42f4-9c97-9ff2c4266d54">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="20" y="162" width="94" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="65683f5a-bc9d-4a6a-9047-72b0a89e3129">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Transfer No: ]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="114" y="146" width="106" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="fa0e5ddf-64dd-463b-9b96-e57274b0f6f4">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_number}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="20" y="178" width="94" height="16" backcolor="#E5E5E5" uuid="2c248c1f-b5e8-4931-9ec0-5d5119c6895b">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Username: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="20" y="194" width="94" height="16" backcolor="#E5E5E5" uuid="d0507357-83ae-422b-abe3-4358f6b5646d">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Payment Date: ]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="114" y="178" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="5ce4ce9a-05cb-4275-9097-eec198f07f10">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{created_by}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="114" y="194" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="553b9e7c-ade7-4de5-aafd-6794004eeeba">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="114" y="162" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="d7b9fdbb-e810-450d-9ee2-25a387f7d1c7">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{transfer_number}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="220" y="146" width="47" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="233d1538-4732-45ed-b4b9-25a1b7730ff9">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Bank: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SubTitle" mode="Transparent" x="20" y="146" width="94" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="a2460b10-729d-4467-adfd-e70cf3203c5d">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} != null || $F{last_reading_date} != null)]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Cheque No: ]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="114" y="210" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="dc730dc4-89b2-4c02-aa0b-8b261a58d1f8">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="20" y="210" width="94" height="16" backcolor="#E5E5E5" uuid="80f3a8d4-2ced-480b-8692-b357e713d72a">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Print Date: ]]></text>
+				</staticText>
+				<image>
+					<reportElement x="490" y="180" width="100" height="30" uuid="9d2c31aa-12b8-42da-8d1b-44916012ed70"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{signature}.substring( 22,$F{signature}.length()).getBytes()))]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement mode="Opaque" x="290" y="37" width="55" height="31" backcolor="#CCCCCC" uuid="674edeff-635e-4026-93fa-05fbe7225ff9"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Balance Before]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="290" y="68" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="46061d22-c3ca-47f0-b4ca-ae18a13427bb"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{balance_before}.doubleValue()/1000]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="582" y="68" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="71ea1458-802d-4c43-8029-1df71b38174a">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{last_reading_value}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="455" y="68" width="57" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="2ca069e2-07c3-4e34-aa02-b871fc3d676b"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{balance_after}.doubleValue()/1000]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="582" y="37" width="55" height="31" backcolor="#CCCCCC" uuid="6953a222-aa8f-4cd6-9635-11d78a390dfb">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Last Reading Value]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="455" y="37" width="57" height="31" backcolor="#CCCCCC" uuid="5e7be268-9539-4059-84bc-3c69eaa036f9"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Balance After]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="345" y="37" width="55" height="31" backcolor="#CCCCCC" uuid="aa20d13c-f85d-46d7-b79f-8bea2cf3fee1"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Sett.
+Amount]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="345" y="68" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="4a028a4a-d2fb-407a-91af-e5bccdd1ffb6"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{settlement_amount} == null ? 0 : ($F{settlement_amount}.doubleValue()/1000)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="400" y="37" width="55" height="31" backcolor="#CCCCCC" uuid="c133c345-a916-4095-9352-425fad0f52e8"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Paid Amount]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="400" y="68" width="55" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="8b39bef3-e14a-4985-9832-aa2958dd1d6d"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_fees} == null ?
+  ($F{total_amt}.doubleValue()/1000) :
+  (($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="104" y="108" width="533" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="00a987da-4f89-4a90-825e-847c1e98d334">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_amt} != 0 ?
+  com.hypercell.shared.utils.NumberToArabic.convertToEnglish(
+    ($F{payment_fees} == null ?
+      new BigDecimal($F{total_amt}.doubleValue()/1000) :
+      new BigDecimal(($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)
+    ), "EGP" )
+: "صفر"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="104" y="108" width="408" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="01e480ca-db6d-4dd9-96c5-b51729b9cee6">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total_amt} != 0 ?
+  com.hypercell.shared.utils.NumberToArabic.convertToEnglish(
+    ($F{payment_fees} == null ?
+      new BigDecimal($F{total_amt}.doubleValue()/1000) :
+      new BigDecimal(($F{payment_fees}.doubleValue() + $F{total_amt}.doubleValue())/1000)
+    ), "EGP" )
+: "صفر"]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement x="20" y="143" width="493" height="62" uuid="3449d566-847c-426a-9e5e-f8b31588f069">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="payment reading details" uuid="8f7aa783-87e7-4824-960f-cfd3521edb6d">
+							<datasetParameter name="paymentId">
+								<datasetParameterExpression><![CDATA[$P{paymentId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="165" uuid="3958eebd-e28d-45d8-8d5d-a286e8ce5e22">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="165" height="30" uuid="63db5522-ece3-4a49-9f2f-1e596e9a5b5a">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[Reading Type]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField>
+									<reportElement x="0" y="0" width="165" height="30" uuid="6a933511-889b-4659-96eb-98390f7d5c77">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_type_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="164" uuid="13921d68-a5b8-4aa0-b744-6fff4a28bf93">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="164" height="30" uuid="2f1d4b6c-ac93-4889-80e8-94a2cb25d0a5">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[Reading Value]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField>
+									<reportElement x="0" y="0" width="164" height="30" uuid="4850c9c7-d514-4043-9573-5eb76ce5bd18">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_value}]]></textFieldExpression>
+								</textField>
+								<textField>
+									<reportElement x="111" y="0" width="43" height="30" uuid="f9b14cdd-fedb-4a3e-9db9-f9bf1c46eee2">
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA[$F{unitEn}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="164" uuid="86eb016a-94c5-4464-acb9-9248a50919d2">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<jr:columnHeader style="Table_CH" height="30">
+								<staticText>
+									<reportElement x="0" y="0" width="164" height="30" uuid="8585339b-37d9-4150-b8bb-4efcad1dc886">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<text><![CDATA[Reading Date]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="yyyy-MM-dd">
+									<reportElement x="0" y="0" width="164" height="30" uuid="7cb30998-aa16-4e94-a9b9-ad7e3d0e4879">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{reading_date}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="216" y="213" width="47" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="8a7abeb0-a835-4a11-9e90-ceb2a07669e6">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Bank: ]]></text>
+				</staticText>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="110" y="229" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="a0cb955a-f781-4c5a-af4f-e0d61e1f62e1">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{transfer_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="110" y="245" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="08dd424f-6b79-4429-98fa-ca1da800c9d0">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{created_by}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="110" y="213" width="106" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="131f189e-06b6-400d-a371-83da76752d0c">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="263" y="213" width="307" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="aade5fb4-4ed9-4509-b309-36371f5d8a83">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="16" y="261" width="94" height="16" backcolor="#E5E5E5" uuid="f898c8d2-e9cc-44d4-8f27-9ef13fcf4fb7">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Payment Date: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="16" y="245" width="94" height="16" backcolor="#E5E5E5" uuid="c28d3e27-74b0-437f-9d71-3fe922b13f7b">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Username: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="16" y="229" width="94" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="6696a817-e199-4c46-bbce-d80fb9700a4c">
+						<printWhenExpression><![CDATA[$F{type}.equals("TRANSFER")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Transfer No: ]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="false">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="110" y="277" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="bf3d8ae9-f13a-4ca6-8acf-2537d326381b">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="16" y="277" width="94" height="16" backcolor="#E5E5E5" uuid="3d2b4ff6-5b5d-4504-a3cf-f77362450011">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="10" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Print Date: ]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy  h.mm a" isBlankWhenNull="true">
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="110" y="261" width="460" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="1d16f6ee-04a0-440b-bc94-ff8c567e42c7">
+						<printWhenExpression><![CDATA[$F{last_reading_value} == null || $F{last_reading_date} == null]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="SubTitle" positionType="FixRelativeToBottom" mode="Transparent" x="16" y="213" width="94" height="16" forecolor="#000000" backcolor="#E5E5E5" uuid="a04b90b2-0369-4618-8572-55e92712c34d">
+						<printWhenExpression><![CDATA[$F{type}.equals("CHEQUE")&&($F{last_reading_value} == null || $F{last_reading_date} == null)]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="5" rightPadding="5"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Cheque No: ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="582" y="88" width="54" height="20" uuid="313fdf0f-125b-481d-99b3-8d7b20a96cdf">
+						<printWhenExpression><![CDATA[$F{last_reading_value} != null || $F{last_reading_date} != null]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{unitEn}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<break>
+				<reportElement x="0" y="340" width="643" height="1" uuid="c6b3bb7a-1b34-493a-8c6a-910d08749262"/>
+			</break>
+		</band>
+	</detail>
+</jasperReport>

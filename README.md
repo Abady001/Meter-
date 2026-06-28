@@ -1,4 +1,4 @@
-# Meter Pulse — Utility Metering & Billing Platform
+# Meter Verse — Utility Metering & Billing Platform
 
 > **Status**: Development (MVP Phase) | **Tests**: 293/293 passing (35 suites) | **Security**: 14 controls active
 > **Last validated**: 2026-05-31 | **Graphify**: 3105 nodes, 241K edges, 117 communities

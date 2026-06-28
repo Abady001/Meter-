@@ -97,6 +97,98 @@ export class LocationsService {
     });
   }
 
+  async assignMeter(projectId: string, unitId: string, meterId: string, userId: string): Promise<any> {
+    await this.findOne(projectId, unitId);
+    const meter = await this.prisma.meter.findUnique({ where: { id: meterId } });
+    if (!meter) throw new NotFoundException('Meter not found');
+
+    // End any active assignment
+    await this.prisma.meterAssignment.updateMany({
+      where: { meterId, status: 'active' },
+      data: { status: 'ended', endAt: new Date(), updatedBy: userId },
+    });
+
+    const assignment = await this.prisma.meterAssignment.create({
+      data: {
+        meterId,
+        unitId,
+        projectId,
+        customerId: '',
+        startAt: new Date(),
+        status: 'active',
+        changeReason: 'Assigned to unit',
+        createdBy: userId,
+        updatedBy: userId,
+      },
+    });
+
+    await this.prisma.meter.update({ where: { id: meterId }, data: { status: 'assigned', updatedBy: userId } });
+    return assignment;
+  }
+
+  async replaceMeter(projectId: string, unitId: string, oldMeterId: string, newMeterId: string, reason: string | undefined, userId: string): Promise<any> {
+    await this.findOne(projectId, unitId);
+    // Deactivate old meter
+    await this.prisma.meterAssignment.updateMany({
+      where: { meterId: oldMeterId, status: 'active' },
+      data: { status: 'ended', endAt: new Date(), changeReason: reason || 'Replaced', updatedBy: userId },
+    });
+    await this.prisma.meter.update({ where: { id: oldMeterId }, data: { status: 'replaced', updatedBy: userId } });
+    // Activate new meter
+    return this.assignMeter(projectId, unitId, newMeterId, userId);
+  }
+
+  async disconnectMeter(projectId: string, unitId: string, meterId: string, reason: string | undefined, userId: string): Promise<any> {
+    await this.findOne(projectId, unitId);
+    await this.prisma.meterAssignment.updateMany({
+      where: { meterId, status: 'active' },
+      data: { status: 'ended', endAt: new Date(), changeReason: reason || 'Disconnected', updatedBy: userId },
+    });
+    await this.prisma.meter.update({ where: { id: meterId }, data: { status: 'available', updatedBy: userId } });
+    return { message: 'Meter disconnected from unit' };
+  }
+
+  async changeCustomer(projectId: string, unitId: string, customerId: string, reason: string | undefined, userId: string): Promise<any> {
+    await this.findOne(projectId, unitId);
+    const customer = await this.prisma.customer.findUnique({ where: { id: customerId } });
+    if (!customer) throw new NotFoundException('Customer not found');
+
+    // Update unit assignment
+    await this.prisma.customerUnitAssignment.updateMany({
+      where: { unitId, endAt: null },
+      data: { endAt: new Date(), updatedBy: userId },
+    });
+    const assignment = await this.prisma.customerUnitAssignment.create({
+      data: {
+        customerId,
+        unitId,
+        startAt: new Date(),
+        reason: reason || 'Customer changed',
+        createdBy: userId,
+        updatedBy: userId,
+      },
+    });
+    return assignment;
+  }
+
+  async closeUnit(projectId: string, unitId: string, reason: string | undefined, userId: string): Promise<any> {
+    await this.findOne(projectId, unitId);
+    // End all active assignments
+    await this.prisma.meterAssignment.updateMany({
+      where: { unitId, status: 'active' },
+      data: { status: 'ended', endAt: new Date(), changeReason: reason || 'Unit closed', updatedBy: userId },
+    });
+    await this.prisma.customerUnitAssignment.updateMany({
+      where: { unitId, endAt: null },
+      data: { endAt: new Date(), updatedBy: userId },
+    });
+    await this.prisma.locationNode.update({
+      where: { id: unitId },
+      data: { status: 'inactive', updatedBy: userId },
+    });
+    return { message: 'Unit closed' };
+  }
+
   private toResponse(node: {
     id: string;
     projectId: string;

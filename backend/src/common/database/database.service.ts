@@ -1,5 +1,4 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 
 @Injectable()
@@ -7,28 +6,18 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(DatabaseService.name);
   private readonly pool: Pool;
 
-  constructor(private readonly configService: ConfigService) {
-    const host = this.configService.get<string>('DB_HOST', '127.0.0.1');
-    const port = Number(this.configService.get<string>('DB_PORT', '5432'));
-    const database = this.configService.get<string>('DB_NAME', 'meter_pulse');
-    const user = this.configService.get<string>('DB_USER', 'postgres');
-    const password = this.configService.get<string>('DB_PASSWORD', 'postgres');
-    const schema = this.configService.get<string>('DB_SCHEMA', 'sim_system');
-
+  constructor() {
+    const schema = process.env.DB_SCHEMA || 'sim_system';
     this.pool = new Pool({
-      host,
-      port,
-      database,
-      user,
-      password,
-      application_name: 'meter-pulse-backend',
+      connectionString: process.env.DATABASE_URL || 'postgresql://meter_pulse:meter_pulse_dev@127.0.0.1:5432/meter_pulse',
+      application_name: 'meter-verse-backend',
       options: `-c search_path=${schema},public`
     });
   }
 
   async onModuleInit(): Promise<void> {
-    const expectedDatabase = this.configService.get<string>('DB_NAME', 'meter_pulse');
-    const expectedSchema = this.configService.get<string>('DB_SCHEMA', 'sim_system');
+    const expectedDatabase = process.env.DB_NAME || 'meter_pulse';
+    const expectedSchema = process.env.DB_SCHEMA || 'sim_system';
     const client = await this.pool.connect();
     try {
       const result = await client.query<{

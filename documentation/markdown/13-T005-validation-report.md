@@ -1,4 +1,4 @@
-# T005 Validation Report — Meter Pulse
+# T005 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T005 — Add local PostgreSQL via docker-compose

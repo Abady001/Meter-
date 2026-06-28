@@ -1,4 +1,4 @@
-# T016 Validation Report — Meter Pulse
+# T016 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T016 — Migration - Invoice, InvoiceLine, InvoiceAdjustment

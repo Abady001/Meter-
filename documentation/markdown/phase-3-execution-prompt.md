@@ -1,4 +1,4 @@
-# Meter Pulse — Phase 3 Master Execution Prompt
+# Meter Verse — Phase 3 Master Execution Prompt
 
 > Full governance, validation, recovery, documentation, and quality gate framework.
 > Saved from user prompt on 2026-05-29.

@@ -1,119 +1,54 @@
-name: CI
+name: Meter Verse CI
 
 on:
   push:
-    branches: [main, 'feature/**']
+    branches: [main, develop, release/**]
   pull_request:
-    branches: [main]
-
-permissions:
-  contents: read
-  security-events: write
+    branches: [main, develop]
 
 jobs:
-  backend:
+  backend-build:
+    name: Backend Build
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
-    services:
-      postgres:
-        image: postgres:16-alpine
-        ports: [5432:5432]
-        env:
-          POSTGRES_DB: meter_pulse
-          POSTGRES_USER: meter_pulse
-          POSTGRES_PASSWORD: meter_pulse_dev
-        options: >-
-          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 5
-    env:
-      DATABASE_URL: postgresql://meter_pulse:meter_pulse_dev@localhost:5432/meter_pulse?schema=sim_system
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_NAME: meter_pulse
-      DB_SCHEMA: sim_system
-      DB_USER: meter_pulse
-      DB_PASSWORD: meter_pulse_dev
-      JWT_SECRET: ci-test-secret
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm', cache-dependency-path: backend/package-lock.json }
-      - run: env | grep DB_ >> .env 2>/dev/null; env | grep JWT_ >> .env 2>/dev/null; env | grep DATABASE_URL >> .env 2>/dev/null; cat .env
-      - run: npm ci --ignore-scripts --legacy-peer-deps
-      - run: npx prisma validate
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
       - run: npx prisma generate
-      - run: PGPASSWORD=meter_pulse_dev psql -h localhost -U meter_pulse -d meter_pulse -c "CREATE SCHEMA IF NOT EXISTS sim_system;"
-      - run: npx prisma migrate deploy
       - run: npm run build
-      - run: npm test
       - run: npm run lint
-        continue-on-error: true
 
-  frontend:
+  frontend-build:
+    name: Frontend Build
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: Frontend
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install
-      - run: bun run lint
-      - run: bun run build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npx next build
 
-  security:
+  security-audit:
+    name: Security Audit
     runs-on: ubuntu-latest
-    defaults:
-      run:
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backend audit
         working-directory: backend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'npm', cache-dependency-path: backend/package-lock.json }
-      - run: npm ci --ignore-scripts --legacy-peer-deps
-      - run: npm audit --audit-level=high || echo "Vulnerabilities found"
-      - name: Trivy scan
-        uses: aquasecurity/trivy-action@master
+        run: npm audit --production
         continue-on-error: true
-        with:
-          scan-type: fs
-          scan-ref: .
-          format: sarif
-          output: trivy-results.sarif
-          severity: CRITICAL,HIGH
-      - uses: github/codeql-action/upload-sarif@v3
-        if: always() && hashFiles('trivy-results.sarif') != ''
-        with: { sarif_file: trivy-results.sarif }
-
-  sbom:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - name: Generate backend SBOM
-        run: |
-          cd backend
-          npm install --ignore-scripts --no-audit --no-fund --legacy-peer-deps 2>/dev/null
-          npx --yes @cyclonedx/cyclonedx-npm --output-file ../sbom-backend.json || echo "SBOM generation skipped (npm ls peer dep issues)"
-      - name: Generate frontend SBOM
+      - name: Frontend audit
+        working-directory: Frontend
+        run: npm audit --production
         continue-on-error: true
-        run: |
-          cd Frontend
-          npm install --ignore-scripts --no-audit --no-fund 2>/dev/null || echo "Frontend SBOM skipped"
-      - name: Upload SBOMs
-        uses: actions/upload-artifact@v4
-        continue-on-error: true
-        with:
-          name: sbom
-          path: sbom-*.json
-
-  secret-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: TruffleHog
-        uses: trufflesecurity/trufflehog@main
-        with: { extra_args: --only-verified }

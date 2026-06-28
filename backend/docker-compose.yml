@@ -1,21 +1,103 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:16-alpine
-    container_name: meter-pulse-db
+    container_name: meter-verse-db
     restart: unless-stopped
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5433:5432"
     environment:
-      POSTGRES_DB: ${DB_NAME:-meter_pulse}
-      POSTGRES_USER: ${DB_USER:-meter_pulse}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-meter_pulse_dev}
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: meter_pulse
+      POSTGRES_USER: meter_pulse
+      POSTGRES_PASSWORD: meter_pulse_dev
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-meter_pulse} -d ${DB_NAME:-meter_pulse}"]
+      test: ["CMD-SHELL", "pg_isready -U meter_pulse -d meter_pulse"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meter-verse-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: meter_pulse
+      DB_SCHEMA: sim_system
+      DB_USER: meter_pulse
+      DB_PASSWORD: meter_pulse_dev
+      DATABASE_URL: postgresql://meter_pulse:meter_pulse_dev@db:5432/meter_pulse?schema=sim_system
+      JWT_SECRET: UVqb32VePfFmNsFGbQ62O0lqI2kSvyNq7oLUg0YwatybCirPZnMrDCBTf3ExnJ-N
+      JWT_EXPIRES_IN: 3600
+      CORS_ORIGIN: http://localhost:3000,http://localhost:3001
+      NODE_ENV: production
+      DEV_LOGIN_ENABLED: "true"
+      ADMIN_USER: admin
+      ADMIN_PASS: iskra_admin_2026
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend-migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meter-verse-migrate
+    environment:
+      DATABASE_URL: postgresql://meter_pulse:meter_pulse_dev@db:5432/meter_pulse?schema=sim_system
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma migrate deploy && npx prisma db seed 2>/dev/null; exit 0"
+
+  frontend:
+    build:
+      context: ../Frontend
+      dockerfile: Dockerfile
+    container_name: meter-verse-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+      PORT: 3000
+    depends_on:
+      - backend
+
+  db-admin:
+    image: node:20-alpine
+    container_name: meter-verse-db-admin
+    restart: unless-stopped
+    ports:
+      - "4001:4001"
+    working_dir: /app
+    environment:
+      ADMIN_PORT: 4001
+      ADMIN_USER: admin
+      ADMIN_PASS: iskra_admin_2026
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: meter_pulse
+      DB_USER: meter_pulse
+      DB_PASSWORD: meter_pulse_dev
+    command: >
+      sh -c "npm install pg cors express && node db-admin-server.js"
+    volumes:
+      - ./db-admin-server.js:/app/db-admin-server.js
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:

@@ -1,0 +1,17 @@
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.22.208.1:3000
+- Environments: .env.local
+✓ Ready in 1917ms
+
+ GET / 404 in 294ms (next.js: 38ms, application-code: 256ms)
+ GET /login? 404 in 541ms (next.js: 234ms, application-code: 307ms)
+ GET / 404 in 1019ms (next.js: 520ms, application-code: 500ms)
+ GET /login 404 in 1564ms (next.js: 508ms, application-code: 1056ms)
+ GET /login 404 in 611ms (next.js: 58ms, application-code: 553ms)
+ GET / 404 in 883ms (next.js: 283ms, application-code: 601ms)
+ GET /login 404 in 302ms (next.js: 53ms, application-code: 249ms)
+ GET /login 404 in 518ms (next.js: 92ms, application-code: 426ms)
+ GET / 404 in 151ms (next.js: 29ms, application-code: 122ms)
+ GET / 404 in 218ms (next.js: 54ms, application-code: 164ms)
+[?25h

@@ -17,9 +17,9 @@ jobs:
         image: postgres:16-alpine
         ports: [5432:5432]
         env:
-          POSTGRES_DB: meter_pulse
-          POSTGRES_USER: meter_pulse
-          POSTGRES_PASSWORD: meter_pulse_dev
+          POSTGRES_DB: Meter_Verse_pulse
+          POSTGRES_USER: Meter_Verse_pulse
+          POSTGRES_PASSWORD: Meter_Verse_pulse_dev
         options: >-
           --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 5
     steps:
@@ -32,7 +32,7 @@ jobs:
       - run: npm run build
       - run: npm test
         env:
-          DATABASE_URL: postgresql://meter_pulse:meter_pulse_dev@localhost:5432/meter_pulse?schema=sim_system
+          DATABASE_URL: postgresql://Meter_Verse_pulse:Meter_Verse_pulse_dev@localhost:5432/Meter_Verse_pulse?schema=sim_system
           JWT_SECRET: ci-test-secret
       - run: npm run lint
         continue-on-error: true

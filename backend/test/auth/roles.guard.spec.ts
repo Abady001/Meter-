@@ -74,20 +74,20 @@ describe('RolesGuard', () => {
     });
 
     it('should deny access when user role does not match any required role', () => {
-      reflector.getAllAndOverride.mockReturnValue([Role.SUPER_ADMIN, Role.PROJECT_ADMIN]);
+      reflector.getAllAndOverride.mockReturnValue([Role.SUPER_ADMIN, Role.ADMIN]);
       const context = mockContext({ role: Role.TECHNICIAN });
       expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     });
 
     it('should include required roles in the error message', () => {
-      reflector.getAllAndOverride.mockReturnValue([Role.SUPER_ADMIN, Role.PROJECT_ADMIN]);
+      reflector.getAllAndOverride.mockReturnValue([Role.SUPER_ADMIN, Role.ADMIN]);
       const context = mockContext({ role: Role.TECHNICIAN });
       try {
         guard.canActivate(context);
       } catch (e) {
         const error = e as ForbiddenException;
         expect(error.message).toContain(Role.SUPER_ADMIN);
-        expect(error.message).toContain(Role.PROJECT_ADMIN);
+        expect(error.message).toContain(Role.ADMIN);
       }
     });
   });
@@ -97,8 +97,8 @@ describe('RolesGuard', () => {
       expect(Role.SUPER_ADMIN).toBe('super_admin');
     });
 
-    it('should have project_admin role', () => {
-      expect(Role.PROJECT_ADMIN).toBe('project_admin');
+    it('should have admin role', () => {
+      expect(Role.ADMIN).toBe('admin');
     });
 
     it('should have operator role', () => {
@@ -121,17 +121,26 @@ describe('RolesGuard', () => {
       expect(Role.CUSTOMER).toBe('customer');
     });
 
-    it('should contain exactly 7 roles matching frontend UserRole type', () => {
+    it('should contain exactly 16 roles matching frontend UserRole type', () => {
       const roles = Object.values(Role);
-      expect(roles).toHaveLength(7);
+      expect(roles).toHaveLength(16);
       expect(roles.sort()).toEqual([
+        'accountant',
+        'admin',
+        'area_manager',
+        'collector',
         'customer',
         'finance',
+        'inspector',
+        'meter_reader',
         'operator',
-        'project_admin',
         'super_admin',
+        'supervisor',
         'support',
-        'technician'
+        'system_admin',
+        'team_leader',
+        'technician',
+        'viewer',
       ]);
     });
   });

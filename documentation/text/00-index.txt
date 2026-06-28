@@ -1,4 +1,4 @@
-# Documentation Index — Meter Pulse
+# Documentation Index — Meter Verse
 
 > Complete index of all documentation files organized by format type.
 > Each content piece exists in multiple formats for different use cases.

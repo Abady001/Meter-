@@ -11,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET', 'change-me-in-production')
+      secretOrKey: (() => { const s = configService.get<string>('JWT_SECRET'); if (!s) throw new Error('JWT_SECRET environment variable is required'); return s; })()
     });
   }
 
@@ -29,7 +29,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       sub: payload.sub,
       userId: payload.userId ?? payload.sub,
       role: payload.role,
-      projectScope: payload.projectScope
+      projectScope: payload.projectScope,
+      areas: payload.areas
     };
   }
 }

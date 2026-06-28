@@ -1,4 +1,4 @@
-# Security Gap Analysis — Meter Pulse Platform
+# Security Gap Analysis — Meter Verse Platform
 
 **Date**: 2026-05-31
 **Standards**: OWASP ASVS v4.0.3 (L1), NIST SP 800-53 Rev 5, CIS Controls v8, OWASP Top 10 2021

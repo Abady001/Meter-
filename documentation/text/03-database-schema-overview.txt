@@ -1,4 +1,4 @@
-Database Schema Overview — Meter Pulse
+Database Schema Overview — Meter Verse
 
 Complete entity relationship model for the Utility Metering and Billing Platform MVP.
 Source: specs/001-metering-billing-platform/data-model.md
@@ -109,7 +109,7 @@ Core Tables
   Column  |  Type  |  Constraints  
 
   id  |  uuid  |  PK  
-  meter_id  |  uuid  |  FK → Meter  
+  Meter_Verse_id  |  uuid  |  FK → Meter  
   customer_id  |  uuid  |  FK → Customer  
   unit_id  |  uuid  |  FK → LocationNode  
   project_id  |  uuid  |  FK → Project  
@@ -123,7 +123,7 @@ Core Tables
 
   id  |  uuid  |  PK  
   sim_id  |  uuid  |  FK → SIMCard  
-  meter_id  |  uuid  |  FK → Meter  
+  Meter_Verse_id  |  uuid  |  FK → Meter  
   start_at  |  timestamp  |   
   end_at  |  timestamp  |  nullable  
   change_reason  |  string  |   
@@ -133,7 +133,7 @@ Core Tables
   Column  |  Type  |  Constraints  
 
   id  |  uuid  |  PK  
-  meter_id  |  uuid  |  FK → Meter  
+  Meter_Verse_id  |  uuid  |  FK → Meter  
   project_id  |  uuid  |  FK → Project  
   customeridsnapshot  |  uuid  |   
   unitidsnapshot  |  uuid  |   
@@ -184,7 +184,7 @@ Core Tables
   project_id  |  uuid  |  FK → Project  
   customer_id  |  uuid  |  FK → Customer  
   unit_id  |  uuid  |  FK → LocationNode  
-  meter_id  |  uuid  |  FK → Meter  
+  Meter_Verse_id  |  uuid  |  FK → Meter  
   utility_type  |  enum  |  electricity, water  
   billingperiodid  |  uuid  |  FK → BillingPeriod  
   status  |  enum  |  draft, pendingapproval, issued, partiallypaid, paid, overdue, cancelled  

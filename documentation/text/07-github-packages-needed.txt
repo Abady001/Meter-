@@ -1,5 +1,5 @@
 ================================================================================
-  REQUIRED TOOLS & SERVICES - Meter Pulse (deprecated)
+  REQUIRED TOOLS & SERVICES - Meter Verse (deprecated)
 ================================================================================
   This file is deprecated. The single source of truth is:
   documentation/markdown/06-github-packages-needed.md

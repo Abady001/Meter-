@@ -31,7 +31,7 @@ export function ThemeProvider({
 
   React.useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem('meter-pulse-theme') as Theme | null;
+    const stored = localStorage.getItem('meter-verse-theme') as Theme | null;
     if (stored) {
       setTheme(stored);
     } else if (enableSystem) {
@@ -62,7 +62,7 @@ export function ThemeProvider({
     theme,
     setTheme: (t: Theme) => {
       setTheme(t);
-      localStorage.setItem('meter-pulse-theme', t);
+      localStorage.setItem('meter-verse-theme', t);
     },
     resolvedTheme: theme === 'system' ? getSystemTheme() : theme,
   }), [theme]);

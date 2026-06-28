@@ -1,4 +1,4 @@
-# Meter Pulse Extended Governance Rules
+# Meter Verse Extended Governance Rules
 
 > Enforced starting from T022 closeout.
 > Last updated: 2026-05-29
@@ -97,7 +97,7 @@ The file must be self-contained (no external references required).
 
 Maintain `requirements-inventory.md` tracking: Tools, Services, MCP Servers, GitHub Dependencies, NPM Packages, Docker Services, External Systems.
 
-For each item: Purpose, Installation Steps, Repository URL, Version, Usage in Meter Pulse. Update after every task.
+For each item: Purpose, Installation Steps, Repository URL, Version, Usage in Meter Verse. Update after every task.
 
 ---
 

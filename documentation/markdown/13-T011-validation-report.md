@@ -41,7 +41,7 @@
 
 | Property | Value |
 |----------|-------|
-| Title | Meter Pulse API |
+| Title | Meter Verse API |
 | Description | Utility metering and billing platform API |
 | Version | 1.0 |
 | Server | `/api/v1` |

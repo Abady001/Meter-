@@ -1,37 +1,37 @@
-﻿T019 Validation Report â€” Derived Views
+T019 Validation Report — Derived Views
 
 Date: 2026-05-28
 Branch: feature/t018-audit-reports
-Task: T019 Migration â€” derived views
+Task: T019 Migration — derived views
 
 
 1. Views Created
 
   View   Schema   Source Table   Filter   Status  
  ------ -------- ------------- -------- -------- 
-  meter_assignment_active_view   sim_system   meter_assignments   end_at IS NULL   âœ… Created  
-  sim_assignment_active_view   sim_system   sim_assignments   end_at IS NULL   âœ… Created  
-  customer_statement_view   sim_system   customer_ledger_entries   â€”   âœ… Created  
+  Meter_Verse_assignment_active_view   sim_system   Meter_Verse_assignments   end_at IS NULL   ✅ Created  
+  sim_assignment_active_view   sim_system   sim_assignments   end_at IS NULL   ✅ Created  
+  customer_statement_view   sim_system   customer_ledger_entries   —   ✅ Created  
 
 2. View Column Definitions
 
-meter_assignment_active_view (7 columns)
+Meter_Verse_assignment_active_view (7 columns)
   Column   Type   Source  
  -------- ------ -------- 
-  assignment_id   text   meter_assignments.id  
-  meter_id   text   meter_assignments.meter_id  
-  unit_id   text   meter_assignments.unit_id  
-  customer_id   text   meter_assignments.customer_id  
-  start_at   timestamp   meter_assignments.start_at  
-  assigned_by   text   meter_assignments.created_by  
-  created_at   timestamp   meter_assignments.created_at  
+  assignment_id   text   Meter_Verse_assignments.id  
+  Meter_Verse_id   text   Meter_Verse_assignments.Meter_Verse_id  
+  unit_id   text   Meter_Verse_assignments.unit_id  
+  customer_id   text   Meter_Verse_assignments.customer_id  
+  start_at   timestamp   Meter_Verse_assignments.start_at  
+  assigned_by   text   Meter_Verse_assignments.created_by  
+  created_at   timestamp   Meter_Verse_assignments.created_at  
 
 sim_assignment_active_view (6 columns)
   Column   Type   Source  
  -------- ------ -------- 
   assignment_id   text   sim_assignments.id  
   sim_id   text   sim_assignments.sim_id  
-  meter_id   text   sim_assignments.meter_id  
+  Meter_Verse_id   text   sim_assignments.Meter_Verse_id  
   start_at   timestamp   sim_assignments.start_at  
   assigned_by   text   sim_assignments.created_by  
   created_at   timestamp   sim_assignments.created_at  
@@ -52,11 +52,11 @@ customer_statement_view (8 columns)
 
   Check   Command   Result  
  ------- --------- -------- 
-  Prisma Validate   npx prisma validate   âœ… Valid  
-  Migration Status   npx prisma migrate status   âœ… Up to date  
-  Migration Deploy   npx prisma migrate deploy   âœ… Applied  
-  TypeScript Build   npm run build   âœ… Clean  
-  Test Suite   npm test   âœ… 77/77 passing  
+  Prisma Validate   npx prisma validate   ✅ Valid  
+  Migration Status   npx prisma migrate status   ✅ Up to date  
+  Migration Deploy   npx prisma migrate deploy   ✅ Applied  
+  TypeScript Build   npm run build   ✅ Clean  
+  Test Suite   npm test   ✅ 77/77 passing  
 
 4. Database Validation
 
@@ -67,15 +67,15 @@ Query all views
 
   View   Dependent Tables   Migration Dependency  
  ------ ----------------- --------------------- 
-  meter_assignment_active_view   meter_assignments   T014  
+  Meter_Verse_assignment_active_view   Meter_Verse_assignments   T014  
   sim_assignment_active_view   sim_assignments   T014  
   customer_statement_view   customer_ledger_entries   T017  
 
 Refresh Strategy
-Views use CREATE OR REPLACE VIEW â€” they reflect source table data in real time. No refresh needed.
+Views use CREATE OR REPLACE VIEW — they reflect source table data in real time. No refresh needed.
 
 Rename Risks
-- If meter_assignments table or columns are renamed, this view will break
+- If Meter_Verse_assignments table or columns are renamed, this view will break
 - If sim_assignments table or columns are renamed, this view will break
 - If customer_ledger_entries table or columns are renamed, this view will break
 - All views are schema-qualified under sim_system
@@ -93,9 +93,9 @@ Rename Risks
 
   Check   Result  
  ------- -------- 
-  T014 â€” meter assignments still valid   âœ… Views use correct table/column names from actual migration  
-  T014 â€” SIM assignments still valid   âœ… Views use correct table/column names from actual migration  
-  T017 â€” ledger logic preserved   âœ… Append-only model preserved; uses stored running_balance  
-  T017 â€” append-only model preserved   âœ… No modifications to ledger table  
-  T018 â€” audit compatibility preserved   âœ… No changes to audit_log or report_jobs tables  
-  No breaking changes   âœ… Views only â€” no tables, columns, or enums modified
+  T014 — meter assignments still valid   ✅ Views use correct table/column names from actual migration  
+  T014 — SIM assignments still valid   ✅ Views use correct table/column names from actual migration  
+  T017 — ledger logic preserved   ✅ Append-only model preserved; uses stored running_balance  
+  T017 — append-only model preserved   ✅ No modifications to ledger table  
+  T018 — audit compatibility preserved   ✅ No changes to audit_log or report_jobs tables  
+  No breaking changes   ✅ Views only — no tables, columns, or enums modified

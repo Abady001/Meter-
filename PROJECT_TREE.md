@@ -1,54 +1,77 @@
-# Meter Pulse — Project Tree
-> **Last updated**: 2026-05-29 (T022) — For full architecture see `ROUTE_OF_DATA.md`
+# Meter Verse — Project Tree
+> **Last updated**: 2026-06-13 (v2.0.0 Migration) — For full architecture see `ROUTE_OF_DATA.md`
 > For AI handoff/restore see `AI_HANDOFF.md` and `RESTORE_POINT.md`
-> Completed: T001-T022 (22/85 tasks)
+> Completed: T001-T085 | Phase 7: T086-T120
 
 ```
-Meter-/
+Meter/                                           # Meter Verse v2.0.0
 ├── .agents/skills/                              # 9 SpeckIt agent skills
 ├── .opencode/                                   # OpenCode config + commands
-├── .specify/                                    # SpeckIt SDD pipeline (workflows, templates, scripts)
-├── AGENTS.md                                    # Agent instructions + memory logs
-├── AI_HANDOFF.md                                # Complete AI handoff (updated T022)
-├── ROUTE_OF_DATA.md                             # Architecture + data flow map (NEW T022)
+├── .specify/                                    # SpeckIt SDD pipeline (4 features registered)
+├── .git/                                        # Git repo (migrated from Meter-)
+├── AGENTS.md                                    # Agent instructions + T086+ memory logs
+├── AI_HANDOFF.md                                # Complete AI handoff (v2.0.0)
+├── FULL_PROMPT_XFER.md                          # Single-file context transfer (590 lines)
+├── ROUTE_OF_DATA.md                             # Architecture + data flow map
 ├── PROJECT_ARCHITECTURE_AND_TREE.md             # Full architecture
-├── PROJECT_TREE.md                              # This file - compact tree
-├── MASTER-DEPLOYMENT-GUIDE.md                   # Deployment guide
-├── RESTORE_POINT.md                             # Restore point (updated T022)
-├── T001-T022-FINISHED-TASKS.md                  # Completed tasks log
+├── PROJECT_TREE.md                              # This file
+├── MASTER-DEPLOYMENT-GUIDE.md                   # Deployment guide (dual Linux+Windows)
+├── RESTORE_POINT.md                             # Restore point (v3)
+├── T001-T022-FINISHED-TASKS.md                  # Completed tasks log (T001-T085)
 ├── NEXT-SECTION-PROMPT.md                       # Next task prompt
 ├── metering_system_prd_brainstorm.md            # Original PRD
-├── prompt-history_T009.md                       # T009 prompt history
-├── prompt-history_T010.md                       # T010 prompt history
-├── prompt-history_T011.md                       # T011 prompt history
-├── backend/                                     # NestJS API (T001-T019)
-│   ├── prisma/schema.prisma + migrations/       # 8 migrations (20+ models)
-│   ├── src/                                     # Source code
-│   │   ├── auth/ (JWT + RBAC)                   # T009
-│   │   ├── audit/ (append-only log)             # T010
-│   │   ├── common/ (config, db, http, openapi)  # T002-T008, T011
-│   │   ├── idempotency/                         # T008
-│   │   ├── billing/ thru sim-cards/             # EMPTY (T027+)
-│   │   └── types/express.d.ts
-│   ├── test/ (82 tests)                         # T001-T012
+├── package.json                                 # name: meter-verse-workspace
+├── backend/                                     # NestJS API (T001-T085)
+│   ├── prisma/schema.prisma + migrations/
+│   ├── src/ (auth, audit, common, billing...)
+│   ├── test/ (373 tests, 47 suites)
 │   ├── docker-compose.yml
 │   └── package.json
-├── Frontend/                                    # Next.js 16 app (T020-T022)
-│   ├── src/
-│   │   ├── app/ (layout, page, globals)
-│   │   ├── pages/api/features.ts                # T022
-│   │   ├── components/ (alerts, billing, customers, dashboard, layout, meters, projects, readings, reports, shared, sim-cards, smart-table, tickets, ui/)
-│   │   ├── hooks/ (use-projects.ts, use-mobile.ts, use-toast.ts)
-│   │   └── lib/
-│   │       ├── api/ (client, errors, auth, query-client)  # T020-T021
-│   │       ├── feature-flags.ts                 # T022
-│   │       ├── mock-data.ts, mock-auth.ts, types.ts, navigation.ts, router-store.ts, db.ts, utils.ts
-│   ├── graphify-out/ (graph.json, graph.html, report)
-│   ├── prisma/schema.prisma
+├── Frontend/                                    # Next.js 16 app (Bun runtime)
+│   ├── src/ (app, components, hooks, lib, prisma)
+│   ├── graphify-out/ (frontend graph)
 │   └── package.json
-├── specs/001-metering-billing-platform/         # All 85 tasks, OpenAPI contract
+├── specs/                                       # 4 feature specs
+│   ├── 001-metering-billing-platform/           # T001-T085 (original, DO NOT MODIFY)
+│   │   ├── spec.md, plan.md, data-model.md
+│   │   ├── contracts/meter-verse-api.yaml
+│   │   ├── checklists/requirements.md
+│   │   └── tasks.md (updated with rollback procs)
+│   ├── 002-meter-verse-core/                    # T086-T092 (Core DB, RBAC, i18n)
+│   │   ├── spec.md, plan.md, data-model.md
+│   ├── 003-symbiot-integration/                 # Symbiot bridge (T091)
+│   │   ├── spec.md, plan.md, data-model.md
+│   └── 004-migration-plans/                     # Migration (T107-T111)
+│       ├── spec.md, plan.md, data-model.md
+├── docs/
+│   ├── architecture/                            # Architecture diagrams
+│   ├── migration/                               # Migration guides
+│   └── planning/                                # 12 planning docs with Mermaid diagrams
+│       ├── v2.0.0-planning-strategy.md
+│       ├── v2.0.0-implementation-roadmap.md
+│       ├── v2.0.0-tasks.md
+│       ├── v2.0.0-workflow.md
+│       ├── v2.0.0-stories.md
+│       ├── v2.0.0-data-model.md
+│       ├── v2.0.0-security.md
+│       ├── v2.0.0-migration-plan.md
+│       ├── v2.0.0-symbiot-integration.md
+│       ├── v2.0.0-test-plan.md
+│       ├── v2.0.0-deployment-guide.md
+│       └── v2.0.0-upcoming-updates.md
+├── reference/                                   # 7 reference systems (not in git)
+│   ├── collection-system/                       # Flask billing system (priority features)
+│   ├── sbill/                                   # SBill Palm Hills + Estates (2.1 GB)
+│   ├── symbiot/                                 # Symbiot SEP integration (1.7 GB)
+│   ├── ims/                                     # IMS system
+│   ├── meter-department/                        # Meter department files (4.1 GB)
+│   ├── energy-360/                              # Energy 360 mobile app
+│   └── all-last-update/                         # Latest system updates (1.5 GB)
+├── tools/                                       # Playwright MCP
+│   └── playwright-mcp/
+├── scripts/                                     # Utility scripts
+├── ci-cd/                                       # CI/CD pipeline configs
 ├── documentation/                               # Multi-format (markdown, sql, text, excel, pdf)
-├── graphify-out/                                # Structural graph (198 files)
-├── backup files/                                # T021 + T022 session backups
-└── .gitignore
+├── graphify-out/                                # Structural graph
+└── backup files/                                # Session backups
 ```

@@ -1,4 +1,4 @@
-# Task List — Meter Pulse MVP
+# Task List — Meter Verse MVP
 
 > Ready to paste into Notion as a task database.
 > Source: `specs/001-metering-billing-platform/tasks.md`
@@ -28,7 +28,7 @@
 | T009 | Auth (JWT) + RBAC guard + role model | ✅ Done | High |
 | T010 | Append-only audit log service + interceptor | ✅ Done | High |
 | T011 | API versioning `/api/v1` + OpenAPI serving | ✅ Done | High |
-| T012 | Contract-test harness against `meter-pulse-api.yaml` | ✅ Done | High |
+| T012 | Contract-test harness against `meter-verse-api.yaml` | ✅ Done | High |
 
 ### PostgreSQL Schema / Migrations
 
@@ -40,7 +40,7 @@
 | T016 | Invoice, InvoiceLine, InvoiceAdjustment | ✅ Done | High |
 | T017 | Payment, PaymentAllocation, CustomerLedgerEntry | ✅ Done | High |
 | T018 | AuditLog, ReportJob | ✅ Done | Medium |
-| T019 | Derived views (customer_statement_view, meter_assignment_active_view, sim_assignment_active_view) | ✅ Done | Medium |
+| T019 | Derived views (customer_statement_view, Meter_Verse_assignment_active_view, sim_assignment_active_view) | ✅ Done | Medium |
 
 ### Frontend Sprint 0 Foundation
 

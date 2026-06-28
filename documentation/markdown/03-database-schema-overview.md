@@ -1,4 +1,4 @@
-# Database Schema Overview — Meter Pulse
+# Database Schema Overview — Meter Verse
 
 > Complete entity relationship model for the Utility Metering and Billing Platform MVP.
 > Source: `specs/001-metering-billing-platform/data-model.md`
@@ -30,7 +30,7 @@ Project
   │   ├── SIMAssignment (links meter ↔ SIMCard)
   │   ├── Reading (consumption data)
   │   │   └── ReadingReview (approval/rejection)
-  │   └── parent_main_meter_id (self-ref for water_child → water_main)
+  │   └── parent_main_Meter_Verse_id (self-ref for water_child → water_main)
   ├── SIMCard (communication asset)
   ├── TariffPlan (rate definition per meter type)
   ├── BillingPeriod (monthly cycles)
@@ -101,7 +101,7 @@ Project
 |--------|------|-------------|
 | id | uuid | PK |
 | serial_number | string | UNIQUE |
-| meter_type | enum | electricity, water_main, water_child |
+| Meter_Verse_type | enum | electricity, water_main, water_child |
 | brand | string | |
 | model | string | |
 | status | enum | available, assigned, active, offline, faulty, replaced, terminated, retired |
@@ -110,7 +110,7 @@ Project
 | termination_date | date | nullable |
 | project_id | uuid | FK → Project |
 | location_id | uuid | FK → LocationNode (nullable) |
-| parent_main_meter_id | uuid | FK → Meter (nullable, required for water_child) |
+| parent_main_Meter_Verse_id | uuid | FK → Meter (nullable, required for water_child) |
 
 ### 6. SIMCard
 | Column | Type | Constraints |
@@ -128,7 +128,7 @@ Project
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | uuid | PK |
-| meter_id | uuid | FK → Meter |
+| Meter_Verse_id | uuid | FK → Meter |
 | customer_id | uuid | FK → Customer |
 | unit_id | uuid | FK → LocationNode |
 | project_id | uuid | FK → Project |
@@ -136,14 +136,14 @@ Project
 | end_at | timestamp | nullable |
 | change_reason | string | |
 | status | enum | active, ended |
-| **Partial unique** | | `(meter_id)` WHERE end_at IS NULL |
+| **Partial unique** | | `(Meter_Verse_id)` WHERE end_at IS NULL |
 
 ### 8. SIMAssignment
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | uuid | PK |
 | sim_id | uuid | FK → SIMCard |
-| meter_id | uuid | FK → Meter |
+| Meter_Verse_id | uuid | FK → Meter |
 | start_at | timestamp | |
 | end_at | timestamp | nullable |
 | change_reason | string | |
@@ -154,7 +154,7 @@ Project
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | uuid | PK |
-| meter_id | uuid | FK → Meter |
+| Meter_Verse_id | uuid | FK → Meter |
 | project_id | uuid | FK → Project |
 | customer_id_snapshot | uuid | |
 | unit_id_snapshot | uuid | |
@@ -167,7 +167,7 @@ Project
 | raw_payload | jsonb | nullable |
 | entered_by | uuid | |
 | notes | text | nullable |
-| **Unique** | | `(meter_id, reading_at, source)` |
+| **Unique** | | `(Meter_Verse_id, reading_at, source)` |
 
 ### 10. ReadingReview
 | Column | Type | Constraints |
@@ -184,7 +184,7 @@ Project
 |--------|------|-------------|
 | id | uuid | PK |
 | project_id | uuid | FK → Project |
-| meter_type | enum | electricity, water_main, water_child |
+| Meter_Verse_type | enum | electricity, water_main, water_child |
 | rate_per_unit | decimal | |
 | currency | string | |
 | effective_from | date | |
@@ -209,7 +209,7 @@ Project
 | project_id | uuid | FK → Project |
 | customer_id | uuid | FK → Customer |
 | unit_id | uuid | FK → LocationNode |
-| meter_id | uuid | FK → Meter |
+| Meter_Verse_id | uuid | FK → Meter |
 | utility_type | enum | electricity, water |
 | billing_period_id | uuid | FK → BillingPeriod |
 | status | enum | draft, pending_approval, issued, partially_paid, paid, overdue, cancelled |
@@ -330,7 +330,7 @@ Payment:   pending → confirmed → reversed|cancelled
 | View Name | Purpose |
 |-----------|---------|
 | `customer_statement_view` | Opening balance, charges, payments, adjustments, reversals, closing balance |
-| `meter_assignment_active_view` | One active row per meter |
+| `Meter_Verse_assignment_active_view` | One active row per meter |
 | `sim_assignment_active_view` | One active row per SIM |
 
 ---

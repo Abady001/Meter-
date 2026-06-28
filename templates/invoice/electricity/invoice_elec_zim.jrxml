@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_template" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="54" bottomMargin="54" uuid="1a38b833-cae4-43f1-be6b-d7757924ad5e">
+	<property name="ireport.zoom" value="2.3579476910000117"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="261"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="invoice_details" uuid="ef4d6ec1-7cf0-4d4b-8b94-d3451e8a2461">
+		<parameter name="invoiceId" class="java.lang.Long"/>
+		<parameter name="invoiceAmt" class="java.lang.Long"/>
+		<queryString language="SQL">
+			<![CDATA[select
+  name as charge_name,
+  amount as charge_amount,
+  start_reading,
+  end_reading,
+  consumption_value,
+  tc.flat_rate
+from
+  invoice_details id
+  left outer join tariff_charges tc on id.tariff_charge_id = tc.id
+where
+  invoice_id = $P{invoiceId}]]>
+		</queryString>
+		<field name="charge_name" class="java.lang.String"/>
+		<field name="charge_amount" class="java.lang.Long"/>
+		<field name="start_reading" class="java.lang.Double"/>
+		<field name="end_reading" class="java.lang.Double"/>
+		<field name="consumption_value" class="java.lang.Double"/>
+		<field name="flat_rate" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="invoiceId" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select
+  i.id as invoice_id,
+  c.code as customer_code,
+  i.number as invoice_number,
+  m.serial,
+  t.name_en as tariff_name,
+  i.counsumption_month,
+  DATEADD(month, 1, i.counsumption_month) as due_date,
+  i.total_amt,
+  i.total_consumption,
+  u.unit_no
+from
+  invoice i,
+  meter m,
+  customer c,
+  tariff t,
+  unit u
+where
+  i.meter_id = m.id
+  and m.unit_id = u.id
+  and m.customer_id = c.id
+  and m.tariff_id = t.id
+  and i.id = $P{invoiceId}]]>
+	</queryString>
+	<field name="invoice_id" class="java.lang.Long"/>
+	<field name="customer_code" class="java.lang.String"/>
+	<field name="invoice_number" class="java.lang.String"/>
+	<field name="serial" class="java.lang.String"/>
+	<field name="tariff_name" class="java.lang.String"/>
+	<field name="counsumption_month" class="java.sql.Timestamp"/>
+	<field name="due_date" class="java.sql.Timestamp"/>
+	<field name="total_amt" class="java.lang.Long"/>
+	<field name="total_consumption" class="java.lang.Double"/>
+	<field name="unit_no" class="java.lang.String"/>
+	<background>
+		<band height="734">
+			<image>
+				<reportElement mode="Opaque" x="152" y="365" width="255" height="255" uuid="56a4a425-ba11-4002-b8de-b24e66c047d8"/>
+				<imageExpression><![CDATA["zetdc_logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="230" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="18" width="555" height="22" forecolor="#0000CC" uuid="3b08ebc3-16cb-4709-a449-c63132cc95bc"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZIMBABWE ELECTRICITY TRANSMISSION & DISTRIBUTION COMPANY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="13" forecolor="#000000" uuid="3a7bb1d7-6f19-4975-be1f-088694d504ac"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone: 0392 - 262138]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="53" width="555" height="23" forecolor="#0000CC" uuid="f47c6211-abc3-48c9-9cf3-a235dd96062d"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECTRICITY CHARGES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="113" width="182" height="50" forecolor="#000000" uuid="384f3a85-d736-4fbc-8dbf-e99ac0ba86cd"/>
+				<box leftPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CLIENT T.I.N. 0000000000
+CLIENT VAT REG.NO.:
+ZETDC TIN.NO.:
+ZETDC VAT REG.NO.: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="113" width="92" height="23" forecolor="#0000CC" uuid="184ca99c-ca2a-4fb5-b12b-85c5b89ed191"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account No]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="460" y="113" width="95" height="23" uuid="bdf5ee31-6f9c-421a-beeb-07c67c131a8e"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="368" y="139" width="92" height="23" forecolor="#0000CC" uuid="c93a5424-cc74-479d-a0b2-b74fdd5a0592"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Profoma Invoice No.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="460" y="139" width="95" height="23" uuid="ef206c7e-9ea7-4885-9f6b-dcf188c24105"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoice_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="165" width="92" height="23" forecolor="#0000CC" uuid="3935f47f-e3cb-4109-accb-dbdeebff2267"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contracted Tariff]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="92" y="165" width="90" height="23" uuid="68d4599f-cfcf-4a16-a22c-0dadcf582f00"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tariff_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="191" width="92" height="23" forecolor="#0000CC" uuid="b76d2552-c664-4f11-adc5-db8fea5f07af"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consumption Month]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="92" y="191" width="90" height="23" uuid="62409d62-9e11-4ab1-b55e-86e8893cb78f"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{counsumption_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="184" y="165" width="92" height="23" forecolor="#0000CC" uuid="a71e1525-ab65-4e89-8211-f69f630c3144"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Service Addr]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="191" width="92" height="23" forecolor="#CC0000" uuid="732c9980-b830-42a6-a169-40e44e68f6ea"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Due Date]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="460" y="191" width="95" height="23" uuid="6f25f45a-dbc6-4b90-b2c3-6a41ca4a0aba"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{due_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="76" width="555" height="15" forecolor="#CC0000" uuid="85b7798f-a0a5-417e-821f-9171d26592a2"/>
+				<box leftPadding="5" rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROFORMA INVOICE]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="276" y="191" width="90" height="23" uuid="48f9c4e4-e859-4b2b-b87d-56db40b504f2"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="184" y="191" width="92" height="23" forecolor="#0000CC" uuid="2bc6a23c-fc07-4e61-a23e-fe1ee5d0398e"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Meter Serial]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="276" y="165" width="279" height="23" uuid="adf0a9a2-d177-4fa6-9627-9e95873d5473"/>
+				<box leftPadding="2" bottomPadding="2">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="116" width="182" height="47" uuid="bbc8418c-b2c8-4d93-a877-701040049ded"/>
+				<box leftPadding="2" bottomPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit_no}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="96" splitType="Stretch">
+			<componentElement>
+				<reportElement key="invoice_details" style="table 1" x="0" y="0" width="555" height="96" uuid="5cbc8592-b284-4772-8fe4-4a8419275f3c"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="invoice_details" uuid="a542f8d8-4b08-4552-aaf4-67e9fc433de2">
+						<datasetParameter name="invoiceId">
+							<datasetParameterExpression><![CDATA[$P{invoiceId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="invoiceAmt">
+							<datasetParameterExpression><![CDATA[$F{total_amt}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="180" uuid="3294194f-5b0d-40e3-9acc-8952c33a2e2c">
+						<jr:columnHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="180" height="30" forecolor="#0000CC" uuid="d261a49b-070c-405f-8545-f855b29b41c9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[ Bill Items]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField>
+								<reportElement x="0" y="0" width="180" height="20" uuid="225bd23b-b8a7-41f3-90e7-9a71728613e4"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{charge_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="65" uuid="0eb7eac1-1ea7-4b75-9d69-00aaf8e51e25">
+						<jr:columnHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="65" height="30" forecolor="#0000CC" uuid="52181b90-11c9-4899-985a-cf701cb2d5b7"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Meter
+Constant]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField>
+								<reportElement x="0" y="0" width="65" height="20" uuid="f8fdb3aa-fdb9-4509-9449-6c38a7803b5b"/>
+								<box leftPadding="2" rightPadding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA["1"]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="ca15184f-3728-4db0-8cb5-a04f1a7207de">
+						<jr:columnHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="30" forecolor="#0000CC" uuid="82fe35e3-cf66-48d5-b8e3-192b68d1181e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Consumption
+Kwh\KVA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField pattern="#,##0.000" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="140" height="20" uuid="391ff9d4-e0ae-46da-b8f3-494463f4db72"/>
+								<box leftPadding="3" rightPadding="3"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{consumption_value}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="316af54d-f397-4a9a-ba69-6a8728306d01">
+						<jr:columnHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" forecolor="#0000CC" uuid="0ec2fa6b-d59d-4a0f-8b3f-cd2ee0bc6ff2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Rate]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0"/>
+							<textField pattern="#,##0.00" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="80" height="20" uuid="68caa4e8-4b61-466b-8d77-edd006d06b76"/>
+								<box leftPadding="3" rightPadding="3"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{flat_rate}/1000]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="2b9a7e32-dbf9-478e-8382-11308227bc94">
+						<jr:tableHeader height="0" rowSpan="1"/>
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader height="30" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement mode="Transparent" x="0" y="0" width="90" height="30" forecolor="#0000CC" backcolor="#FFFFFF" uuid="48e200bf-d7d8-404e-a855-587f73368939"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+									<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<text><![CDATA[Charge]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="150" rowSpan="1">
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<staticText>
+								<reportElement mode="Transparent" x="0" y="120" width="90" height="15" forecolor="#CC0000" backcolor="#FFFFFF" uuid="aab3d974-986a-400f-8509-a89902cf97f2"/>
+								<box leftPadding="2" rightPadding="2">
+									<topPen lineWidth="0.5" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+									<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<text><![CDATA[Total Amount]]></text>
+							</staticText>
+							<textField pattern="#,##0.000" isBlankWhenNull="false">
+								<reportElement mode="Transparent" x="0" y="135" width="90" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="e04d79f9-12e1-441b-9376-cefec6427964"/>
+								<box leftPadding="2" rightPadding="2">
+									<topPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+									<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$P{invoiceAmt}/1000]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<box leftPadding="0" rightPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField pattern="#,##0.00" isBlankWhenNull="false">
+								<reportElement mode="Transparent" x="0" y="0" width="90" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c162b8c7-59d3-44f1-b350-0c81d941fc7f"/>
+								<box leftPadding="3" rightPadding="3"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+									<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{charge_amount}/1000]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

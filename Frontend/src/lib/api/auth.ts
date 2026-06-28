@@ -1,3 +1,5 @@
+import { getCsrfToken } from './client';
+
 const TOKEN_KEY = 'mp-auth-token';
 const REFRESH_TOKEN_KEY = 'mp-refresh-token';
 
@@ -70,6 +72,7 @@ export async function refreshToken(): Promise<string | null> {
     if (data.accessToken) {
       setToken(data.accessToken);
       if (data.refreshToken) setRefreshToken(data.refreshToken);
+      getCsrfToken().catch(() => {});
       return data.accessToken;
     }
 

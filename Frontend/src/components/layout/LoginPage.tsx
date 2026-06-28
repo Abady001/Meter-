@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { useT } from '@/lib/i18n/context';
 import { cn } from '@/lib/utils';
 
 export function LoginPage() {
+  const t = useT();
   const login = useAuthStore((s) => s.login);
   const navigate = usePageStore((s) => s.navigate);
   const [selectedRole, setSelectedRole] = useState<UserRole>('super_admin');
@@ -23,9 +25,7 @@ export function LoginPage() {
 
   const handleSignIn = async () => {
     setIsLoading(true);
-    // Simulate a brief loading state
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    login(selectedRole);
+    await login(selectedRole);
     navigate('dashboard');
     setIsLoading(false);
   };
@@ -34,8 +34,8 @@ export function LoginPage() {
     <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-background">
       {/* Animated background gradient */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-full blur-3xl" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/3 via-transparent to-transparent rounded-full blur-3xl" />
+        <div className="absolute -top-1/2 -start-1/2 w-full h-full bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-full blur-3xl" />
+        <div className="absolute -bottom-1/2 -end-1/2 w-full h-full bg-gradient-to-tl from-primary/3 via-transparent to-transparent rounded-full blur-3xl" />
         {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -74,7 +74,7 @@ export function LoginPage() {
                 transition={{ delay: 0.3, duration: 0.3 }}
                 className="text-2xl font-bold tracking-tight"
               >
-                Meter <span className="text-primary">Pulse</span>
+                {t('login.brand')}
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -82,7 +82,7 @@ export function LoginPage() {
                 transition={{ delay: 0.4, duration: 0.3 }}
                 className="text-sm text-muted-foreground mt-1"
               >
-                Utility Metering & Billing Management
+                {t('login.subtitle')}
               </motion.p>
             </div>
 
@@ -96,7 +96,7 @@ export function LoginPage() {
               {/* Role Selector */}
               <div className="space-y-2">
                 <Label htmlFor="role" className="text-sm font-medium">
-                  Sign in as
+                  {t('login.role')}
                 </Label>
                 <select
                   id="role"
@@ -115,17 +115,17 @@ export function LoginPage() {
               {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
-                  Email
+                  {t('login.email')}
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <Mail className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@meterpulse.com"
+                    placeholder={t('login.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11"
+                    className="ps-10 h-11"
                   />
                 </div>
               </div>
@@ -134,26 +134,26 @@ export function LoginPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-sm font-medium">
-                    Password
+                    {t('login.password')}
                   </Label>
                   <button className="text-xs text-primary hover:underline">
-                    Forgot Password?
+                    {t('login.forgotPassword')}
                   </button>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                  <Lock className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder={t('login.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-11"
+                    className="ps-10 pe-10 h-11"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -177,10 +177,10 @@ export function LoginPage() {
                       transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                       className="size-4 border-2 border-current border-t-transparent rounded-full"
                     />
-                    Signing in...
+                    {t('login.signingIn')}
                   </span>
                 ) : (
-                  'Sign In'
+                  t('login.signIn')
                 )}
               </Button>
             </motion.div>
@@ -198,9 +198,9 @@ export function LoginPage() {
                     <Info className="size-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium mb-1">Demo Mode</p>
+                    <p className="text-xs font-medium mb-1">{t('login.demoMode')}</p>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Select any role from the dropdown and click <span className="text-primary font-medium">Sign In</span> to explore the dashboard with different permission levels.
+                      {t('login.demoDescription')}
                     </p>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export function LoginPage() {
           transition={{ delay: 0.7, duration: 0.3 }}
           className="text-center text-xs text-muted-foreground mt-6"
         >
-          &copy; {new Date().getFullYear()} Meter Pulse. All rights reserved.
+          &copy; {new Date().getFullYear()} {t('login.copyright')}
         </motion.p>
       </motion.div>
     </div>

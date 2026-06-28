@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meter Verse — Administration Portal</title>
+<style>
+  :root { --bg:#0f172a; --surface:#1e293b; --surface2:#334155; --primary:#3b82f6; --primary-h:#2563eb; --success:#22c55e; --danger:#ef4444; --warning:#f59e0b; --text:#f1f5f9; --text2:#94a3b8; --border:#475569; --sidebar-w:240px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+  .flex { display:flex; }
+  
+  /* Sidebar */
+  .sidebar { width:var(--sidebar-w); background:var(--surface); border-right:1px solid var(--border); height:100vh; position:fixed; top:0; left:0; overflow-y:auto; z-index:50; }
+  .sidebar .brand { padding:16px; border-bottom:1px solid var(--border); }
+  .sidebar .brand h1 { font-size:16px; font-weight:700; }
+  .sidebar .brand h1 span { color:var(--primary); }
+  .sidebar .brand .sub { font-size:10px; color:var(--text2); margin-top:2px; }
+  .sidebar .nav-item { display:flex; align-items:center; gap:10px; padding:10px 16px; cursor:pointer; color:var(--text2); font-size:13px; transition:all .15s; border-left:3px solid transparent; }
+  .sidebar .nav-item:hover { background:var(--surface2); color:var(--text); }
+  .sidebar .nav-item.active { background:var(--surface2); color:var(--primary); border-left-color:var(--primary); }
+  .sidebar .nav-section { padding:12px 16px 4px; font-size:10px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+  
+  /* Main content */
+  .main { margin-left:var(--sidebar-w); flex:1; padding:0; min-height:100vh; }
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; }
+  .header .user { display:flex; align-items:center; gap:10px; font-size:13px; }
+  .header .user .badge { background:var(--primary); color:#fff; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; }
+  .content { padding:24px; max-width:1400px; }
+  
+  /* Stats */
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-bottom:20px; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .stat-card .label { font-size:11px; color:var(--text2); text-transform:uppercase; }
+  .stat-card .value { font-size:28px; font-weight:700; margin-top:4px; }
+  
+  /* Card / Table */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:16px; }
+  .card h2 { font-size:15px; font-weight:600; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; padding:8px 10px; border-bottom:2px solid var(--border); color:var(--text2); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
+  td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  tr:hover td { background:var(--surface2); }
+  
+  /* Components */
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; }
+  .badge-green { background:rgba(34,197,94,0.15); color:var(--success); }
+  .badge-red { background:rgba(239,68,68,0.15); color:var(--danger); }
+  .badge-yellow { background:rgba(245,158,11,0.15); color:var(--warning); }
+  .badge-blue { background:rgba(59,130,246,0.15); color:var(--primary); }
+  .btn { padding:6px 14px; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:500; transition:all .15s; display:inline-flex; align-items:center; gap:4px; }
+  .btn-primary { background:var(--primary); color:#fff; }
+  .btn-primary:hover { background:var(--primary-h); }
+  .btn-success { background:var(--success); color:#fff; }
+  .btn-danger { background:var(--danger); color:#fff; }
+  .btn-warning { background:var(--warning); color:#000; }
+  .btn-sm { padding:4px 8px; font-size:11px; }
+  .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text2); }
+  .btn-outline:hover { border-color:var(--text); color:var(--text); }
+  .btn-group { display:flex; gap:4px; flex-wrap:wrap; }
+  .status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; }
+  .status-dot.online { background:var(--success); }
+  .status-dot.offline { background:var(--danger); }
+  
+  /* Modal */
+  .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.6); z-index:1000; justify-content:center; align-items:center; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; max-width:650px; width:95%; max-height:85vh; overflow-y:auto; }
+  .modal h3 { margin-bottom:16px; font-size:16px; }
+  .modal .fg { margin-bottom:12px; }
+  .modal .fg label { display:block; font-size:12px; color:var(--text2); margin-bottom:4px; }
+  .modal .fg input,.modal .fg select,.modal .fg textarea { width:100%; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; outline:none; }
+  .modal .fg input:focus,.modal .fg select:focus { border-color:var(--primary); }
+  .modal .br { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+  
+  /* Toast */
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 20px; font-size:13px; z-index:2000; display:none; box-shadow:0 4px 20px rgba(0,0,0,.4); border-left:4px solid var(--primary); }
+  .toast.show { display:block; animation:slideIn .3s ease; }
+  .toast.error { border-left-color:var(--danger); }
+  .toast.success { border-left-color:var(--success); }
+  @keyframes slideIn { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  
+  /* Login */
+  .login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .login-box { max-width:380px; width:100%; }
+  .login-box .card { padding:32px; }
+  .login-box h1 { text-align:center; font-size:22px; margin-bottom:4px; }
+  .login-box h1 span { color:var(--primary); }
+  .login-box p { text-align:center; color:var(--text2); font-size:13px; margin-bottom:24px; }
+  
+  /* DB Admin */
+  .data-grid { overflow:auto; max-height:calc(100vh - 300px); }
+  .data-grid table { font-size:12px; min-width:100%; }
+  .data-grid th { position:sticky; top:0; background:var(--surface2); z-index:2; }
+  .data-grid td { max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .data-grid td.editing { padding:0; }
+  .data-grid td.editing input { width:100%; padding:6px 8px; border:2px solid var(--primary); outline:none; font-size:12px; background:var(--bg); color:var(--text); }
+  
+  /* Search */
+  .search-bar { width:100%; padding:8px 14px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; margin-bottom:12px; outline:none; }
+  .search-bar:focus { border-color:var(--primary); }
+  
+  .empty { text-align:center; padding:40px; color:var(--text2); font-size:14px; }
+  
+  @media (max-width:768px) { .sidebar { width:56px; } .sidebar .nav-item span,.sidebar .nav-section,.sidebar .brand .sub { display:none; } .main { margin-left:56px; } .content { padding:12px; } .stats-row { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+
+<div class="flex" id="app">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar" style="display:none">
+    <div class="brand">
+      <h1><span>MV</span> Admin</h1>
+      <div class="sub">Port 6262 · v1.0</div>
+    </div>
+    <div class="nav-section">System</div>
+    <div class="nav-item active" onclick="showPage('dashboard')"><span>📊</span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="showPage('dbadmin')"><span>🗄️</span><span>DB Admin</span></div>
+    <div class="nav-section">Governance</div>
+    <div class="nav-item" onclick="showPage('areas')"><span>🏢</span><span>Areas</span></div>
+    <div class="nav-item" onclick="showPage('projects')"><span>📁</span><span>Projects</span></div>
+    <div class="nav-item" onclick="showPage('users')"><span>👤</span><span>Users</span></div>
+    <div class="nav-item" onclick="showPage('groups')"><span>👥</span><span>User Groups</span></div>
+    <div class="nav-item" onclick="showPage('roles')"><span>🔑</span><span>Roles</span></div>
+    <div class="nav-item" onclick="showPage('permissions')"><span>🛡️</span><span>Permissions</span></div>
+    <div class="nav-section">Configuration</div>
+    <div class="nav-item" onclick="showPage('customer-types')"><span>🏷️</span><span>Customer Types</span></div>
+    <div class="nav-item" onclick="showPage('ownership-types')"><span>📋</span><span>Ownership Types</span></div>
+    <div class="nav-item" onclick="showPage('payment-options')"><span>💳</span><span>Payment Options</span></div>
+    <div class="nav-item" onclick="showPage('holidays')"><span>🎉</span><span>Holidays</span></div>
+    <div class="nav-item" onclick="showPage('unit-zones')"><span>📍</span><span>Unit Zones</span></div>
+    <div class="nav-section">Data</div>
+    <div class="nav-item" onclick="showPage('readings')"><span>📏</span><span>Readings</span></div>
+    <div class="nav-item" onclick="showPage('audit')"><span>📜</span><span>Audit Log</span></div>
+    <div class="nav-item" onclick="showPage('sync')"><span>🔄</span><span>Sync Gateways</span></div>
+    <div class="nav-item" onclick="showPage('api-control')"><span>🔌</span><span>API Control</span></div>
+    <div class="nav-item" onclick="showPage('settings')"><span>⚙️</span><span>System Settings</span></div>
+  </div>
+
+  <!-- Main -->
+  <div class="main" id="mainArea" style="display:none">
+    <div class="header">
+      <div style="font-size:14px;font-weight:500" id="pageTitle">Dashboard</div>
+      <div class="user">
+        <span id="userName"></span>
+        <span class="badge" id="userRole"></span>
+        <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="content" id="pageContent"></div>
+  </div>
+
+  <!-- Login -->
+  <div class="login-screen" id="loginScreen" style="flex:1">
+    <div class="login-box">
+      <div class="card">
+        <h1><span>Meter Verse</span> Admin</h1>
+        <p>Administration Portal — Port 6262</p>
+        <div class="fg"><label>Username</label><input type="text" id="loginUser" placeholder="Enter username"></div>
+        <div class="fg"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:10px;justify-content:center">Sign In</button>
+        <p id="loginError" style="color:var(--danger);margin-top:10px;font-size:13px;display:none"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+let token = localStorage.getItem('admin6262_token');
+let user = JSON.parse(localStorage.getItem('admin6262_user') || 'null');
+let BASE = '/api';
+let currentPage = 'dashboard';
+let tables = [], currentSchema = 'core', currentTable = '', tableData = [], tableColumns = [], pendingInserts = [], pendingUpdates = [], pendingDeletes = [];
+
+// Init
+if (token && user) { showApp(); renderPage('dashboard'); }
+else { showLogin(); }
+
+function toast(msg, type='info') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+type; setTimeout(()=>t.classList.remove('show'),3000); }
+
+function showLogin() { document.getElementById('loginScreen').style.display='flex'; document.getElementById('sidebar').style.display='none'; document.getElementById('mainArea').style.display='none'; }
+function showApp() { document.getElementById('loginScreen').style.display='none'; document.getElementById('sidebar').style.display='block'; document.getElementById('mainArea').style.display='block'; }
+
+function doLogin() {
+  const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginError'); err.style.display='none';
+  fetch(BASE+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})})
+  .then(r=>r.json()).then(d=>{
+    if (d.error) { err.textContent=d.error; err.style.display='block'; return; }
+    token=d.token; user=d.user; localStorage.setItem('admin6262_token',token); localStorage.setItem('admin6262_user',JSON.stringify(user));
+    showApp(); renderPage('dashboard');
+  }).catch(e=>{err.textContent='Connection failed';err.style.display='block';});
+}
+
+function logout() { token=null; user=null; localStorage.removeItem('admin6262_token'); localStorage.removeItem('admin6262_user'); showLogin(); }
+
+async function api(path,opts={}) {
+  const h={'Content-Type':'application/json',...opts.headers};
+  if (token) h['Authorization']='Bearer '+token;
+  const r=await fetch(BASE+path,{...opts,headers:h});
+  const d=await r.json();
+  if (!r.ok) throw new Error(d.error||'API Error');
+  return d;
+}
+
+// ==================== PAGE NAVIGATION ====================
+function showPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const nav = Array.from(document.querySelectorAll('.nav-item')).find(n=>n.textContent.trim().toLowerCase().includes(page.replace('-',' ')));
+  if (nav) nav.classList.add('active');
+  renderPage(page);
+}
+
+function renderPage(page) {
+  const   titles = { dashboard:'Dashboard', dbadmin:'Database Administration', areas:'Area Management', projects:'Project Management', users:'User Management', groups:'User Groups', roles:'Role Management', permissions:'Permission Management', 'customer-types':'Customer Types', 'ownership-types':'Ownership Types', 'payment-options':'Payment Options', holidays:'Holiday Management', 'unit-zones':'Unit Zones', readings:'Readings Management', audit:'Audit Log', sync:'Sync Gateway Status', 'api-control':'API Control', settings:'System Settings' };
+  document.getElementById('pageTitle').textContent = titles[page] || page;
+  const el = document.getElementById('pageContent');
+  const fn = 'render_'+page.replace(/-/g,'_');
+  if (typeof window[fn] === 'function') window[fn](el);
+  else el.innerHTML = '<div class="empty">Page loading...</div>';
+}
+
+// ==================== DASHBOARD ====================
+async function render_dashboard(el) {
+  try {
+    const [health,stats,config] = await Promise.all([api('/system/health'),api('/audit/stats'),api('/settings/database')]);
+    el.innerHTML = `
+      <div class="stats-row">
+        <div class="stat-card"><div class="label">Database</div><div class="value" style="color:var(--success)">Connected</div><div class="label">PostgreSQL</div></div>
+        <div class="stat-card"><div class="label">Areas</div><div class="value">${config.data.areas}</div><div class="label">Enterprise governance</div></div>
+        <div class="stat-card"><div class="label">Projects</div><div class="value">${config.data.projects}</div><div class="label">Across all areas</div></div>
+        <div class="stat-card"><div class="label">Users</div><div class="value">${config.data.users}</div><div class="label">Active accounts</div></div>
+        <div class="stat-card"><div class="label">Audit Entries</div><div class="value">${stats.data.total_entries}</div><div class="label">${stats.data.last_24h} last 24h</div></div>
+        <div class="stat-card"><div class="label">Permissions</div><div class="value">${config.data.permissions}</div><div class="label">Across ${config.data.roles} roles</div></div>
+      </div>
+      <div class="card"><h2>System</h2><table>
+        <tr><td>Service</td><td>Meter Verse Administration Portal (Merged: DB Admin + Governance Console)</td></tr>
+        <tr><td>Port</td><td>6262</td></tr>
+        <tr><td>User</td><td>${user.username} <span class="badge badge-blue">${user.role}</span></td></tr>
+        <tr><td>Database</td><td>${config.data.db}</td></tr>
+        <tr><td>PostgreSQL</td><td>${config.data.pg_version?.substring(0,30)||'16'}</td></tr>
+        <tr><td>Audit Unique Users</td><td>${stats.data.unique_users}</td></tr>
+      </table></div>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+// ==================== DB ADMIN ====================
+async function render_dbadmin(el) {
+  try {
+    const schemas = await api('/db/schemas');
+    const grouped = {}; schemas.data.forEach(s => { if (!grouped[s.table_schema]) grouped[s.table_schema] = []; grouped[s.table_schema].push(s); });
+    el.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+        <select id="dbSchema" class="search-bar" style="width:auto;min-width:140px;margin:0" onchange="loadDbTables()">
+          ${Object.keys(grouped).map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select>
+        <select id="dbTable" class="search-bar" style="width:auto;min-width:200px;margin:0" onchange="loadDbData()"></select>
+        <button class="btn btn-sm btn-primary" onclick="loadDbData()">↻ Refresh</button>
+        <button class="btn btn-sm btn-success" onclick="dbAddRow()">+ Add</button>
+        <button class="btn btn-sm btn-primary" onclick="dbApplyChanges()">Apply Changes</button>
+        <span id="dbInfo" style="font-size:12px;color:var(--text2);margin-left:8px"></span>
+        <span id="dbPending" style="font-size:12px;color:var(--warning);display:none"></span>
+      </div>
+      <div class="card"><div class="data-grid" id="dbGrid"><div class="empty">Select a table</div></div></div>
+      <div class="card"><h2>SQL Query</h2>
+        <textarea id="sqlQuery" rows="3" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-size:13px;font-family:monospace;margin-bottom:8px" placeholder="SELECT * FROM core.users LIMIT 50"></textarea>
+        <button class="btn btn-sm btn-primary" onclick="runQuery()">▶ Run</button>
+        <div id="queryResult" style="margin-top:8px"></div>
+      </div>`;
+    loadDbTables();
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function loadDbTables() {
+  currentSchema = document.getElementById('dbSchema').value;
+  try {
+    const d = await api('/db/schemas');
+    const filtered = d.data.filter(s => s.table_schema === currentSchema);
+    const sel = document.getElementById('dbTable');
+    sel.innerHTML = filtered.map(t => `<option value="${t.table_name}">${t.table_name} (${t.cols} cols)</option>`).join('');
+    if (filtered.length) { currentTable = filtered[0].table_name; loadDbData(); }
+  } catch(e) { toast(e.message,'error'); }
+}
+
+async function loadDbData() {
+  currentTable = document.getElementById('dbTable').value;
+  if (!currentTable) return;
+  pendingInserts = []; pendingUpdates = []; pendingDeletes = [];
+  try {
+    const d = await api(`/db/data/${currentSchema}/${currentTable}`);
+    tableData = d.data; tableColumns = d.columns;
+    document.getElementById('dbInfo').textContent = `${currentSchema}.${currentTable} — ${d.total} rows`;
+    dbRenderTable();
+  } catch(e) { document.getElementById('dbGrid').innerHTML = `<div class="empty" style="color:var(--danger)">${e.message}</div>`; }
+}
+
+function dbRenderTable() {
+  const cols = tableColumns.map(c => c.column_name).filter(c => !['password_hash','connection_string','mfa_secret'].includes(c));
+  let html = '<table><thead><tr><th style="width:30px"><input type="checkbox" onchange="dbSelectAll(this.checked)"></th>';
+  cols.forEach(c => { html += `<th>${c}</th>`; });
+  html += '<th style="width:80px">Actions</th></tr></thead><tbody>';
+  
+  pendingInserts.forEach((r,idx) => {
+    html += '<tr style="background:rgba(34,197,94,0.05)"><td><span class="badge badge-green">NEW</span></td>';
+    cols.forEach(c => { html += `<td class="editing"><input value="${(r[c]||'')}" onchange="pendingInserts[${idx}]['${c}']=this.value" /></td>`; });
+    html += `<td><button class="btn btn-sm btn-danger" onclick="pendingInserts.splice(${idx},1);dbRenderTable()">✕</button></td></tr>`;
+  });
+  
+  tableData.forEach((row,i) => {
+    const isDel = pendingDeletes.includes(row.id);
+    const isMod = pendingUpdates.some(u => u.id === row.id);
+    html += `<tr class="${isDel?'removed':''}" style="${isDel?'opacity:0.4;text-decoration:line-through':''}">`;
+    html += `<td><input type="checkbox" ${isDel?'checked':''} onchange="dbToggleDelete('${row.id}',this.checked)"></td>`;
+    cols.forEach(c => {
+      let val = typeof row[c]==='object'&&row[c]!==null ? JSON.stringify(row[c]).substring(0,80) : (row[c]===null?'':String(row[c]));
+      if (['password_hash','connection_string','mfa_secret'].includes(c)) val = '••••••';
+      html += `<td ondblclick="dbEditCell(this,'${row.id}','${c}','${val.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')" style="${isDel?'text-decoration:line-through':''}${isMod?'background:rgba(245,158,11,0.1)':''}">${val.substring(0,100)}</td>`;
+    });
+    html += `<td>${isDel?'<span style="font-size:11px;color:var(--danger)">Pending</span>':''}</td></tr>`;
+  });
+  
+  if (!tableData.length && !pendingInserts.length) html += '<tr><td colspan="'+(cols.length+2)+'" class="empty">No data</td></tr>';
+  html += '</tbody></table>';
+  document.getElementById('dbGrid').innerHTML = html;
+  const total = pendingInserts.length + pendingUpdates.length + pendingDeletes.length;
+  const el = document.getElementById('dbPending');
+  if (total) { el.textContent = `Pending: ${pendingInserts.length}I ${pendingUpdates.length}U ${pendingDeletes.length}D`; el.style.display = 'inline'; }
+  else el.style.display = 'none';
+}
+
+function dbEditCell(td, rowId, col, val) {
+  if (pendingDeletes.includes(rowId)) return;
+  td.innerHTML = `<input value="${val.replace(/"/g,'&quot;')}" style="width:100%;padding:4px 6px;border:2px solid var(--primary);border-radius:4px;background:var(--bg);color:var(--text);font-size:12px;outline:none" onblur="dbSaveCell('${rowId}','${col}',this.value)" autofocus>`;
+  td.querySelector('input').focus();
+}
+
+function dbSaveCell(rowId, col, val) {
+  const row = tableData.find(r => r.id === rowId);
+  if (!row) return;
+  if (String(row[col]) === val) { dbRenderTable(); return; }
+  row[col] = val;
+  const existing = pendingUpdates.find(u => u.id === rowId);
+  if (existing) existing.data[col] = val;
+  else pendingUpdates.push({ id: rowId, data: { [col]: val } });
+  dbRenderTable();
+}
+
+function dbToggleDelete(rowId, checked) {
+  if (checked) { if (!pendingDeletes.includes(rowId)) pendingDeletes.push(rowId); }
+  else pendingDeletes = pendingDeletes.filter(id => id !== rowId);
+  dbRenderTable();
+}
+
+function dbSelectAll(checked) {
+  if (checked) tableData.forEach(r => { if (!pendingDeletes.includes(r.id)) pendingDeletes.push(r.id); });
+  else pendingDeletes = [];
+  dbRenderTable();
+}
+
+function dbAddRow() {
+  const empty = {}; tableColumns.forEach(c => { if (c.column_name !== 'id' && c.column_name !== 'created_at' && c.column_name !== 'updated_at') empty[c.column_name] = ''; });
+  pendingInserts.push(empty);
+  dbRenderTable();
+}
+
+async function dbApplyChanges() {
+  const total = pendingInserts.length+pendingUpdates.length+pendingDeletes.length;
+  if (!total) { toast('No changes','info'); return; }
+  if (!confirm(`Apply ${total} changes to ${currentSchema}.${currentTable}?`)) return;
+  try {
+    const r = await api('/db/apply', { method:'POST', body:JSON.stringify({ schema:currentSchema, table:currentTable, inserts:pendingInserts, updates:pendingUpdates, deletes:pendingDeletes }) });
+    if (r.error) { toast('Error: '+r.error,'error'); return; }
+    toast(`Applied: ${r.inserted}I ${r.updated}U ${r.deleted}D`,'success');
+    loadDbData();
+  } catch(e) { toast(e.message,'error'); }
+}
+
+async function runQuery() {
+  const sql = document.getElementById('sqlQuery').value;
+  if (!sql) return;
+  try {
+    const r = await api('/db/query', { method:'POST', body:JSON.stringify({ sql }) });
+    if (r.error) { document.getElementById('queryResult').innerHTML = `<div style="color:var(--danger);font-size:13px">${r.error}</div>`; return; }
+    if (!r.data || !r.data.length) { document.getElementById('queryResult').innerHTML = `<div style="color:var(--text2);font-size:13px">${r.total} rows returned</div>`; return; }
+    const cols = Object.keys(r.data[0]);
+    let html = `<div style="font-size:11px;color:var(--text2);margin-bottom:4px">${r.total} rows, ${cols.length} columns</div><table><thead><tr>${cols.map(c=>'<th>'+c+'</th>').join('')}</tr></thead><tbody>`;
+    r.data.slice(0,50).forEach(row => { html += '<tr>'+cols.map(c => '<td>'+(row[c]===null?'<em>null</em>':String(row[c]).substring(0,100))+'</td>').join('')+'</tr>'; });
+    html += '</tbody></table>';
+    if (r.data.length > 50) html += `<div style="font-size:12px;color:var(--text2);margin-top:4px">... and ${r.data.length-50} more rows</div>`;
+    document.getElementById('queryResult').innerHTML = html;
+  } catch(e) { document.getElementById('queryResult').innerHTML = `<div style="color:var(--danger);font-size:13px">${e.message}</div>`; }
+}
+
+// ==================== GENERIC CRUD ====================
+function buildTable(data, cols, actions) {
+  if (!data || !data.length) return '<div class="empty">No records found</div>';
+  const keys = cols.map(c => c.key);
+  let html = '<table><thead><tr>'+cols.map(c => `<th>${c.label}</th>`).join('')+'<th style="width:120px">Actions</th></tr></thead><tbody>';
+  data.forEach((row,i) => {
+    html += '<tr>';
+    cols.forEach(c => {
+      let val = c.render ? c.render(row[c.key], row) : (row[c.key] !== null && row[c.key] !== undefined ? String(row[c.key]) : '-');
+      html += `<td>${val}</td>`;
+    });
+    html += `<td><div class="btn-group">${actions(row)}</div></td></tr>`;
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function statusBadge(active) {
+  return active === true || active === 'true' || active === 1 || active === 'active' || active === 't' 
+    ? '<span class="badge badge-green">Active</span>' 
+    : '<span class="badge badge-red">Inactive</span>';
+}
+
+function openModal(html) { document.getElementById('modal').classList.add('show'); document.getElementById('modalContent').innerHTML = html; }
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+// ==================== AREAS ====================
+async function render_areas(el) {
+  try {
+    const d = await api('/areas');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 style="font-size:16px;font-weight:600">Area Management (${d.total})</h2>
+        <button class="btn btn-sm btn-primary" onclick="areaCreate()">+ Add Area</button>
+      </div>
+      ${buildTable(d.data, [
+        { key:'area_code', label:'Code' },
+        { key:'area_name', label:'Name' },
+        { key:'project_count', label:'Projects' },
+        { key:'is_active', label:'Status', render:(v)=>statusBadge(v) },
+        { key:'created_at', label:'Created', render:(v)=>v ? new Date(v).toLocaleDateString() : '-' }
+      ], row => `
+        <button class="btn btn-sm btn-primary" onclick="areaEdit('${row.id}')">Edit</button>
+        <button class="btn btn-sm ${row.is_active?'btn-warning':'btn-success'}" onclick="areaToggle('${row.id}',${row.is_active})">${row.is_active?'Deact':'Activate'}</button>
+        <button class="btn btn-sm btn-danger" onclick="areaDelete('${row.id}')">Archive</button>
+        ${user.role==='super_admin' ? `<button class="btn btn-sm btn-danger" onclick="areaHardDelete('${row.id}')">✕</button>` : ''}
+      `)}`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+function areaCreate() {
+  openModal(`<h3>Create Area</h3>
+    <div class="fg"><label>Area Code</label><input id="f_areaCode" placeholder="e.g. north_coast"></div>
+    <div class="fg"><label>Area Name</label><input id="f_areaName" placeholder="e.g. North Coast"></div>
+    <div class="br"><button class="btn btn-primary" onclick="areaDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function areaDoCreate() {
+  try { await api('/areas',{method:'POST',body:JSON.stringify({areaCode:document.getElementById('f_areaCode').value,areaName:document.getElementById('f_areaName').value})}); toast('Area created','success'); closeModal(); render_areas(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+async function areaEdit(id) {
+  const d = await api('/areas/'+id);
+  openModal(`<h3>Edit Area: ${d.data.area_name}</h3>
+    <div class="fg"><label>Area Name</label><input id="f_areaName" value="${d.data.area_name}"></div>
+    <div class="br"><button class="btn btn-primary" onclick="areaDoEdit('${id}')">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function areaDoEdit(id) {
+  try { await api('/areas/'+id,{method:'PUT',body:JSON.stringify({areaName:document.getElementById('f_areaName').value})}); toast('Updated','success'); closeModal(); render_areas(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+async function areaToggle(id,current) {
+  try { await api('/areas/'+id+'/toggle-active',{method:'PATCH'}); toast(current?'Deactivated':'Activated','success'); render_areas(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+async function areaDelete(id) {
+  if (!confirm('Archive this area?')) return;
+  try { await api('/areas/'+id,{method:'DELETE'}); toast('Archived','success'); render_areas(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+async function areaHardDelete(id) {
+  if (!confirm('PERMANENTLY DELETE? Cannot be undone.')) return;
+  try { await api('/areas/'+id+'/hard',{method:'DELETE'}); toast('Deleted permanently','success'); render_areas(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+
+// ==================== PROJECTS ====================
+async function render_projects(el) {
+  try { const d=await api('/projects');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">Project Management (${d.total})</h2><button class="btn btn-sm btn-primary" onclick="projCreate()">+ Add Project</button></div>
+    ${buildTable(d.data,[{key:'area_name',label:'Area'},{key:'project_code',label:'Code'},{key:'project_name',label:'Name'},{key:'is_active',label:'Status',render:v=>statusBadge(v)}],row=>`
+      <button class="btn btn-sm btn-primary" onclick="projEdit('${row.id}')">Edit</button>
+      <button class="btn btn-sm ${row.is_active?'btn-warning':'btn-success'}" onclick="projToggle('${row.id}',${row.is_active})">${row.is_active?'Deact':'Activate'}</button>
+      <button class="btn btn-sm btn-danger" onclick="projDelete('${row.id}')">Archive</button>`)}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+async function projCreate() {
+  const areas=await api('/areas');
+  openModal(`<h3>Create Project</h3><div class="fg"><label>Area</label><select id="f_projArea">${areas.data.map(a=>`<option value="${a.id}">${a.area_name}</option>`).join('')}</select></div>
+    <div class="fg"><label>Code</label><input id="f_projCode" placeholder="e.g. GOLF_VIEWS"></div>
+    <div class="fg"><label>Name</label><input id="f_projName" placeholder="e.g. Golf Views"></div>
+    <div class="br"><button class="btn btn-primary" onclick="projDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function projDoCreate() { try { await api('/projects',{method:'POST',body:JSON.stringify({areaId:document.getElementById('f_projArea').value,projectCode:document.getElementById('f_projCode').value,projectName:document.getElementById('f_projName').value})}); toast('Created','success'); closeModal(); render_projects(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function projEdit(id) { const d=await api('/projects/'+id); openModal(`<h3>Edit: ${d.data.project_name}</h3><div class="fg"><label>Name</label><input id="f_projName" value="${d.data.project_name}"></div><div class="fg"><label>Code</label><input id="f_projCode" value="${d.data.project_code}"></div><div class="br"><button class="btn btn-primary" onclick="projDoEdit('${id}')">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function projDoEdit(id) { try { await api('/projects/'+id,{method:'PUT',body:JSON.stringify({projectName:document.getElementById('f_projName').value,projectCode:document.getElementById('f_projCode').value})}); toast('Updated','success'); closeModal(); render_projects(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function projToggle(id,c) { try { await api('/projects/'+id+'/toggle-active',{method:'PATCH'}); toast(c?'Deactivated':'Activated','success'); render_projects(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function projDelete(id) { if(!confirm('Archive?')) return; try { await api('/projects/'+id,{method:'DELETE'}); toast('Archived','success'); render_projects(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== USERS ====================
+async function render_users(el) {
+  try { const d=await api('/users');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">User Management (${d.total})</h2><button class="btn btn-sm btn-primary" onclick="userCreate()">+ Add User</button></div>
+    ${buildTable(d.data,[
+      {key:'username',label:'Username'},
+      {key:'email',label:'Email'},
+      {key:'role_code',label:'Role',render:v=>`<span class="badge badge-blue">${v}</span>`},
+      {key:'status',label:'Status',render:v=>statusBadge(v)},
+      {key:'last_login_at',label:'Last Login',render:v=>v?new Date(v).toLocaleString():'Never'},
+      {key:'failed_login_attempts',label:'Failed',render:v=>v>0?`<span style="color:var(--warning)">${v}</span>`:'0'}
+    ], row=>`
+      <button class="btn btn-sm btn-primary" onclick="userView('${row.id}')">View</button>
+      <button class="btn btn-sm ${row.status==='locked'?'btn-success':'btn-warning'}" onclick="userToggleLock('${row.id}')">${row.status==='locked'?'Unlock':'Lock'}</button>
+      <button class="btn btn-sm ${row.status==='active'?'btn-warning':'btn-success'}" onclick="userToggleStatus('${row.id}')">${row.status==='active'?'Deact':'Activate'}</button>
+      <button class="btn btn-sm btn-danger" onclick="userDelete('${row.id}')">Suspend</button>`)}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+async function userCreate() {
+  const roles=await api('/system/roles');
+  openModal(`<h3>Create User</h3><div class="fg"><label>Username</label><input id="f_userName"></div>
+    <div class="fg"><label>Email</label><input id="f_userEmail" type="email"></div>
+    <div class="fg"><label>Password</label><input id="f_userPass" type="password"></div>
+    <div class="fg"><label>Role</label><select id="f_userRole">${roles.data.map(r=>`<option value="${r.role_code}">${r.role_name}</option>`).join('')}</select></div>
+    <div class="br"><button class="btn btn-primary" onclick="userDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function userDoCreate() { try { await api('/users',{method:'POST',body:JSON.stringify({username:document.getElementById('f_userName').value,email:document.getElementById('f_userEmail').value,password:document.getElementById('f_userPass').value,roleCode:document.getElementById('f_userRole').value})}); toast('Created','success'); closeModal(); render_users(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function userView(id) {
+  try {
+    const d=await api('/users/'+id);
+    const history=await api('/users/'+id+'/login-history');
+    openModal(`<h3>User: ${d.data.username}</h3>
+      <table><tr><td>Email</td><td>${d.data.email}</td></tr><tr><td>Role</td><td>${d.data.role_name} (${d.data.role_code})</td></tr>
+      <tr><td>Status</td><td>${statusBadge(d.data.status)}</td></tr>
+      <tr><td>Last Login</td><td>${d.data.last_login_at||'Never'}</td></tr>
+      <tr><td>Password Changed</td><td>${d.data.password_changed_at||'Never'}</td></tr>
+      <tr><td>Failed Attempts</td><td>${d.data.failed_login_attempts}</td></tr>
+      <tr><td>MFA</td><td>${d.data.is_mfa_enabled?'Enabled':'Disabled'}</td></tr></table>
+      <div class="br"><button class="btn btn-primary" onclick="userResetPass('${id}')">Reset Password</button><button class="btn btn-outline" onclick="closeModal()">Close</button></div>`);
+  } catch(e) { toast(e.message,'error'); }
+}
+async function userResetPass(id) {
+  const pwd=prompt('Enter new password (min 8 chars):');
+  if (!pwd || pwd.length<8) return;
+  try { await api('/users/'+id+'/reset-password',{method:'POST',body:JSON.stringify({newPassword:pwd})}); toast('Password reset','success'); closeModal(); } catch(e) { toast(e.message,'error'); }
+}
+async function userToggleLock(id) { try { await api('/users/'+id+'/toggle-lock',{method:'PATCH'}); toast('Toggled','success'); render_users(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function userToggleStatus(id) { try { await api('/users/'+id+'/toggle-status',{method:'PATCH'}); toast('Toggled','success'); render_users(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function userDelete(id) { if(!confirm('Suspend this user?')) return; try { await api('/users/'+id,{method:'DELETE'}); toast('Suspended','success'); render_users(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== GROUPS ====================
+async function render_groups(el) {
+  try { const d=await api('/groups');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">User Groups (${d.total})</h2><button class="btn btn-sm btn-primary" onclick="groupCreate()">+ Add Group</button></div>
+    ${buildTable(d.data,[{key:'group_name',label:'Name'},{key:'description',label:'Description',render:v=>v||'-'},{key:'is_active',label:'Active',render:v=>statusBadge(v)},{key:'created_at',label:'Created',render:v=>new Date(v).toLocaleDateString()}],row=>`
+      <button class="btn btn-sm btn-primary" onclick="groupEdit('${row.id}')">Edit</button>
+      <button class="btn btn-sm ${row.is_active?'btn-warning':'btn-success'}" onclick="groupToggle('${row.id}')">${row.is_active?'Deact':'Activate'}</button>
+      <button class="btn btn-sm btn-danger" onclick="groupDelete('${row.id}')">Delete</button>`)}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+function groupCreate() { openModal(`<h3>Create Group</h3><div class="fg"><label>Name</label><input id="f_gName"></div><div class="fg"><label>Description</label><textarea id="f_gDesc" rows="3"></textarea></div><div class="br"><button class="btn btn-primary" onclick="groupDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function groupDoCreate() { try { await api('/groups',{method:'POST',body:JSON.stringify({groupName:document.getElementById('f_gName').value,description:document.getElementById('f_gDesc').value})}); toast('Created','success'); closeModal(); render_groups(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function groupEdit(id) { const d=await api('/groups/'+id); openModal(`<h3>Edit: ${d.data.group_name}</h3><div class="fg"><label>Name</label><input id="f_gName" value="${d.data.group_name}"></div><div class="fg"><label>Description</label><textarea id="f_gDesc" rows="3">${d.data.description||''}</textarea></div><div class="br"><button class="btn btn-primary" onclick="groupDoEdit('${id}')">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function groupDoEdit(id) { try { await api('/groups/'+id,{method:'PUT',body:JSON.stringify({groupName:document.getElementById('f_gName').value,description:document.getElementById('f_gDesc').value})}); toast('Updated','success'); closeModal(); render_groups(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function groupToggle(id) { try { await api('/groups/'+id+'/toggle-active',{method:'PATCH'}); toast('Toggled','success'); render_groups(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function groupDelete(id) { if(!confirm('Delete?')) return; try { await api('/groups/'+id,{method:'DELETE'}); toast('Deleted','success'); render_groups(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== ROLES ====================
+async function render_roles(el) {
+  try { const d=await api('/system/roles');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">Roles (${d.data.length})</h2><button class="btn btn-sm btn-primary" onclick="roleCreate()">+ Add Role</button></div>
+    ${buildTable(d.data,[{key:'role_code',label:'Code',render:v=>`<code>${v}</code>`},{key:'role_name',label:'Name'},{key:'description',label:'Description',render:v=>v||'-'},{key:'is_system',label:'System',render:v=>v?'<span class="badge badge-yellow">System</span>':'<span class="badge badge-green">Custom</span>'},{key:'assigned_users',label:'Users'}],row=>`
+      <button class="btn btn-sm btn-primary" onclick="roleEdit('${row.id}')">Edit</button>
+      <button class="btn btn-sm btn-danger" onclick="roleDelete('${row.id}')">Delete</button>`)}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+function roleCreate() { openModal(`<h3>Create Role</h3><div class="fg"><label>Code</label><input id="f_roleCode" placeholder="e.g. auditor"></div><div class="fg"><label>Name</label><input id="f_roleName" placeholder="e.g. Auditor"></div><div class="fg"><label>Description</label><textarea id="f_roleDesc" rows="2"></textarea></div><div class="br"><button class="btn btn-primary" onclick="roleDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function roleDoCreate() { try { await api('/roles',{method:'POST',body:JSON.stringify({roleName:document.getElementById('f_roleName').value,roleCode:document.getElementById('f_roleCode').value,description:document.getElementById('f_roleDesc').value})}); toast('Created','success'); closeModal(); render_roles(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function roleEdit(id) { const d=await api('/roles/'+id); openModal(`<h3>Edit: ${d.data.role_name}</h3><div class="fg"><label>Name</label><input id="f_roleName" value="${d.data.role_name}"></div><div class="fg"><label>Description</label><textarea id="f_roleDesc" rows="2">${d.data.description||''}</textarea></div><div class="br"><button class="btn btn-primary" onclick="roleDoEdit('${id}')">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function roleDoEdit(id) { try { await api('/roles/'+id,{method:'PUT',body:JSON.stringify({roleName:document.getElementById('f_roleName').value,description:document.getElementById('f_roleDesc').value})}); toast('Updated','success'); closeModal(); render_roles(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function roleDelete(id) { if(!confirm('Delete role?')) return; try { await api('/roles/'+id,{method:'DELETE'}); toast('Deleted','success'); render_roles(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== PERMISSIONS ====================
+async function render_permissions(el) {
+  try {
+    const [list,matrix]=await Promise.all([api('/permissions'),api('/permissions/matrix')]);
+    el.innerHTML=`<h2 style="font-size:16px;font-weight:600;margin-bottom:12px">Permissions (${list.total})</h2>
+      <div class="card"><h2>Matrix</h2><div style="overflow-x:auto">
+      <table><thead><tr><th>Permission</th>${matrix.roles.map(r=>`<th style="text-align:center;font-size:10px">${r.role_code}</th>`).join('')}</tr></thead><tbody>
+      ${matrix.permissions.map(p=>`<tr><td style="font-size:11px">${p.module} / ${p.display_name}</td>${matrix.roles.map(r=>{const a=matrix.matrix.find(m=>m.role.id===r.id);const h=a&&a.permissions.find(ap=>ap.id===p.id);return `<td style="text-align:center">${h?'<span style="color:var(--success)">✓</span>':'<span style="color:var(--text2)">—</span>'}</td>`;}).join('')}</tr>`).join('')}
+      </tbody></table></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:16px"><h2 style="font-size:14px;font-weight:600">All Permissions</h2><button class="btn btn-sm btn-primary" onclick="permCreate()">+ Add Permission</button></div>
+      <table><thead><tr><th>Code</th><th>Name</th><th>Module</th><th>Roles</th><th style="width:60px"></th></tr></thead><tbody>
+      ${list.data.map(p=>`<tr><td><code>${p.permission_code}</code></td><td>${p.display_name}</td><td><span class="badge badge-blue">${p.module}</span></td><td style="font-size:11px;color:var(--text2)">${(p.assigned_roles||[]).filter(Boolean).join(', ')||'-'}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="permDelete('${p.id}')">✕</button></td></tr>`).join('')}</tbody></table>`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+function permCreate() { openModal(`<h3>Create Permission</h3><div class="fg"><label>Code</label><input id="f_permCode" placeholder="e.g. customers.delete"></div><div class="fg"><label>Name</label><input id="f_permName" placeholder="e.g. Delete Customers"></div><div class="fg"><label>Module</label><input id="f_permMod" placeholder="e.g. Customers"></div><div class="br"><button class="btn btn-primary" onclick="permDoCreate()">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`); }
+async function permDoCreate() { try { await api('/permissions',{method:'POST',body:JSON.stringify({permissionCode:document.getElementById('f_permCode').value,displayName:document.getElementById('f_permName').value,module:document.getElementById('f_permMod').value})}); toast('Created','success'); closeModal(); render_permissions(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function permDelete(id) { if(!confirm('Delete?')) return; try { await api('/permissions/'+id,{method:'DELETE'}); toast('Deleted','success'); render_permissions(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== META CRUD (generic for customer-types, ownership-types, payment-options, holidays, unit-zones) ====================
+function makeMetaPage(endpoint, title, fields, idField='id') {
+  return async function(el) {
+    try {
+      const d=await api('/meta/'+endpoint);
+      el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">${title} (${d.total})</h2><button class="btn btn-sm btn-primary" onclick="metaCreate('${endpoint}','${title}',${JSON.stringify(fields)})">+ Add</button></div>
+      <table><thead><tr>${fields.map(f=>`<th>${f.label}</th>`).join('')}<th style="width:120px">Actions</th></tr></thead><tbody>
+      ${d.data.map((row,i)=>`<tr>${fields.map(f=>{let v=f.render?f.render(row[f.key],row):(row[f.key]!==null&&row[f.key]!==undefined?String(row[f.key]):'-');return `<td>${v}</td>`;}).join('')}
+      <td><div class="btn-group">
+        <button class="btn btn-sm btn-primary" onclick="metaEdit('${endpoint}','${idField}','${row[idField]}',${JSON.stringify(fields)})">Edit</button>
+        ${row.is_active !== undefined ? `<button class="btn btn-sm ${row.is_active?'btn-warning':'btn-success'}" onclick="metaToggle('${endpoint}','${row[idField]}',${row.is_active})">${row.is_active?'Deact':'Activate'}</button>` : ''}
+        <button class="btn btn-sm btn-danger" onclick="metaDelete('${endpoint}','${row[idField]}')">Delete</button>
+      </div></td></tr>`).join('')}</tbody></table>`;
+    } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+  };
+}
+
+function metaCreate(endpoint, title, fields) {
+  openModal(`<h3>Create ${title}</h3>${fields.map(f => `<div class="fg"><label>${f.label}</label><input id="m_${f.key}" ${f.type==='select'?'':''}></div>`).join('')}
+    <div class="br"><button class="btn btn-primary" onclick="metaDoCreate('${endpoint}',${JSON.stringify(fields)})">Create</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function metaDoCreate(endpoint, fields) {
+  const body = {}; fields.forEach(f => { const v = document.getElementById('m_'+f.key)?.value; if (v) body[f.key] = v; });
+  try { await api('/meta/'+endpoint,{method:'POST',body:JSON.stringify(body)}); toast('Created','success'); closeModal(); renderPage(currentPage); } catch(e) { toast(e.message,'error'); }
+}
+async function metaEdit(endpoint, idField, id, fields) {
+  openModal(`<h3>Edit</h3>${fields.map(f => `<div class="fg"><label>${f.label}</label><input id="m_${f.key}" value=""></div>`).join('')}
+    <div class="br"><button class="btn btn-primary" onclick="metaDoEdit('${endpoint}','${idField}','${id}',${JSON.stringify(fields)})">Save</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function metaDoEdit(endpoint, idField, id, fields) {
+  const body = {}; fields.forEach(f => { const v = document.getElementById('m_'+f.key)?.value; if (v) body[f.key] = v; });
+  try { await api('/meta/'+endpoint+'/'+id,{method:'PUT',body:JSON.stringify(body)}); toast('Updated','success'); closeModal(); renderPage(currentPage); } catch(e) { toast(e.message,'error'); }
+}
+async function metaToggle(endpoint, id, current) {
+  try { await api('/meta/'+endpoint+'/'+id,{method:'PUT',body:JSON.stringify({isActive:!current})}); toast('Toggled','success'); renderPage(currentPage); } catch(e) { toast(e.message,'error'); }
+}
+async function metaDelete(endpoint, id) {
+  if(!confirm('Delete?')) return;
+  try { await api('/meta/'+endpoint+'/'+id,{method:'DELETE'}); toast('Deleted','success'); renderPage(currentPage); } catch(e) { toast(e.message,'error'); }
+}
+
+// Register meta pages
+window.render_customer_types = makeMetaPage('customer-types', 'Customer Types', [
+  {key:'type_code',label:'Code'},{key:'type_name',label:'Name'},{key:'description',label:'Description',render:v=>v||'-'},{key:'is_active',label:'Status',render:v=>statusBadge(v)}
+]);
+window.render_ownership_types = makeMetaPage('ownership-types', 'Ownership Types', [
+  {key:'type_code',label:'Code'},{key:'type_name',label:'Name'},{key:'description',label:'Description',render:v=>v||'-'},{key:'is_active',label:'Status',render:v=>statusBadge(v)}
+]);
+window.render_payment_options = makeMetaPage('payment-options', 'Payment Options', [
+  {key:'option_code',label:'Code'},{key:'option_name',label:'Name'},{key:'payment_type',label:'Type',render:v=>`<span class="badge badge-blue">${v||'cash'}</span>`},{key:'is_active',label:'Status',render:v=>statusBadge(v)}
+]);
+window.render_unit_zones = makeMetaPage('unit-zones', 'Unit Zones', [
+  {key:'zone_code',label:'Code'},{key:'zone_name',label:'Name'},{key:'is_active',label:'Status',render:v=>statusBadge(v)}
+]);
+
+// ==================== HOLIDAYS ====================
+async function render_holidays(el) {
+  try { const d=await api('/meta/holidays');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="font-size:16px;font-weight:600">Holidays (${d.total})</h2><button class="btn btn-sm btn-primary" onclick="holidayCreate()">+ Add</button></div>
+    ${buildTable(d.data,[{key:'holiday_name',label:'Name'},{key:'holiday_date',label:'Date',render:v=>new Date(v).toLocaleDateString()},{key:'area_name',label:'Area',render:v=>v||'All'},{key:'is_recurring',label:'Recurring',render:v=>v?'<span class="badge badge-blue">Yes</span>':'No'}],row=>`
+      <button class="btn btn-sm btn-danger" onclick="holidayDelete('${row.id}')">Delete</button>`)}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+async function holidayCreate() {
+  const areas=await api('/areas');
+  openModal(`<h3>Add Holiday</h3><div class="fg"><label>Name</label><input id="f_hName" placeholder="e.g. Eid al-Fitr"></div>
+    <div class="fg"><label>Date</label><input id="f_hDate" type="date"></div>
+    <div class="fg"><label>Area</label><select id="f_hArea"><option value="">All Areas</option>${areas.data.map(a=>`<option value="${a.id}">${a.area_name}</option>`).join('')}</select></div>
+    <div class="fg"><label><input id="f_hRecur" type="checkbox"> Recurring yearly</label></div>
+    <div class="br"><button class="btn btn-primary" onclick="holidayDoCreate()">Add</button><button class="btn btn-outline" onclick="closeModal()">Cancel</button></div>`);
+}
+async function holidayDoCreate() { try { await api('/meta/holidays',{method:'POST',body:JSON.stringify({holidayName:document.getElementById('f_hName').value,holidayDate:document.getElementById('f_hDate').value,areaId:document.getElementById('f_hArea').value||null,isRecurring:document.getElementById('f_hRecur').checked})}); toast('Added','success'); closeModal(); render_holidays(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+async function holidayDelete(id) { if(!confirm('Delete?')) return; try { await api('/meta/holidays/'+id,{method:'DELETE'}); toast('Deleted','success'); render_holidays(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== READINGS ====================
+async function render_readings(el) {
+  try { const d=await api('/meta/readings?limit=200');
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <h2 style="font-size:16px;font-weight:600">Readings (${d.total})</h2>
+      <div style="display:flex;gap:8px">
+        <input id="readingSearch" class="search-bar" style="width:200px;margin:0" placeholder="Filter by meter..." oninput="filterReadings()">
+        <button class="btn btn-sm btn-danger" onclick="readingsBulkDelete()" id="bulkDeleteBtn" style="display:none">Delete Selected</button>
+      </div></div>
+      <div id="readingsTable"><table><thead><tr><th style="width:30px"><input type="checkbox" id="readingSelectAll" onchange="readingToggleAll(this.checked)"></th><th>Meter</th><th>Customer</th><th>Value</th><th>Date</th><th>Type</th><th style="width:60px">Action</th></tr></thead><tbody>
+      ${d.data.map(r => `<tr><td><input type="checkbox" class="reading-cb" value="${r.id}" onchange="readingUpdateBulkBtn()"></td>
+        <td>${r.meter_serial||r.meter_id?.substring(0,8)}</td><td>${r.customer_name||'-'}</td><td>${r.reading_value||r.value||'-'}</td><td>${r.reading_date?new Date(r.reading_date).toLocaleString():'-'}</td>
+        <td>${r.reading_type||r.type||'-'}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="readingDelete('${r.id}')">✕</button></td></tr>`).join('')}
+      </tbody></table></div>`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+function readingUpdateBulkBtn() {
+  const checked = document.querySelectorAll('.reading-cb:checked');
+  document.getElementById('bulkDeleteBtn').style.display = checked.length ? 'inline-flex' : 'none';
+}
+function readingToggleAll(checked) {
+  document.querySelectorAll('.reading-cb').forEach(cb => cb.checked = checked);
+  readingUpdateBulkBtn();
+}
+async function readingDelete(id) {
+  if(!confirm('Delete this reading?')) return;
+  try { await api('/meta/readings/'+id,{method:'DELETE'}); toast('Deleted','success'); render_readings(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+async function readingsBulkDelete() {
+  const ids = Array.from(document.querySelectorAll('.reading-cb:checked')).map(cb => cb.value);
+  if (!ids.length) return;
+  if(!confirm(`Delete ${ids.length} readings?`)) return;
+  try { const r=await api('/meta/readings/bulk-delete',{method:'POST',body:JSON.stringify({ids})}); toast(`Deleted ${r.deleted} readings`,'success'); render_readings(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); }
+}
+function filterReadings() { /* client-side filter */ const q=document.getElementById('readingSearch').value.toLowerCase(); document.querySelectorAll('#readingsTable tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';}); }
+
+// ==================== AUDIT ====================
+async function render_audit(el) {
+  try {
+    const [logs,stats,ret]=await Promise.all([api('/audit?limit=100'),api('/audit/stats'),api('/audit/retention')]);
+    el.innerHTML=`<div class="stats-row">
+      <div class="stat-card"><div class="label">Total</div><div class="value">${stats.data.total_entries}</div></div>
+      <div class="stat-card"><div class="label">Last 24h</div><div class="value">${stats.data.last_24h}</div></div>
+      <div class="stat-card"><div class="label">7 Days</div><div class="value">${stats.data.last_7d}</div></div>
+      <div class="stat-card"><div class="label">30 Days</div><div class="value">${stats.data.last_30d}</div></div>
+    </div>
+    <div class="card"><h2>Retention <button class="btn btn-sm btn-primary" onclick="auditCompress()">Compress &gt;7d</button></h2>
+      ${ret.data?`<table><tr><td>Compressible (&gt;7d)</td><td>${ret.data.compressible}</td><td>Deletable (&gt;30d)</td><td>${ret.data.deletable}</td></tr></table>`:''}</div>
+    <h2 style="font-size:14px;font-weight:600;margin:12px 0">Recent Entries</h2>
+    ${buildTable(logs.data,[
+      {key:'created_at',label:'Time',render:v=>new Date(v).toLocaleString()},
+      {key:'username',label:'User'},
+      {key:'action_type',label:'Action',render:v=>`<span class="badge badge-blue">${v}</span>`},
+      {key:'entity_type',label:'Entity'},
+      {key:'entity_id',label:'ID',render:v=>v?v.substring(0,8)+'...':'-'}
+    ],()=>'')}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+async function auditCompress() { try { const r=await api('/audit/compress',{method:'POST',body:JSON.stringify({olderThanDays:7})}); toast(r.message,'success'); render_audit(document.getElementById('pageContent')); } catch(e) { toast(e.message,'error'); } }
+
+// ==================== SYNC ====================
+async function render_sync(el) {
+  try { const d=await api('/sync');
+    el.innerHTML=`<h2 style="font-size:16px;font-weight:600;margin-bottom:12px">Sync Gateways</h2><div style="margin-bottom:12px"><span class="badge badge-green">${d.online} Online</span> <span class="badge badge-red">${d.offline} Offline</span></div>
+    ${buildTable(d.data,[
+      {key:'name',label:'Gateway'},
+      {key:'areaCode',label:'Area'},
+      {key:'port',label:'Port'},
+      {key:'online',label:'Status',render:v=>`<span class="status-dot ${v?'online':'offline'}"></span>${v?'Online':'Offline'}`},
+      {key:'latency',label:'Latency',render:v=>v!==null?v+'ms':'-'}
+    ],()=>'')}`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+
+// ==================== SETTINGS ====================
+async function render_api_control(el) {
+  try {
+    const d = await api('/api-control');
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 style="font-size:16px;font-weight:600">API Control (${d.total} endpoints)</h2>
+        <div><span class="badge badge-green">${d.enabled} Enabled</span> <span class="badge badge-red">${d.disabled} Disabled</span></div>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th style="width:50px">Status</th><th>API</th><th>Module</th><th>Methods</th><th>Route</th><th style="width:80px">Action</th></tr></thead>
+          <tbody>
+            ${d.data.map(a => `
+              <tr>
+                <td><span class="status-dot ${a.enabled ? 'online' : 'offline'}"></span></td>
+                <td><strong>${a.name}</strong></td>
+                <td><span class="badge badge-blue">${a.module}</span></td>
+                <td style="font-size:11px;color:var(--text2)">${a.methods}</td>
+                <td style="font-size:11px;font-family:monospace;color:var(--text2)">${a.route}</td>
+                <td>
+                  <button class="btn btn-sm ${a.enabled ? 'btn-warning' : 'btn-success'}" onclick="toggleApi('${a.id}')">
+                    ${a.enabled ? 'Disable' : 'Enable'}
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+async function toggleApi(id) {
+  try {
+    const r = await api('/api-control/' + id + '/toggle', { method: 'POST' });
+    toast(r.message, r.enabled ? 'success' : 'error');
+    render_api_control(document.getElementById('pageContent'));
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function render_settings(el) {
+  try { const d=await api('/settings');
+    const config=await api('/settings/database');
+    el.innerHTML=`<h2 style="font-size:16px;font-weight:600;margin-bottom:12px">System Settings</h2>
+      <div class="card"><h2>Configuration</h2>
+      <table>${Object.entries(d.data||{}).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')||'<tr><td colspan="2" class="empty">No settings configured</td></tr>'}</table></div>
+      <div class="card"><h2>Database Info</h2><table>
+        <tr><td>Database</td><td>${config.data.db}</td></tr>
+        <tr><td>PostgreSQL</td><td>${(config.data.pg_version||'').substring(0,40)}</td></tr>
+        <tr><td>Areas</td><td>${config.data.areas}</td></tr>
+        <tr><td>Projects</td><td>${config.data.projects}</td></tr>
+        <tr><td>Users</td><td>${config.data.users}</td></tr>
+        <tr><td>Roles</td><td>${config.data.roles}</td></tr>
+        <tr><td>Permissions</td><td>${config.data.permissions}</td></tr>
+      </table></div>`;
+  } catch(e) { el.innerHTML=`<div class="empty">Error: ${e.message}</div>`; }
+}
+
+// Welcome
+refreshUser();
+function refreshUser() {
+  document.getElementById('userName').textContent = user ? user.username : '';
+  document.getElementById('userRole').textContent = user ? user.role : '';
+}
+</script>
+</body>
+</html>

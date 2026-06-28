@@ -1,4 +1,4 @@
-# T007 Validation Report — Meter Pulse
+# T007 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T007 — Add correlation-ID middleware

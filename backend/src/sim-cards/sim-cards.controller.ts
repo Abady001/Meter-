@@ -24,12 +24,12 @@ import { UpdateSimCardDto } from './dto/update-sim-card.dto';
 import { QuerySimCardDto } from './dto/query-sim-card.dto';
 
 @Controller('sim-cards')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class SimCardsController {
   constructor(private readonly simCardsService: SimCardsService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('sim_card', 'create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateSimCardDto, @Req() req: { user: { userId: string } }) {
@@ -37,10 +37,9 @@ export class SimCardsController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -51,10 +50,9 @@ export class SimCardsController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(
     Role.OPERATOR,
-    Role.PROJECT_ADMIN,
+    Role.ADMIN,
     Role.SUPER_ADMIN,
     Role.TECHNICIAN,
     Role.FINANCE,
@@ -65,8 +63,7 @@ export class SimCardsController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.OPERATOR, Role.PROJECT_ADMIN, Role.SUPER_ADMIN)
+  @Roles(Role.OPERATOR, Role.ADMIN, Role.SUPER_ADMIN)
   @Audit('sim_card', 'update')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -77,7 +74,6 @@ export class SimCardsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.SUPER_ADMIN)
   @Audit('sim_card', 'deactivate')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -86,6 +82,7 @@ export class SimCardsController {
   }
 
   @Get(':simId/eligibility')
+  @Roles(Role.OPERATOR, Role.TECHNICIAN, Role.ADMIN, Role.SUPER_ADMIN)
   async getEligibility(@Param('simId', ParseUUIDPipe) simId: string) {
     return this.simCardsService.getEligibility(simId);
   }

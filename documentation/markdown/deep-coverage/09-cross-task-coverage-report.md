@@ -33,7 +33,7 @@
 ## Contract Consistency
 | Contract | T022 Compatible | Notes |
 |---|---|---|
-| `meter-pulse-api.yaml` | ✅ | No API changes that affect contracts |
+| `meter-verse-api.yaml` | ✅ | No API changes that affect contracts |
 | `MeterAssignRequest` schema | ✅ | Unchanged |
 | `SimEligibility` schema | ✅ | Unchanged |
 | Error envelope | ✅ | Unchanged |

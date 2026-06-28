@@ -10,29 +10,29 @@
 
 | View | Schema | Source Table | Filter | Status |
 |------|--------|-------------|--------|--------|
-| `meter_assignment_active_view` | sim_system | meter_assignments | end_at IS NULL | ✅ Created |
+| `Meter_Verse_assignment_active_view` | sim_system | Meter_Verse_assignments | end_at IS NULL | ✅ Created |
 | `sim_assignment_active_view` | sim_system | sim_assignments | end_at IS NULL | ✅ Created |
 | `customer_statement_view` | sim_system | customer_ledger_entries | — | ✅ Created |
 
 ## 2. View Column Definitions
 
-### meter_assignment_active_view (7 columns)
+### Meter_Verse_assignment_active_view (7 columns)
 | Column | Type | Source |
 |--------|------|--------|
-| assignment_id | text | meter_assignments.id |
-| meter_id | text | meter_assignments.meter_id |
-| unit_id | text | meter_assignments.unit_id |
-| customer_id | text | meter_assignments.customer_id |
-| start_at | timestamp | meter_assignments.start_at |
-| assigned_by | text | meter_assignments.created_by |
-| created_at | timestamp | meter_assignments.created_at |
+| assignment_id | text | Meter_Verse_assignments.id |
+| Meter_Verse_id | text | Meter_Verse_assignments.Meter_Verse_id |
+| unit_id | text | Meter_Verse_assignments.unit_id |
+| customer_id | text | Meter_Verse_assignments.customer_id |
+| start_at | timestamp | Meter_Verse_assignments.start_at |
+| assigned_by | text | Meter_Verse_assignments.created_by |
+| created_at | timestamp | Meter_Verse_assignments.created_at |
 
 ### sim_assignment_active_view (6 columns)
 | Column | Type | Source |
 |--------|------|--------|
 | assignment_id | text | sim_assignments.id |
 | sim_id | text | sim_assignments.sim_id |
-| meter_id | text | sim_assignments.meter_id |
+| Meter_Verse_id | text | sim_assignments.Meter_Verse_id |
 | start_at | timestamp | sim_assignments.start_at |
 | assigned_by | text | sim_assignments.created_by |
 | created_at | timestamp | sim_assignments.created_at |
@@ -65,15 +65,15 @@
 ```sql
 SELECT column_name FROM information_schema.columns
 WHERE table_schema='sim_system'
-  AND table_name='meter_assignment_active_view'
+  AND table_name='Meter_Verse_assignment_active_view'
 ORDER BY ordinal_position;
--- ✅ Returns 7 columns: assignment_id, meter_id, unit_id, customer_id, start_at, assigned_by, created_at
+-- ✅ Returns 7 columns: assignment_id, Meter_Verse_id, unit_id, customer_id, start_at, assigned_by, created_at
 
 SELECT column_name FROM information_schema.columns
 WHERE table_schema='sim_system'
   AND table_name='sim_assignment_active_view'
 ORDER BY ordinal_position;
--- ✅ Returns 6 columns: assignment_id, sim_id, meter_id, start_at, assigned_by, created_at
+-- ✅ Returns 6 columns: assignment_id, sim_id, Meter_Verse_id, start_at, assigned_by, created_at
 
 SELECT column_name FROM information_schema.columns
 WHERE table_schema='sim_system'
@@ -86,7 +86,7 @@ ORDER BY ordinal_position;
 
 | View | Dependent Tables | Migration Dependency |
 |------|-----------------|---------------------|
-| meter_assignment_active_view | meter_assignments | T014 |
+| Meter_Verse_assignment_active_view | Meter_Verse_assignments | T014 |
 | sim_assignment_active_view | sim_assignments | T014 |
 | customer_statement_view | customer_ledger_entries | T017 |
 
@@ -94,7 +94,7 @@ ORDER BY ordinal_position;
 Views use `CREATE OR REPLACE VIEW` — they reflect source table data in real time. No refresh needed.
 
 ### Rename Risks
-- If `meter_assignments` table or columns are renamed, this view will break
+- If `Meter_Verse_assignments` table or columns are renamed, this view will break
 - If `sim_assignments` table or columns are renamed, this view will break
 - If `customer_ledger_entries` table or columns are renamed, this view will break
 - All views are schema-qualified under `sim_system`

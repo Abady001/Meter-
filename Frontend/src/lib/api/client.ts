@@ -17,6 +17,32 @@ export interface ApiRequestOptions extends Omit<RequestInit, 'headers'> {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api/v1';
 
+let cachedCsrfToken: string | null = null;
+
+export async function getCsrfToken(): Promise<string | null> {
+  if (cachedCsrfToken) return cachedCsrfToken;
+
+  if (typeof document !== 'undefined') {
+    const match = document.cookie.match(/(?:^|;\s*)csrf-token=([^;]*)/);
+    if (match) {
+      cachedCsrfToken = match[1];
+      return cachedCsrfToken;
+    }
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/auth/csrf-token`);
+    if (response.ok) {
+      const data = await response.json();
+      cachedCsrfToken = data.token ?? data.csrfToken ?? null;
+    }
+  } catch {
+    // API not available — CSRF is best-effort
+  }
+
+  return cachedCsrfToken;
+}
+
 function generateCorrelationId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -43,7 +69,6 @@ function buildUrl(endpoint: string, params?: Record<string, string | number | bo
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await parseApiError(response);
-    console.error(`[API] ${error.code} (${error.statusCode}) correlationId=${error.correlationId}`, error.details ?? '');
     throw error;
   }
 
@@ -63,13 +88,32 @@ export function createApiClient(customHeaders?: () => Record<string, string>): A
   return async <T = unknown>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> => {
     const correlationId = generateCorrelationId();
 
+    // Send area/project context from localStorage
+    const areaHeader: Record<string, string> = {};
+    if (typeof window !== 'undefined') {
+      const area = localStorage.getItem('selected-area');
+      const project = localStorage.getItem('selected-project');
+      if (area && area !== '__all_areas__') areaHeader['x-area-id'] = area;
+      if (project && project !== '__all_projects__') areaHeader['x-project-id'] = project;
+    }
+
+    const method = options.method ?? 'GET';
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'x-correlation-id': correlationId,
+      ...areaHeader,
       ...customHeaders?.(),
       ...(await getAuthHeaders()),
       ...options.headers,
     };
+
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      const csrfToken = await getCsrfToken();
+      if (csrfToken) {
+        headers['x-csrf-token'] = csrfToken;
+      }
+    }
 
     const url = buildUrl(endpoint, options.params);
 

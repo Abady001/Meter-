@@ -40,10 +40,25 @@ export class QueryMeterDto {
     | 'terminated'
     | 'retired';
 
-  @ApiPropertyOptional({ enum: ['electricity', 'water_main', 'water_child'] })
+  @ApiPropertyOptional({ enum: ['electricity', 'water_main', 'water_child', 'solar', 'gas', 'chilled_water', 'outdoor_unit'] })
   @IsOptional()
-  @IsEnum(['electricity', 'water_main', 'water_child'] as const)
-  meterType?: 'electricity' | 'water_main' | 'water_child';
+  @IsString()
+  meterType?: string;
+
+  @ApiPropertyOptional({ enum: ['1PH', '3PH'] })
+  @IsOptional()
+  @IsString()
+  phaseType?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  ampRating?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  diameter?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

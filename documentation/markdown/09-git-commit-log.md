@@ -1,4 +1,4 @@
-# Git Commit Log — Meter Pulse
+# Git Commit Log — Meter Verse
 
 > Full commit history with timestamps, messages, and file counts.
 > Last updated: 2026-06-01
@@ -39,7 +39,7 @@
 | 2026-05-26 | `42db219` | T013: fix migration — remove audit_log CREATE TABLE (already on main) | 1 | +-15 | -0 |
 | 2026-05-26 | `d844c0e` | T014: fix migration — remove audit_log CREATE TABLE (already on main) | 1 | +-15 | -0 |
 | 2026-05-26 | `20103d3` | T015: docs, validation report, graphify, tasks update | 5 | ++78 | -0 |
-| 2026-05-26 | `79d9620` | T012: build contract-test harness against meter-pulse-api.yaml | 4 | ++310 | -0 |
+| 2026-05-26 | `79d9620` | T012: build contract-test harness against meter-verse-api.yaml | 4 | ++310 | -0 |
 | 2026-05-26 | `dde8aa3` | T012: add response body schema validation + docs | 3 | ++120 | -0 |
 | 2026-05-26 | `a5532f9` | test(backend): finalize T012 contract harness | 3 | ++42 | -0 |
 | 2026-05-26 | `1912d9d` | T012: contract test harness with YAML spec loading, deref, AJV validation | 9 | ++680 | -0 |

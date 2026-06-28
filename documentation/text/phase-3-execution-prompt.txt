@@ -1,20 +1,20 @@
-﻿Meter Pulse â€” Phase 3 Master Execution Prompt
+Meter Verse — Phase 3 Master Execution Prompt
 
 Full governance, validation, recovery, documentation, and quality gate framework.
 Saved from user prompt on 2026-05-29.
-Execute T023â†’T042 sequentially.
+Execute T023→T042 sequentially.
 
 Execution Mode
-- Sequential: T023 â†’ T042, never skip order
-- For every task: Deep Analysis â†’ Dependency Review â†’ Hidden Requirements â†’ Design â†’ Implementation â†’ Validation (3 loops) â†’ Documentation â†’ Backup â†’ Recovery â†’ Git â†’ Closeout
+- Sequential: T023 → T042, never skip order
+- For every task: Deep Analysis → Dependency Review → Hidden Requirements → Design → Implementation → Validation (3 loops) → Documentation → Backup → Recovery → Git → Closeout
 
 Key Rules
-- SpecKit is source of truth â€” never bypass
+- SpecKit is source of truth — never bypass
 - Graphify-first before frontend work
-- Test loop 3x per task (local â†’ SpecKit â†’ OpenSpec â†’ Open-Interpreter â†’ Graphify)
+- Test loop 3x per task (local → SpecKit → OpenSpec → Open-Interpreter → Graphify)
 - Deep-Coverage Gate before every implementation
-- Cross-task validation after every task (T001â†’Current)
-- Target 95%+ confidence â€” do not claim 100%
+- Cross-task validation after every task (T001→Current)
+- Target 95%+ confidence — do not claim 100%
 - Never break: ErrorEnvelope, CorrelationMiddleware, Idempotency, Contract Harness, Graphify
 
 Phase 3 Tasks (20 total)
@@ -23,8 +23,8 @@ Phase 3 Tasks (20 total)
  --- --- --- 
   T023   Contract test assignMeter (200+409)   Test  
   T024   Contract test terminateMeter + getSimEligibility   Test  
-  T025   Integration test â€” assignment conflict   Test  
-  T026   Integration test â€” SIM reuse   Test  
+  T025   Integration test — assignment conflict   Test  
+  T026   Integration test — SIM reuse   Test  
   T027   Projects module (CRUD + config)   Backend  
   T028   Locations module (CRUD hierarchy)   Backend  
   T029   Customers module + CustomerUnitAssignment   Backend  

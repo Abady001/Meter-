@@ -1,4 +1,4 @@
-# Memory Files — Meter Pulse
+# Memory Files — Meter Verse
 
 > All agent memory files: AGENTS.md, Speckit constitution, skills, OpenCode config, Graphify.
 > Last updated: 2026-06-01 (RCA Sprint + CI fixes + T061-T065 implementation + 373/373 tests)
@@ -57,7 +57,7 @@
 - **Story**: Foundational
 - **Status**: Complete
 - **What changed**: Created setup.ts (YAML loading, custom $ref deref, AJV validation, supertest app factory), 8 contract tests, added GET /health to OpenAPI spec
-- **Files**: `test/contract/setup.ts`, `test/contract/setup.spec.ts`, `specs/*/contracts/meter-pulse-api.yaml`
+- **Files**: `test/contract/setup.ts`, `test/contract/setup.spec.ts`, `specs/*/contracts/meter-verse-api.yaml`
 - **Packages**: supertest, ajv, ajv-formats, js-yaml (@apidevtools/swagger-parser removed — ESM-only)
 - **Validation**: 77 tests passing, build clean
 - **Next task**: T013
@@ -86,7 +86,7 @@
 
 - **Story**: Phase 2 (schema)
 - **Status**: Complete
-- **What changed**: Reading with unique (meter_id, reading_at, source), jsonb defaults, DECIMAL(12,3)
+- **What changed**: Reading with unique (Meter_Verse_id, reading_at, source), jsonb defaults, DECIMAL(12,3)
 - **Next task**: T016
 
 ---
@@ -123,8 +123,8 @@
 
 - **Story**: Phase 2 (schema)
 - **Status**: Complete
-- **What changed**: 3 views — meter_assignment_active_view (7 cols), sim_assignment_active_view (6 cols), customer_statement_view (8 cols with debit/credit from amount_delta, running_balance)
-- **Dependencies**: T014 (meter_assignments, sim_assignments), T017 (customer_ledger_entries)
+- **What changed**: 3 views — Meter_Verse_assignment_active_view (7 cols), sim_assignment_active_view (6 cols), customer_statement_view (8 cols with debit/credit from amount_delta, running_balance)
+- **Dependencies**: T014 (Meter_Verse_assignments, sim_assignments), T017 (customer_ledger_entries)
 - **Risks**: Views break if source tables/columns renamed; document dependency chain
 - **Next task**: T020
 

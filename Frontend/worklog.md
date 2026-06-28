@@ -1,7 +1,7 @@
 ---
 Task ID: 1
 Agent: main-coordinator
-Task: Build complete Meter Pulse frontend application
+Task: Build complete Meter Verse frontend application
 
 Work Log:
 - Created /src/lib/types.ts with all TypeScript interfaces (User, Project, Meter, Customer, Reading, Invoice, etc.)

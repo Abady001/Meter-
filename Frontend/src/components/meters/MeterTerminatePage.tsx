@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockMeters, mockSimCards, mockCustomers } from '@/lib/mock-data';
+import { useSimCardsList } from '@/hooks/use-sim-cards';import { useCustomersList } from '@/hooks/use-customers';
 import { useMetersList } from '@/hooks/use-meters';
 import { useTerminateMeter } from '@/hooks/use-terminate-meter';
 import { PageHeader } from '@/components/shared/PageHelpers';
@@ -16,8 +16,10 @@ import {
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { XCircle, AlertTriangle, Check, Loader2 } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 export default function MeterTerminatePage() {
+  const t = useT();
   const [meterId, setMeterId] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [reason, setReason] = useState('');
@@ -27,10 +29,10 @@ export default function MeterTerminatePage() {
   const metersQuery = useMetersList();
   const terminateMutation = useTerminateMeter();
 
-  const allMeters = metersQuery.data ?? mockMeters;
+  const allMeters = metersQuery.data ?? [];
   const meter = allMeters.find((m) => m.id === meterId);
-  const sim = meter?.simCardId ? mockSimCards.find((s) => s.id === meter.simCardId) : null;
-  const customer = meter?.customerId ? mockCustomers.find((c) => c.id === meter.customerId) : null;
+  const sim = meter?.simCardId ? (sims ?? []).find((s) => s.id === meter.simCardId) : null;
+  const customer = meter?.customerId ? (customers ?? []).find((c) => c.id === meter.customerId) : null;
   const activeMeters = allMeters.filter((m) => m.status === 'active' || m.status === 'offline');
 
   const validate = () => {
@@ -56,15 +58,15 @@ export default function MeterTerminatePage() {
 
     try {
       await terminateMutation.mutateAsync({ meterId, data: payload });
-      toast.success('Meter terminated successfully');
-    } catch {
-      toast.success('Meter terminated successfully (mock)');
+      toast.success(t('meters.terminate.success'));
+    } catch (error: any) {
+      toast.error(error?.message || t('common.error'));
     }
   };
 
   return (
     <div>
-      <PageHeader title="Terminate Meter" subtitle="Permanently deactivate a meter connection" />
+      <PageHeader title={t('meters.terminate.title')} subtitle={t('meters.terminate.subtitle')} />
 
       <div className="max-w-2xl space-y-6">
         {/* Meter Selector */}
@@ -90,12 +92,12 @@ export default function MeterTerminatePage() {
             <CardContent className="p-6">
               <h3 className="font-semibold mb-4">Meter Details</h3>
               <div className="text-sm space-y-2 p-4 rounded-lg bg-muted/30">
-                <div className="flex justify-between"><span className="text-muted-foreground">Serial</span><span className="font-mono">{meter.serialNumber}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Type</span><StatusBadge status={meter.meterType} /></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Status</span><StatusBadge status={meter.status} /></div>
-                {customer && <div className="flex justify-between"><span className="text-muted-foreground">Customer</span><span>{customer.name}</span></div>}
-                {meter.unitNumber && <div className="flex justify-between"><span className="text-muted-foreground">Unit</span><span>{meter.unitNumber}</span></div>}
-                {sim && <div className="flex justify-between"><span className="text-muted-foreground">SIM</span><span>{sim.msisdn}</span></div>}
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.serialNumber')}</span><span className="font-mono">{meter.serialNumber}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.type')}</span><StatusBadge status={meter.meterType} /></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.status')}</span><StatusBadge status={meter.status} /></div>
+                {customer && <div className="flex justify-between"><span className="text-muted-foreground">{t('meters.customer')}</span><span>{customer.name}</span></div>}
+                {meter.unitNumber && <div className="flex justify-between"><span className="text-muted-foreground">{t('locations.unit')}</span><span>{meter.unitNumber}</span></div>}
+                {sim && <div className="flex justify-between"><span className="text-muted-foreground">{t('simCards.phoneNumber')}</span><span>{sim.msisdn}</span></div>}
               </div>
             </CardContent>
           </Card>
@@ -112,12 +114,12 @@ export default function MeterTerminatePage() {
                 {validationErrors.date && <p className="text-xs text-red-500 mt-1">{validationErrors.date}</p>}
               </div>
               <div>
-                <Label>Final Reading</Label>
+                <Label>{t('meters.terminate.finalReading')}</Label>
                 <Input type="number" value={finalReading} onChange={(e) => setFinalReading(e.target.value)} placeholder="Enter final meter reading" />
                 {validationErrors.finalReading && <p className="text-xs text-red-500 mt-1">{validationErrors.finalReading}</p>}
               </div>
               <div>
-                <Label>Reason</Label>
+                <Label>{t('meters.terminate.reason')}</Label>
                 <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Enter termination reason..." rows={3} />
                 {validationErrors.reason && <p className="text-xs text-red-500 mt-1">{validationErrors.reason}</p>}
               </div>
@@ -140,7 +142,7 @@ export default function MeterTerminatePage() {
               </ul>
               <Button className="mt-4 gap-2" onClick={handleConfirm} disabled={terminateMutation.isPending}>
                 {terminateMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                {terminateMutation.isPending ? 'Terminating...' : 'Confirm Termination'}
+                {terminateMutation.isPending ? t('common.loading').replace('...', '') + '...' : t('meters.terminate.submit')}
               </Button>
             </CardContent>
           </Card>

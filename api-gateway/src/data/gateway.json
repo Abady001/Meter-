@@ -1,0 +1,60 @@
+{
+  "apiKeys": [
+    {
+      "id": "e36f3ac7-b8ae-4840-8a0a-10b2a97150d8",
+      "key_name": "Dev Test Key",
+      "api_key": "mv_a7bc4923de63e4c439685e42d410ec254babdcb43b100166",
+      "allowed_methods": "GET",
+      "allowed_endpoints": "*",
+      "is_active": 1,
+      "max_users": -1,
+      "current_users": 0,
+      "license_key": "",
+      "start_date": null,
+      "end_date": null,
+      "never_expires": 0,
+      "rate_limit_per_min": 30,
+      "created_by": "admin",
+      "created_at": "2026-06-19T14:09:48.411Z",
+      "updated_at": "2026-06-19T14:09:48.411Z"
+    }
+  ],
+  "apiLogs": [
+    {
+      "id": 1,
+      "api_key_id": "e36f3ac7-b8ae-4840-8a0a-10b2a97150d8",
+      "api_key_name": "Dev Test Key",
+      "method": "GET",
+      "endpoint": "/health",
+      "status_code": 200,
+      "ip_address": "::1",
+      "user_agent": "",
+      "response_time_ms": 684,
+      "blocked": 0,
+      "block_reason": null,
+      "created_at": "2026-06-19T14:10:42.562Z"
+    },
+    {
+      "id": 2,
+      "api_key_id": null,
+      "api_key_name": "unknown",
+      "method": "GET",
+      "endpoint": "/invoices",
+      "status_code": 200,
+      "ip_address": "::1",
+      "user_agent": "curl/8.19.0",
+      "response_time_ms": 919,
+      "blocked": 0,
+      "block_reason": null,
+      "created_at": "2026-06-19T16:23:50.911Z"
+    }
+  ],
+  "apiAlerts": [],
+  "apiConfig": {
+    "gateway_name": "Meter Verse API Gateway",
+    "core_api_url": "http://localhost:3001/api/v1",
+    "auto_disable_error_threshold": "10",
+    "auto_disable_window_minutes": "5",
+    "alert_email": "admin@meter-verse.com"
+  }
+}

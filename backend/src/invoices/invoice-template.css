@@ -1,0 +1,29 @@
+body{font-family:Arial,'DejaVu Sans',sans-serif;font-size:9pt;margin:0;color:#000;background:#fff}
+.p{width:413pt;margin:0 auto;position:relative;height:285pt}
+.bn{position:absolute;top:6pt;left:2pt;width:409pt;height:12pt;background:#CC0000}
+.pjt{position:absolute;top:24pt;left:2pt;width:121pt;text-align:right;font-size:12pt;color:#000}
+.un{position:absolute;top:39pt;left:2pt;width:121pt;text-align:right;font-size:12pt;color:#000}
+.lbl_a{position:absolute;top:24pt;left:123pt;width:37pt;text-align:right;font-size:12pt;font-weight:bold;color:#000066}
+.lbl_u{position:absolute;top:39pt;left:123pt;width:37pt;text-align:right;font-size:12pt;font-weight:bold;color:#000066}
+.tt{position:absolute;top:24pt;left:160pt;width:100pt;text-align:center;font-size:15pt;font-weight:bold;color:#000066}
+.inv_no{position:absolute;top:38pt;left:160pt;width:75pt;text-align:right;font-size:12pt;font-weight:bold;color:#000}
+.inv_lbl{position:absolute;top:38pt;left:235pt;width:25pt;font-size:12pt;font-weight:bold;color:#000066}
+.lg{position:absolute;top:26pt;left:313pt;width:100pt;height:28pt;text-align:left}
+.lg img{max-width:100pt;max-height:28pt}
+.lic{position:absolute;top:64pt;left:295pt;width:118pt;height:34pt;font-size:9pt;font-weight:bold;text-align:center;border:0.25pt solid #999;background:#fff;display:flex;align-items:center;justify-content:center}
+.ci{position:absolute;top:98pt;left:354pt;width:59pt;height:68pt;font-size:6pt;text-align:center;border:0.25pt solid #999;background:#CCCCFF;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rh{position:absolute;width:413pt;height:17pt}
+.rh span{position:absolute;top:0;height:15pt;border:0.25pt solid #999;background:#CCCCFF;font-weight:bold;text-align:center;font-size:9pt;display:flex;align-items:center;justify-content:center}
+.rd{position:absolute;width:413pt;height:17pt}
+.rd span{position:absolute;top:0;height:15pt;border:0.25pt solid #999;font-size:9pt;display:flex;align-items:center;justify-content:center;text-align:center}
+.tl{position:absolute;top:200pt;left:0pt;width:59pt;height:34pt;background:#CCCCFF;font-weight:bold;text-align:center;font-size:9pt;display:flex;align-items:center;justify-content:center;border:0.25pt solid #999}
+.tw{position:absolute;top:200pt;left:59pt;width:295pt;height:34pt;font-size:9pt;font-weight:bold;text-align:center;border:0.25pt solid #999;display:flex;align-items:center;justify-content:center}
+.tr{position:absolute;top:200pt;left:354pt;width:59pt;height:34pt;background:#CCCCFF;font-weight:bold;text-align:center;font-size:9pt;display:flex;align-items:center;justify-content:center;border:0.25pt solid #999}
+.tv{position:absolute;top:217pt;left:0pt;width:59pt;height:15pt;font-weight:bold;text-align:center;font-size:9pt;display:flex;align-items:center;justify-content:center;border:0.25pt solid #999;border-top:none}
+.line{position:absolute;top:240pt;left:2pt;width:409pt;border-top:4pt solid #000099}
+.sg_img{position:absolute;top:249pt;left:200pt;width:111pt;height:20pt;text-align:center}
+.sg_img img{max-height:20pt;max-width:111pt}
+.sg_lbl{position:absolute;top:249pt;left:311pt;width:93pt;height:20pt;font-size:12pt;font-weight:bold;color:#000066;text-align:right;display:flex;align-items:center}
+.ft{position:absolute;top:278pt;left:0;width:413pt;text-align:center;font-size:5pt;color:#666}
+.dl{position:absolute;top:14pt;left:16pt;right:16pt;bottom:16pt;color:#FF0033;font-size:60pt;font-weight:bold;text-align:center;opacity:0.25;pointer-events:none;z-index:999;display:flex;align-items:center;justify-content:center}
+@media print{.p{width:413pt}}

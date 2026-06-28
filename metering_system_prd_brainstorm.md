@@ -1,12 +1,12 @@
 # Product Requirements Document (PRD)
 
-# Meter Pulse: Utility Metering & Billing Management Platform
+# Meter Verse: Utility Metering & Billing Management Platform
 
 ## Document Status
 
 | Field | Value |
 |---|---|
-| Product Name | Meter Pulse |
+| Product Name | Meter Verse |
 | Product Type | Utility Metering, Billing, and Customer Balance Management System |
 | Version | PRD v1.0 Draft |
 | Status | Planning / Requirements Definition |
@@ -14,7 +14,7 @@
 | Planned Backend | NestJS |
 | Planned Database | PostgreSQL |
 | Existing Database Source | `sim_system` |
-| Target PostgreSQL Database | `meter_pulse` |
+| Target PostgreSQL Database | `Meter_Verse_pulse` |
 | Target PostgreSQL Schema | `sim_system` |
 
 ---
@@ -23,13 +23,13 @@
 
 ## 1.1 Product Name
 
-**Meter Pulse: Utility Metering & Billing Management Platform**
+**Meter Verse: Utility Metering & Billing Management Platform**
 
 ---
 
 ## 1.2 Product Description
 
-Meter Pulse is a web-based platform for managing electricity meters, main water meters, and child/sub-water meters across projects, buildings, floors, units, and customers.
+Meter Verse is a web-based platform for managing electricity meters, main water meters, and child/sub-water meters across projects, buildings, floors, units, and customers.
 
 The system connects every meter to a customer and physical location, tracks the meter SIM card and IP address, collects meter readings, calculates consumption, generates invoices, records payments, and maintains customer balances.
 
@@ -1530,7 +1530,7 @@ Planned Next.js pages may include:
 
 # 17. Final Product Direction
 
-Meter Pulse should be treated as:
+Meter Verse should be treated as:
 
 > A utility metering and billing platform where SIM cards support meter connectivity, but the core business value is accurate consumption tracking, invoice generation, payment tracking, and customer balance management.
 

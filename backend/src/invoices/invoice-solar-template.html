@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <style>{{CSS_CONTENT}}</style>
+</head>
+<body>
+  <div class="invoice-container">
+    {{DELETED_WATERMARK}}
+
+    <div class="header">
+      <table class="header-table">
+        <tr>
+          <td class="header-left">
+            <div class="company-name">{{COMPANY_NAME}}</div>
+            <div class="company-license">{{COMPANY_LICENSE}}</div>
+          </td>
+          <td class="header-center">
+            <div class="invoice-title">{{INVOICE_TITLE}} <span style="color:#e94560;font-size:9pt">(SOLAR)</span></div>
+            <div class="invoice-number"># {{INVOICE_NUMBER}}</div>
+          </td>
+          <td class="header-right">{{LOGO_IMG}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="info-section">
+      <table class="info-table">
+        <tr>
+          <td class="info-label">العميل</td>
+          <td class="info-value">{{CUSTOMER_NAME}}</td>
+          <td class="info-label">كود العميل</td>
+          <td class="info-value">{{CUSTOMER_CODE}}</td>
+        </tr>
+        <tr>
+          <td class="info-label">المنطقة</td>
+          <td class="info-value">{{AREA_NAME}}</td>
+          <td class="info-label">المشروع</td>
+          <td class="info-value">{{PROJECT_NAME}}</td>
+        </tr>
+        <tr>
+          <td class="info-label">العداد (شبكة)</td>
+          <td class="info-value">{{METER_SERIAL}}</td>
+          <td class="info-label">فترة المحاسبة</td>
+          <td class="info-value">{{BILLING_PERIOD}}</td>
+        </tr>
+        <tr>
+          <td class="info-label">تاريخ الإصدار</td>
+          <td class="info-value">{{ISSUE_DATE}}</td>
+          <td class="info-label">تاريخ الاستحقاق</td>
+          <td class="info-value">{{DUE_DATE}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-title">قراءات الطاقة الشمسية</div>
+    <table class="data-table">
+      <tr>
+        <th>القراءة الحالية (تصدير)</th>
+        <th>القراءة السابقة (تصدير)</th>
+        <th>الاستهلاك (شبكة)</th>
+        <th>وحدة القياس</th>
+      </tr>
+      <tr>
+        <td class="val-center">{{END_READING}}</td>
+        <td class="val-center">{{START_READING}}</td>
+        <td class="val-center val-bold">{{CONSUMPTION}}</td>
+        <td class="val-center">{{UNIT_LABEL}}</td>
+      </tr>
+    </table>
+
+    <div class="section-title">تفاصيل الفاتورة</div>
+    <table class="data-table">
+      <tr>
+        <th style="width:40%">البيان</th>
+        <th style="width:15%">الكمية</th>
+        <th style="width:15%">سعر الوحدة</th>
+        <th style="width:15%">الإجمالي</th>
+        <th style="width:15%">ملاحظات</th>
+      </tr>
+      {{CHARGE_ROWS}}
+      <tr class="subtotal-row">
+        <td colspan="3" class="val-left">صافي الاستهلاك</td>
+        <td class="val-left val-bold">{{SUBTOTAL}}</td>
+        <td></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3" class="val-left">الإجمالي النهائي</td>
+        <td class="val-left val-bold">{{TOTAL_AMOUNT}}</td>
+        <td></td>
+      </tr>
+    </table>
+
+    <div class="section-title">ملخص الحساب الشمسي</div>
+    <table class="summary-table">
+      <tr>
+        <td class="summary-label">رصيد المحفظة الشمسية</td>
+        <td class="summary-value">{{BALANCE_BEFORE}}</td>
+        <td class="summary-label">المدفوعات</td>
+        <td class="summary-value">{{PAYMENTS}}</td>
+      </tr>
+      <tr class="summary-total">
+        <td class="summary-label">الرصيد الحالي</td>
+        <td class="summary-value val-bold">{{BALANCE_AFTER}}</td>
+        <td class="summary-label">حالة الفاتورة</td>
+        <td class="summary-value">{{STATUS}}</td>
+      </tr>
+    </table>
+
+    <div class="words-section">{{AMOUNT_WORDS_AR}}</div>
+    <div class="bank-details">{{COMPANY_BANK_DETAILS}}</div>
+
+    <div class="footer">
+      <table class="footer-table">
+        <tr>
+          <td class="footer-right">
+            <div class="sig-label">العضو المنتدب /</div>
+            {{SIGNATURE_IMG}}
+          </td>
+          <td class="footer-left">
+            <div class="generated-at">{{GENERATED_AT}}</div>
+            <div class="powered-by">Meter Verse | Solar</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

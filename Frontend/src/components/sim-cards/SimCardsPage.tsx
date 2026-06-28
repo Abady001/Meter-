@@ -1,6 +1,5 @@
 'use client';
 
-import { mockSimCards } from '@/lib/mock-data';
 import { useSimCardsList } from '@/hooks/use-sim-cards';
 import { QueryBoundary } from '@/components/shared/QueryBoundary';
 import { PageHeader } from '@/components/shared/PageHelpers';
@@ -10,6 +9,7 @@ import { formatDate } from '@/components/shared/PageHelpers';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 function SimEligibilityBadge({ status, assignmentEndDate }: { status: string; assignmentEndDate?: string }) {
   const isEligible = status === 'available' || status === 'reusable';
@@ -72,22 +72,23 @@ function SimEligibilityBadge({ status, assignmentEndDate }: { status: string; as
 }
 
 export default function SimCardsPage() {
+  const t = useT();
   const simCardsQuery = useSimCardsList();
-  const simCards = simCardsQuery.data ?? mockSimCards;
+  const simCards = simCardsQuery.data ?? [];
   const providers = [...new Set(simCards.map((s) => s.provider))];
 
   const columns = [
     {
-      key: 'iccid', label: 'ICCID', sortable: true,
+      key: 'iccid', label: t('simCards.iccid'), sortable: true,
       render: (v: string) => <span className="font-mono text-xs">{v.slice(0, 12)}...{v.slice(-4)}</span>,
     },
-    { key: 'msisdn', label: 'MSISDN', sortable: true },
+    { key: 'msisdn', label: t('simCards.phoneNumber'), sortable: true },
     { key: 'ipAddress', label: 'IP Address', sortable: true, render: (v: string) => v || '-' },
     {
       key: 'ipType', label: 'IP Type', width: '90px',
       render: (v: string) => <StatusBadge status={v} />,
     },
-    { key: 'provider', label: 'Provider', sortable: true },
+    { key: 'provider', label: t('simCards.provider'), sortable: true },
     {
       key: 'assignedMeterSerial', label: 'Assigned Meter',
       render: (v: string) => v ? <span className="font-mono text-xs">{v}</span> : <span className="text-muted-foreground">-</span>,
@@ -99,7 +100,7 @@ export default function SimCardsPage() {
       ),
     },
     {
-      key: 'status', label: 'Status', sortable: true, width: '110px',
+      key: 'status', label: t('simCards.status'), sortable: true, width: '110px',
       render: (v: string) => <StatusBadge status={v} />,
     },
     {
@@ -110,7 +111,7 @@ export default function SimCardsPage() {
 
   return (
     <div>
-      <PageHeader title="SIM Cards & IP Addresses" subtitle="Manage SIM cards and IP assignments for meters" />
+      <PageHeader title={t('simCards.title')} subtitle={t('simCards.subtitle')} />
       <QueryBoundary query={simCardsQuery}>
       <SmartTable
         data={simCards}
@@ -138,10 +139,11 @@ export default function SimCardsPage() {
             ],
           },
         ]}
-        searchKeys={['iccid', 'msisdn', 'ipAddress', 'provider', 'assignedMeterSerial']}
-        searchPlaceholder="Search SIM cards..."
+        searchable
+        searchPlaceholder={t('simCards.search')}
       />
       </QueryBoundary>
     </div>
   );
 }
+

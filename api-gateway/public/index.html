@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meter Verse — API Gateway Admin</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;padding:20px}
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #1e293b}
+  .header h1{font-size:22px;color:#38bdf8}
+  .header .status{font-size:12px;padding:4px 12px;border-radius:12px;background:#065f46;color:#6ee7b7}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+  .stat-card{background:#1e293b;border-radius:10px;padding:14px;text-align:center}
+  .stat-card .num{font-size:24px;font-weight:700;color:#38bdf8}
+  .stat-card .label{font-size:11px;color:#94a3b8;margin-top:2px}
+  .stat-card.danger .num{color:#ef4444}
+  .stat-card.success .num{color:#22c55e}
+  .tabs{display:flex;gap:4px;margin-bottom:16px}
+  .tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;background:#1e293b;color:#94a3b8;border:none}
+  .tab.active{background:#38bdf8;color:#0f172a;font-weight:600}
+  .panel{display:none}
+  .panel.active{display:block}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #1e293b}
+  th{color:#94a3b8;font-weight:600;font-size:11px;text-transform:uppercase}
+  tr:hover{background:#1e293b}
+  .badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600}
+  .badge.active{background:#065f46;color:#6ee7b7}
+  .badge.inactive{background:#7f1d1d;color:#fca5a5}
+  .badge.critical{background:#7f1d1d;color:#fca5a5}
+  .badge.high{background:#92400e;color:#fcd34d}
+  .badge.medium{background:#1e3a5f;color:#93c5fd}
+  button{padding:6px 14px;border-radius:6px;border:none;cursor:pointer;font-size:12px;transition:.15s}
+  .btn-primary{background:#38bdf8;color:#0f172a}
+  .btn-danger{background:#ef4444;color:#fff}
+  .btn-sm{padding:3px 8px;font-size:10px}
+  .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);align-items:center;justify-content:center}
+  .modal.open{display:flex}
+  .modal-content{background:#1e293b;border-radius:12px;padding:24px;width:90%;max-width:500px;max-height:80vh;overflow-y:auto}
+  .modal-content h2{font-size:16px;margin-bottom:16px;color:#38bdf8}
+  .form-group{margin-bottom:12px}
+  .form-group label{display:block;font-size:12px;color:#94a3b8;margin-bottom:3px}
+  .form-group input,.form-group select{width:100%;padding:7px 10px;border-radius:6px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:13px}
+  .form-group input:focus{border-color:#38bdf8;outline:none}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .checkbox-group{display:flex;gap:10px;flex-wrap:wrap}
+  .checkbox-group label{display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer}
+  .actions{display:flex;gap:4px}
+  .empty{text-align:center;padding:30px;color:#475569;font-size:13px}
+  .log-blocked{color:#ef4444}
+  .log-ok{color:#22c55e}
+  input[type=checkbox]{width:auto}
+  .flex{display:flex;gap:8px;align-items:center}
+  .text-muted{color:#64748b;font-size:11px}
+  code{background:#0f172a;padding:1px 4px;border-radius:3px;font-size:11px}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>🔐 Meter Verse — API Gateway</h1>
+    <span class="text-muted">Security puffer zone · v1.0.0</span>
+  </div>
+  <div class="flex">
+    <span class="status" id="healthStatus">● Checking...</span>
+    <button class="btn-primary" onclick="openCreateModal()">+ New API Key</button>
+  </div>
+</div>
+
+<div class="stats" id="statsContainer">
+  <div class="stat-card"><div class="num" id="statKeys">-</div><div class="label">Active Keys</div></div>
+  <div class="stat-card"><div class="num" id="statRequests">-</div><div class="label">Requests (24h)</div></div>
+  <div class="stat-card danger"><div class="num" id="statBlocked">-</div><div class="label">Blocked (24h)</div></div>
+  <div class="stat-card"><div class="num" id="statAlerts">-</div><div class="label">Alerts</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('keys')">🔑 API Keys</button>
+  <button class="tab" onclick="switchTab('logs')">📋 Audit Logs</button>
+  <button class="tab" onclick="switchTab('alerts')">🚨 Alerts</button>
+  <button class="tab" onclick="switchTab('config')">⚙️ Config</button>
+</div>
+
+<!-- Keys Panel -->
+<div id="panel-keys" class="panel active">
+  <table><thead><tr><th>Name</th><th>API Key</th><th>Methods</th><th>Status</th><th>Rate</th><th>Users</th><th>Expires</th><th>Actions</th></tr></thead>
+    <tbody id="keysTable"><tr><td colspan="8" class="empty">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Logs Panel -->
+<div id="panel-logs" class="panel">
+  <div class="flex" style="margin-bottom:12px">
+    <select id="logFilter" onchange="loadLogs()" style="padding:6px 10px;border-radius:6px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:12px">
+      <option value="">All</option>
+      <option value="blocked">Blocked Only</option>
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PATCH">PATCH</option>
+      <option value="DELETE">DELETE</option>
+    </select>
+    <span class="text-muted" id="logCount"></span>
+  </div>
+  <table><thead><tr><th>Time</th><th>Key</th><th>Method</th><th>Endpoint</th><th>Status</th><th>IP</th><th>MS</th></tr></thead>
+    <tbody id="logsTable"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Alerts Panel -->
+<div id="panel-alerts" class="panel">
+  <table><thead><tr><th>Time</th><th>Type</th><th>Severity</th><th>Message</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody id="alertsTable"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- Config Panel -->
+<div id="panel-config" class="panel">
+  <div id="configForm" style="max-width:500px"></div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div id="keyModal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalTitle">New API Key</h2>
+    <input type="hidden" id="editKeyId">
+    <div class="form-group"><label>Key Name</label><input id="keyName" placeholder="e.g. Mobile App API"></div>
+    <div class="form-group"><label>Allowed Methods</label>
+      <div class="checkbox-group" id="methodCheckboxes">
+        <label><input type="checkbox" value="GET" checked> GET</label>
+        <label><input type="checkbox" value="POST" checked> POST</label>
+        <label><input type="checkbox" value="PATCH" checked> PATCH</label>
+        <label><input type="checkbox" value="DELETE" checked> DELETE</label>
+      </div>
+    </div>
+    <div class="form-group"><label>Allowed Endpoints (comma-separated, * = all)</label><input id="allowedEndpoints" value="*" placeholder="e.g. /customers*, /invoices*"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Rate Limit (per min)</label><input id="rateLimit" type="number" value="60"></div>
+      <div class="form-group"><label>Max Users (-1 = unlimited)</label><input id="maxUsers" type="number" value="-1"></div>
+    </div>
+    <div class="form-group"><label>License Key</label><input id="licenseKey" placeholder="Optional license key"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Start Date</label><input id="startDate" type="date"></div>
+      <div class="form-group"><label>End Date</label><input id="endDate" type="date"></div>
+    </div>
+    <div class="form-group"><label><input type="checkbox" id="neverExpires" checked> Never expires</label></div>
+    <div class="flex" style="margin-top:16px;justify-content:flex-end">
+      <button class="btn-sm" style="background:#475569;color:#fff;margin-right:8px" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveKey()">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTab = 'keys';
+
+function $(id) { return document.getElementById(id); }
+
+async function api(path, opts = {}) {
+  const res = await fetch('/admin' + path, {
+    headers: { 'Content-Type': 'application/json', ...opts.headers },
+    method: opts.method || 'GET',
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  return res.json();
+}
+
+async function loadAll() {
+  await Promise.all([loadHealth(), loadKeys(), loadLogs(), loadAlerts(), loadConfig()]);
+}
+
+async function loadHealth() {
+  const h = await api('/health');
+  $('healthStatus').textContent = '● ' + h.active_keys + ' active keys';
+  $('statKeys').textContent = h.active_keys;
+  $('statRequests').textContent = h.requests_24h;
+  $('statBlocked').textContent = h.blocked_24h;
+  $('statAlerts').textContent = h.unresolved_alerts;
+}
+
+async function loadKeys() {
+  const keys = await api('/api-keys');
+  $('keysTable').innerHTML = keys.length ? keys.map(k => `
+    <tr>
+      <td><strong>${k.key_name}</strong></td>
+      <td><code>${k.api_key.substring(0, 16)}...</code></td>
+      <td>${k.allowed_methods}</td>
+      <td><span class="badge ${k.is_active ? 'active' : 'inactive'}">${k.is_active ? 'Active' : 'Inactive'}</span></td>
+      <td>${k.rate_limit_per_min}/min</td>
+      <td>${k.current_users}${k.max_users > 0 ? '/' + k.max_users : ''}</td>
+      <td>${k.never_expires ? 'Never' : k.end_date ? new Date(k.end_date).toLocaleDateString() : '-'}</td>
+      <td class="actions">
+        <button class="btn-sm btn-primary" onclick="editKey('${k.id}')">✏️</button>
+        <button class="btn-sm ${k.is_active ? 'btn-danger' : 'btn-primary'}" onclick="toggleKey('${k.id}', ${!k.is_active})">${k.is_active ? '🔴' : '🟢'}</button>
+        <button class="btn-sm btn-danger" onclick="deleteKey('${k.id}')">🗑️</button>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="8" class="empty">No API keys. Create your first one.</td></tr>';
+}
+
+async function loadLogs() {
+  const filter = $('logFilter').value;
+  const params = filter === 'blocked' ? '?blocked=true' : filter ? '?method=' + filter : '';
+  const logs = await api('/logs' + params + '&limit=200');
+  $('logsTable').innerHTML = logs.length ? logs.map(l => `
+    <tr>
+      <td class="text-muted">${new Date(l.created_at + 'Z').toLocaleString()}</td>
+      <td><code>${(l.api_key_name || '').substring(0, 12)}</code></td>
+      <td>${l.method}</td>
+      <td>${l.endpoint}</td>
+      <td class="${l.status_code >= 400 ? 'log-blocked' : 'log-ok'}">${l.status_code}</td>
+      <td class="text-muted">${l.ip_address}</td>
+      <td class="text-muted">${l.response_time_ms}ms</td>
+    </tr>
+  `).join('') : '<tr><td colspan="7" class="empty">No logs yet</td></tr>';
+  $('logCount').textContent = logs.length + ' entries';
+}
+
+async function loadAlerts() {
+  const alertsData = await api('/alerts?limit=100');
+  $('alertsTable').innerHTML = alertsData.length ? alertsData.map(a => `
+    <tr>
+      <td class="text-muted">${new Date(a.created_at + 'Z').toLocaleString()}</td>
+      <td>${a.alert_type}</td>
+      <td><span class="badge ${a.severity}">${a.severity}</span></td>
+      <td>${a.message}</td>
+      <td>${a.resolved ? '✅ Resolved' : '⏳ Open'}</td>
+      <td>${!a.resolved ? `<button class="btn-sm btn-primary" onclick="resolveAlert(${a.id})">Resolve</button>` : ''}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" class="empty">No alerts</td></tr>';
+}
+
+async function loadConfig() {
+  const config = await api('/config');
+  const fields = [
+    { key: 'gateway_name', label: 'Gateway Name' },
+    { key: 'core_api_url', label: 'Core API URL' },
+    { key: 'auto_disable_error_threshold', label: 'Auto-disable Error Threshold' },
+    { key: 'auto_disable_window_minutes', label: 'Auto-disable Window (minutes)' },
+    { key: 'alert_email', label: 'Alert Email' },
+  ];
+  $('configForm').innerHTML = fields.map(f => `
+    <div class="form-group">
+      <label>${f.label}</label>
+      <input id="cfg_${f.key}" value="${config[f.key] || ''}" onchange="saveConfig()">
+    </div>
+  `).join('');
+}
+
+async function saveConfig() {
+  const data = {};
+  document.querySelectorAll('#configForm input').forEach(inp => {
+    data[inp.id.replace('cfg_', '')] = inp.value;
+  });
+  await api('/config', { method: 'PATCH', body: data });
+}
+
+function openCreateModal() {
+  $('modalTitle').textContent = 'New API Key';
+  $('editKeyId').value = '';
+  $('keyName').value = '';
+  document.querySelectorAll('#methodCheckboxes input').forEach(c => c.checked = true);
+  $('allowedEndpoints').value = '*';
+  $('rateLimit').value = '60';
+  $('maxUsers').value = '-1';
+  $('licenseKey').value = '';
+  $('startDate').value = '';
+  $('endDate').value = '';
+  $('neverExpires').checked = true;
+  $('keyModal').classList.add('open');
+}
+
+async function editKey(id) {
+  const key = await api('/api-keys/' + id);
+  $('modalTitle').textContent = 'Edit: ' + key.key_name;
+  $('editKeyId').value = id;
+  $('keyName').value = key.key_name;
+  document.querySelectorAll('#methodCheckboxes input').forEach(c => c.checked = key.allowed_methods.includes(c.value));
+  $('allowedEndpoints').value = key.allowed_endpoints;
+  $('rateLimit').value = key.rate_limit_per_min;
+  $('maxUsers').value = key.max_users;
+  $('licenseKey').value = key.license_key || '';
+  $('startDate').value = key.start_date || '';
+  $('endDate').value = key.end_date || '';
+  $('neverExpires').checked = key.never_expires == 1;
+  $('keyModal').classList.add('open');
+}
+
+function closeModal() { $('keyModal').classList.remove('open'); }
+
+async function saveKey() {
+  const methods = Array.from(document.querySelectorAll('#methodCheckboxes input:checked')).map(c => c.value).join(',');
+  const body = {
+    keyName: $('keyName').value,
+    allowedMethods: methods,
+    allowedEndpoints: $('allowedEndpoints').value,
+    rateLimitPerMin: parseInt($('rateLimit').value),
+    maxUsers: parseInt($('maxUsers').value),
+    licenseKey: $('licenseKey').value,
+    startDate: $('startDate').value || null,
+    endDate: $('endDate').value || null,
+    neverExpires: $('neverExpires').checked,
+  };
+  const id = $('editKeyId').value;
+  if (id) { await api('/api-keys/' + id, { method: 'PATCH', body }); }
+  else { await api('/api-keys', { method: 'POST', body }); }
+  closeModal();
+  loadAll();
+}
+
+async function toggleKey(id, isActive) {
+  await api('/api-keys/' + id + '/toggle', { method: 'POST', body: { isActive } });
+  loadAll();
+}
+
+async function deleteKey(id) {
+  if (!confirm('Delete this API key? This cannot be undone.')) return;
+  await api('/api-keys/' + id, { method: 'DELETE' });
+  loadAll();
+}
+
+async function resolveAlert(id) {
+  await api('/alerts/' + id + '/resolve', { method: 'POST' });
+  loadAll();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="'${tab}'"]`).classList.add('active');
+  $('panel-' + tab).classList.add('active');
+}
+
+// Close modal on backdrop click
+$('keyModal').addEventListener('click', e => { if (e.target === $('keyModal')) closeModal(); });
+
+// Auto-refresh every 10 seconds
+loadAll();
+setInterval(loadAll, 10000);
+</script>
+</body></html>

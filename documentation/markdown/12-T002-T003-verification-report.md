@@ -1,13 +1,13 @@
 # T002 + T003 Verification Report
 
 > Detailed validation of Config/DB module and Lint/Format/Test tooling.
-> Date: 2026-05-26 | Project: Meter Pulse
+> Date: 2026-05-26 | Project: Meter Verse
 
 ---
 
 ## T002 — Config + PostgreSQL Connection Module
 
-**Acceptance criteria:** @nestjs/config loads env; DB target is meter_pulse DB / sim_system schema; connection validated on boot
+**Acceptance criteria:** @nestjs/config loads env; DB target is Meter_Verse_pulse DB / sim_system schema; connection validated on boot
 
 ### 1. Config Module (`src/common/config/config.module.ts`)
 
@@ -27,10 +27,10 @@
 | `.env` has correct PORT | 3001 | `PORT=3001` | ✅ PASS |
 | `.env` has correct DB_HOST | localhost | `DB_HOST=127.0.0.1` | ✅ PASS |
 | `.env` has correct DB_PORT | 5432 | `DB_PORT=5432` | ✅ PASS |
-| `.env` has correct DB_NAME | meter_pulse | `DB_NAME=meter_pulse` | ✅ PASS |
+| `.env` has correct DB_NAME | Meter_Verse_pulse | `DB_NAME=Meter_Verse_pulse` | ✅ PASS |
 | `.env` has correct DB_SCHEMA | sim_system | `DB_SCHEMA=sim_system` | ✅ PASS |
-| `.env` has correct DB_USER | meter_pulse | `DB_USER=meter_pulse` | ✅ PASS |
-| `.env` has correct DB_PASS | (set) | `DB_PASSWORD=meter_pulse_dev` | ✅ PASS |
+| `.env` has correct DB_USER | Meter_Verse_pulse | `DB_USER=Meter_Verse_pulse` | ✅ PASS |
+| `.env` has correct DB_PASS | (set) | `DB_PASSWORD=Meter_Verse_pulse_dev` | ✅ PASS |
 
 ### 3. Database Module (`src/common/database/database.module.ts`)
 
@@ -56,8 +56,8 @@
 | Check | Command | Result | Verdict |
 |-------|---------|--------|---------|
 | Container running | `docker ps` | `Up About an hour (healthy)` | ✅ PASS |
-| Connection string | `\conninfo` | Connected to `meter_pulse` as `meter_pulse` via socket | ✅ PASS |
-| sim_system schema exists | `\dn` | `sim_schema` listed, owner: `meter_pulse` | ✅ PASS |
+| Connection string | `\conninfo` | Connected to `Meter_Verse_pulse` as `Meter_Verse_pulse` via socket | ✅ PASS |
+| sim_system schema exists | `\dn` | `sim_schema` listed, owner: `Meter_Verse_pulse` | ✅ PASS |
 | Schema query | `SELECT ... FROM information_schema.schemata` | `sim_system` row returned | ✅ PASS |
 
 ### 6. Server Boot — Database Validation Log

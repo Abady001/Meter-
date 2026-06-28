@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MetersService } from '../../../src/meters/meters.service';
+import { MeterStateService } from '../../../src/meters/meter-state.service';
 import { PrismaService } from '../../../src/common/database/prisma.service';
 import { NotFoundException } from '@nestjs/common';
 
@@ -37,7 +38,7 @@ describe('MetersService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MetersService, { provide: PrismaService, useValue: prisma }]
+      providers: [MetersService, MeterStateService, { provide: PrismaService, useValue: prisma }]
     }).compile();
 
     service = module.get<MetersService>(MetersService);

@@ -1,4 +1,4 @@
-# T006 Validation Report — Meter Pulse
+# T006 Validation Report — Meter Verse
 
 **Generated**: 2026-05-28
 **Task**: T006 — Implement standard error envelope + global exception filter
