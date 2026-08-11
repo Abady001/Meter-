@@ -1,0 +1,4 @@
+interface:
+  display_name: "Company Customer-Service Operations"
+  short_description: "Standardize customer-service workflows and audits."
+  default_prompt: "Use $company-customer-service-operations to audit and design this customer-service workflow with normalized data, automation, reporting, security, and QA."
